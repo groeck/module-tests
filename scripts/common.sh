@@ -112,7 +112,7 @@ check_range()
 	fi
 	if [ ${max} -lt ${min} ]
 	then
-		echo "max [${max}] must be larger or equal to min [${min}]"
+		echo "$(basename ${attr}): max [${max}] must be larger or equal to min [${min}]"
 		echo ${orig} > ${attr}
 		return 1
 	fi
@@ -157,7 +157,7 @@ check_range()
 	fi
 	if [ ${mdev} -lt ${deviation} -a ${quiet} -eq 0 ]
 	then
-	    echo Deviation out of range
+	    echo "$(basename ${attr}): Deviation out of range [max ${mdev}, seen ${deviation}]"
 	    rv=1
 	fi
 	return ${rv}
