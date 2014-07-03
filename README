@@ -1,0 +1,17 @@
+hwmon module tests
+------------------
+
+Run test with:
+	sudo ./module-test.sh <driver-name>
+
+Example:
+	sudo ./module-test.sh lm93
+
+module-test.sh currently assumes that the Linux source directory
+is ../linux-staging, and copies the source file from there into
+the current directory.
+
+Various test scripts are available in the scripts/ directory.
+
+The register dumps in directory register-dumps/ may be useful
+for writing additional scripts.
