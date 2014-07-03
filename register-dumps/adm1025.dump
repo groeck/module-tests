@@ -1,0 +1,29 @@
+# adm1025-i2c-0-2d
+# Adapter: SMBus I801 adapter at efa0
+# +2.5V:     +2.50 V  (min =  +2.25 V, max =  +2.75 V)
+# VCore:     +1.48 V  (min =  +1.41 V, max =  +1.55 V)
+# +3.3V:     +3.40 V  (min =  +2.97 V, max =  +3.63 V)
+# +5V:       +5.03 V  (min =  +4.50 V, max =  +5.50 V)
+# +12V:     +12.19 V  (min = +10.81 V, max = +13.19 V)
+# VCC:       +3.40 V  (min =  +2.97 V, max =  +3.63 V)
+# CPU Temp:  +39.0 C  (low  =   +10 C, high =   +60 C)
+# M/B Temp:  +38.0 C  (low  =   +10 C, high =   +45 C)
+# vid:      +1.475 V
+
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f    0123456789abcdef
+00: 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b    [[[[[[[[[[[[[[[[
+10: 5b 5b 5b 5b 5b 00 5b 5b 5b 5b 5b 5b 5b 5b 5b 00    [[[[[.[[[[[[[[[.
+20: c0 7d c6 c1 c2 c6 23 21 5b 5b 5b d3 ad 84 78 d3    ?}????#![[[???x?
+30: ad d3 ad d3 ad d3 ad 3c 0a 2d 0a 5b 5b 5b 41 29    ???????<?-?[[[A)
+40: 09 00 00 5b 5b 5b 5b 0c 5b 80 5b 5b 5b 5b 5b 5b    ?..[[[[?[?[[[[[[
+50: 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b    [[[[[[[[[[[[[[[[
+60: 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b    [[[[[[[[[[[[[[[[
+70: 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b    [[[[[[[[[[[[[[[[
+80: 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b    [[[[[[[[[[[[[[[[
+90: 5b 5b 5b 5b 5b 00 5b 5b 5b 5b 5b 5b 5b 5b 5b 00    [[[[[.[[[[[[[[[.
+a0: c0 7d c6 c1 c2 c6 23 21 5b 5b 5b d3 ad 84 78 d3    ?}????#![[[???x?
+b0: ad d3 ad d3 ad d3 ad 3c 0a 2d 0a 5b 5b 5b 41 29    ???????<?-?[[[A)
+c0: 09 00 00 5b 5b 5b 5b 0c 5b 80 5b 5b 5b 5b 5b 5b    ?..[[[[?[?[[[[[[
+d0: 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b    [[[[[[[[[[[[[[[[
+e0: 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b    [[[[[[[[[[[[[[[[
+f0: 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b 5b    [[[[[[[[[[[[[[[[

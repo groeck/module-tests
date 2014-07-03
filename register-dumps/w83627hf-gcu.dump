@@ -1,0 +1,17 @@
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f    0123456789abcdef
+00: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff    ................
+10: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff    ................
+20: 00 00 00 ba 00 00 00 7f ff ff ff 5e 44 5e 44 ed    ...?...?...^D^D?
+30: b0 f0 57 68 52 58 0b 6f 3d 40 dd 5a ac 5f 00 00    ??WhRX?o=@?Z?_..
+40: 01 f7 3f 00 00 00 00 5f 2d 02 01 44 00 95 00 a3    ???...._-??D.?.?
+50: ff ff 00 ff ff ff 00 80 21 70 ff ff 11 00 ff 05    .......?!p..?..?
+60: 00 00 00 ba 00 00 00 7f ff ff ff 5e 44 5e 44 ed    ...?...?...^D^D?
+70: b0 f0 57 68 52 58 0b 6f 3d 40 dd 5a ac 5f 00 00    ??WhRX?o=@?Z?_..
+80: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff    ................
+90: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff    ................
+a0: 00 00 00 ba 00 00 00 7f ff ff ff 5e 44 5e 44 ed    ...?...?...^D^D?
+b0: b0 f0 57 68 52 58 0b 6f 3d 40 dd 5a ac 5f 00 00    ??WhRX?o=@?Z?_..
+c0: 01 00 10 00 00 00 00 5f 2d 02 01 44 00 95 00 a3    ?.?...._-??D.?.?
+d0: ff ff 00 ff ff ff 00 80 21 70 ff ff 11 00 ff 05    .......?!p..?..?
+e0: 00 00 00 ba 00 00 00 7f ff ff ff 5e 44 5e 44 ed    ...?...?...^D^D?
+f0: b0 f0 57 68 52 58 0b 6f 3d 40 dd 5a ac 5f 00 00    ??WhRX?o=@?Z?_..

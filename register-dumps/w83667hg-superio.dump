@@ -1,0 +1,19 @@
+# W83667HG at 0x2e on an Asus Maximus II Formula
+
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00: ff ff ff ff ff ff ff 00 ff ff ff ff ff ff ff ff
+10: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+20: a5 13 ff 00 44 00 00 ff 40 08 00 7f 22 00 00 40
+30: 00 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+40: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+50: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+60: 00 00 ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+70: 00 ff ff ff 02 ff ff ff ff ff ff ff ff ff ff ff
+80: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+90: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+a0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+b0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+c0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+d0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+e0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+f0: 0e 00 ff ff 00 00 ff ff ff ff ff ff ff ff ff ff

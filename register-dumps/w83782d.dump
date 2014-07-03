@@ -1,0 +1,17 @@
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f    0123456789abcdef
+00: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff    ................
+10: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff    ................
+20: 6f 9f d5 ba ca 21 2e 27 72 47 ff 80 67 ee 8c ee    o????!.'rG.?g???
+30: af cd a8 e6 a5 3c 0b 4a 22 32 2f fe fe fe 00 00    ?????<?J"2/???..
+40: 01 c2 28 ff ff 00 00 f4 2d 02 01 c4 10 15 80 5c    ??(....?-??????\
+50: ff ff 00 ff ff ff ef 87 30 70 ff ff 11 09 ff ff    ......??0p..??..
+60: 70 9f d5 ba ca 21 2e 27 71 48 ff 80 67 ee 8c ee    p????!.'qH.?g???
+70: af cd a8 e6 a5 3c 0b 4a 22 32 2f fe fe fe 00 00    ?????<?J"2/???..
+80: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff    ................
+90: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff    ................
+a0: 6f 9f d4 ba c9 21 2e 27 72 47 ff 80 67 ee 8c ee    o????!.'rG.?g???
+b0: af cd a8 e6 a5 3c 0b 4a 22 32 2f fe fe fe 00 00    ?????<?J"2/???..
+c0: 01 00 00 ff ff 00 00 f4 2d 02 01 c4 10 15 80 5c    ?......?-??????\
+d0: ff ff 00 ff ff ff ef 87 30 70 ff ff 11 09 ff ff    ......??0p..??..
+e0: 6f 9f d4 ba ca 21 2f 27 71 48 ff 80 67 ee 8c ee    o????!/'qH.?g???
+f0: af cd a8 e6 a5 3c 0b 4a 22 32 2f fe fe fe 00 00    ?????<?J"2/???..

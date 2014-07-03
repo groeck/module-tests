@@ -1,0 +1,19 @@
+# isadump -k 0x87,0x87 0x4e 0x4f
+
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00: ff ff ff ff ff ff ff 01 ff ff ff ff ff ff ff ff 
+10: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
+20: a2 32 ff f0 44 00 40 ff 00 00 00 00 03 00 00 ff 
+30: 01 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
+40: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
+50: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
+60: 03 78 ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
+70: 07 ff ff ff 04 ff ff ff ff ff ff ff ff ff ff ff 
+80: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
+90: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
+a0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
+b0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
+c0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
+d0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
+e0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
+f0: 3c ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 

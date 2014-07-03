@@ -1,0 +1,20 @@
+# From: Hugo V.
+# Board: Epox EP-8VTAI
+
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00: 01 00 01 00 03 00 00 00 01 01 01 01 3c 3c 0a 0a 
+10: 01 00 01 00 00 01 01 3c 42 00 ff ff 24 32 00 de 
+20: 67 d0 aa b9 64 18 29 12 ff b1 ff f0 00 da 7f 5f 
+30: e9 4f bf db fa bc fe ff ff ac 76 4f ef eb 00 00 
+40: 01 dc 09 de ff 00 00 50 2d 02 01 44 10 15 80 5c 
+50: ff ff 00 ff ff ff 00 80 90 70 ff ff 11 05 ff 05 
+60: 67 d0 aa b9 64 18 29 12 ff b1 ff f0 00 da 7f 5f 
+70: e9 4f bf db fa bc fe ff ff ac 76 4f ef eb 00 00 
+80: 01 00 01 00 03 00 00 00 01 01 01 01 3c 3c 0a 0a 
+90: 01 00 01 00 00 01 01 3c 42 00 ff ff 24 32 00 de 
+a0: 67 d0 aa b9 64 18 29 12 ff b1 ff f0 00 da 7f 5f 
+b0: e9 4f bf db fa bc fe ff ff ac 76 4f ef eb 00 00 
+c0: 01 00 00 de ff 00 00 50 2d 02 01 44 10 15 80 5c 
+d0: ff ff 00 ff ff ff 00 80 90 70 ff ff 11 05 ff 05 
+e0: 67 d0 aa b9 64 18 29 12 ff b1 ff f0 00 da 7f 5f 
+f0: e9 4f bf db fa bc fe ff ff ac 76 4f ef eb 00 00 

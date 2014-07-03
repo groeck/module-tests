@@ -1,0 +1,20 @@
+# From: Steven K.
+# Board: Soltek SL-B9D-FGR
+
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00: 01 70 01 5f 17 2d 3c 11 70 5f 01 01 3c 3c 01 01
+10: 01 00 31 00 00 01 01 3c 43 00 ff ff 24 32 00 c9
+20: 54 5f ce bb a2 9d 10 27 7f 7b ff f0 00 84 9b 48
+30: b3 d2 00 02 da 60 ad 07 6a 02 d5 12 a6 60 00 00
+40: 01 d6 09 de ff 00 00 f0 2d 02 01 44 10 15 01 a3
+50: 27 00 00 4b 00 50 00 ff ff ff ff ff ff ff ff ff
+60: 54 5f ce bb a2 9d 10 27 7f 7b ff f0 00 84 9b 48
+70: b3 d2 00 02 da 60 ad 07 6a 02 d5 12 a6 60 00 00
+80: 01 70 01 5f 17 2d 3c 11 70 5f 01 01 3c 3c 01 01
+90: 01 00 31 00 00 01 01 3c 43 00 ff ff 24 32 00 cb
+a0: 54 5f ce bb a2 9d 10 27 7f 7b ff f0 00 84 9b 48
+b0: b3 d2 00 02 da 60 ad 07 6a 02 d5 12 a6 60 00 00
+c0: 01 00 00 de ff 00 00 f0 2d 02 01 44 10 15 01 a3
+d0: 27 00 00 4b 00 50 00 ff ff ff ff ff ff ff ff ff
+e0: 54 5f ce bb a2 9d 10 27 7f 7b ff f0 00 84 9b 48
+f0: b3 d2 00 02 da 60 ad 07 6a 02 d5 12 a6 60 00 00

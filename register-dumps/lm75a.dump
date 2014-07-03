@@ -1,0 +1,37 @@
+WARNING! This program can confuse your I2C bus, cause data loss and worse!
+I will probe file /dev/i2c-11, address 0x48, mode word
+Continue? [Y/n]
+      0,8  1,9  2,a  3,b  4,c  5,d  6,e  7,f
+00: 001d 0000 004b 0050 ffff ffff ffff a1a1
+08: 001d 0000 004b 0050 ffff ffff ffff a1a1
+10: 001d 0000 004b 0050 ffff ffff ffff a1a1
+18: 001d 0000 004b 0050 ffff ffff ffff a1a1
+20: 001d 0000 004b 0050 ffff ffff ffff a1a1
+28: 001d 0000 004b 0050 ffff ffff ffff a1a1
+30: 001d 0000 004b 0050 ffff ffff ffff a1a1
+38: 001d 0000 004b 0050 ffff ffff ffff a1a1
+40: 001d 0000 004b 0050 ffff ffff ffff a1a1
+48: 001d 0000 004b 0050 ffff ffff ffff a1a1
+50: 001d 0000 004b 0050 ffff ffff ffff a1a1
+58: 001d 0000 004b 0050 ffff ffff ffff a1a1
+60: 001d 0000 004b 0050 ffff ffff ffff a1a1
+68: 001d 0000 004b 0050 ffff ffff ffff a1a1
+70: 001d 0000 004b 0050 ffff ffff ffff a1a1
+78: 001d 0000 004b 0050 ffff ffff ffff a1a1
+80: 001d 0000 004b 0050 ffff ffff ffff a1a1
+88: 001d 0000 004b 0050 ffff ffff ffff a1a1
+90: 001d 0000 004b 0050 ffff ffff ffff a1a1
+98: 001d 0000 004b 0050 ffff ffff ffff a1a1
+a0: 001d 0000 004b 0050 ffff ffff ffff a1a1
+a8: 001d 0000 004b 0050 ffff ffff ffff a1a1
+b0: 001d 0000 004b 0050 ffff ffff ffff a1a1
+b8: 001d 0000 004b 0050 ffff ffff ffff a1a1
+c0: 001d 0000 004b 0050 ffff ffff ffff a1a1
+c8: 001d 0000 004b 0050 ffff ffff ffff a1a1
+d0: 001d 0000 004b 0050 ffff ffff ffff a1a1
+d8: 001d 0000 004b 0050 ffff ffff ffff a1a1
+e0: 001d 0000 004b 0050 ffff ffff ffff a1a1
+e8: 001d 0000 004b 0050 ffff ffff ffff a1a1
+f0: 001d 0000 004b 0050 ffff ffff ffff a1a1
+f8: 001d 0000 004b 0050 ffff ffff ffff a1a1
+

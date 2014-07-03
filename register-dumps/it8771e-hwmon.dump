@@ -1,0 +1,18 @@
+#  isadump 0x295 0x296
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00: 19 02 ed 02 37 ff 07 37 ff 07 49 0f 00 a4 ff 00 
+10: bf f6 ff 3b c7 80 00 00 05 ff 00 76 fa f5 f5 f5 
+20: 2f ba f2 8b ba f4 ba 8d 89 1f 12 f8 80 3c 33 33 
+30: e0 b3 d5 67 4f 5f 5f c6 fe 7e f4 fb 88 85 5b 76 
+40: 4e f3 df 97 7e bf 5f 40 ad 6a d4 00 ff ff ff ff 
+50: ff 38 7f 7f 7f 40 00 00 90 00 3d 12 60 00 00 00 
+60: 00 14 46 5a 14 41 0f ff 00 7f 7f ff 00 00 0f ff 
+70: 7f 7f 7f 80 00 00 0f ff ff ff ff ff ff ff ff ff 
+80: 00 00 00 00 00 00 00 00 00 00 00 00 00 22 02 02 
+90: ff 00 00 00 ff 00 00 00 40 00 00 00 00 e2 02 08 
+a0: 20 e0 e0 e0 e0 e0 e0 ff ff ff ff ff ff ff ff ff 
+b0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
+c0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
+d0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
+e0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
+f0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff

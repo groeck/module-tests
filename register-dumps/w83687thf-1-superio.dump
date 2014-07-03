@@ -1,0 +1,20 @@
+# From: Hugo V.
+# Board: Epox EP-8VTAI
+
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00: ff ff ff ff ff ff ff 0b ff ff ff ff ff ff ff ff 
+10: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
+20: 85 42 ff 00 40 00 00 ff 50 03 f0 01 00 00 00 00 
+30: 01 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
+40: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
+50: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
+60: 02 90 ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
+70: 00 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
+80: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
+90: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
+a0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
+b0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
+c0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
+d0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
+e0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
+f0: 11 3f ff ff ff ff ff ff ff ff ff ff ff ff ff ff 

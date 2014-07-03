@@ -1,0 +1,20 @@
+# From: Markus S.
+# Board: Asus P5B Deluxe
+
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00: 04 ff 04 ff 01 00 42 10 01 4b 01 01 3c 3c 0a 05
+10: 04 ff 50 00 00 01 01 3c 43 17 00 00 ff ff ff c3
+20: ab e3 cf ce bf c7 ba 23 ff af ff da 00 09 a4 85
+30: 15 01 7c 22 01 70 83 b4 82 64 18 91 04 58 48 ff
+40: 03 ce 2f ff ff ff 07 55 2d 00 20 44 18 95 00 a3
+50: ff ff 00 ff ff ff 00 80 c1 65 ff ff 19 04 04 05
+60: 01 9b 31 4c 9b 01 3c ff 12 ff 0a ff ff ff ff ff
+70: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+80: 04 ff 04 ff 01 00 42 10 01 4b 01 01 3c 3c 0a 05
+90: 04 ff 50 00 00 01 01 3c 43 17 00 00 ff ff ff c3
+a0: ab e3 cf ce bf c7 ba 23 ff af ff da 00 09 a4 85
+b0: 15 01 7c 22 01 70 83 b4 82 64 18 91 04 58 48 ff
+c0: 03 00 00 ff ff ff 07 55 2d 00 20 44 18 95 00 a3
+d0: ff ff 00 ff ff ff 00 80 c1 65 ff ff 19 04 04 05
+e0: 01 9b 31 4c 9b 01 3c ff 12 ff 0a ff ff ff ff ff
+f0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff

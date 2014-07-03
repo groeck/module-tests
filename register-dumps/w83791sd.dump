@@ -1,0 +1,19 @@
+# i2cdump -y 0 0x2f b
+
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f    0123456789abcdef
+00: 00 00 00 00 00 00 00 00 00 80 00 00 01 00 00 ff    .........?..?...
+10: 00 00 7f 00 00 10 00 00 00 00 00 00 00 00 00 80    ..?..?.........?
+20: 00 00 0b c3 00 00 00 7f ff ff ff 7e 68 00 00 ed    ..??...?...~h..?
+30: b0 d1 08 20 30 51 4a 10 a8 02 00 08 01 90 ff ff    ??? 0QJ???.???..
+40: 01 30 20 00 00 00 00 50 2f 10 01 44 01 95 80 5c    ?0 ....P/??D???\
+50: ff ff ff ff ff ff 00 80 72 70 ff 00 00 00 05 ff    .......?rp....?.
+60: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff    ................
+70: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff    ................
+80: 01 ff 01 ff 00 00 00 00 01 01 01 01 3c 3c 0a 0a    ?.?.....????<<??
+90: 00 00 00 01 ff 00 00 00 01 01 3c 00 00 00 01 01    ...?....??<...??
+a0: ff ff ff 00 00 00 00 00 16 f5 6f 18 00 ff ff ff    ........??o?....
+b0: c0 01 00 ff 02 01 00 c4 20 08 ff ff 40 04 ff ff    ??..??.? ?..@?..
+c0: 7f 00 00 4b 00 50 00 ff 7f 00 00 4b 00 50 00 ff    ?..K.P..?..K.P..
+d0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff    ................
+e0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff    ................
+f0: ff ff 00 ff 00 01 00 ff ff 02 ff 00 00 10 ff 1d    .....?...?...?.?

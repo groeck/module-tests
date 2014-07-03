@@ -1,0 +1,18 @@
+Results of:
+
+isadump -f 0x800 0x80 > results_jean_dump.txt 2>&1
+
+
+  WARNING! Running this program can cause system crashes, data loss and worse!
+  I will probe address range 0x0800 to 0x087f.
+  You have five seconds to reconsider and press CTRL-C!
+
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00: 00 00 00 00 18 7f f4 ff a0 00 00 00 00 00 00 00 
+10: 02 00 f4 ff ca 00 00 00 00 00 00 00 00 00 02 03 
+20: 00 00 00 01 01 01 01 01 01 01 01 01 01 00 00 00 
+30: 01 01 01 05 05 04 04 05 04 84 84 04 04 84 00 05 
+40: 05 05 04 05 04 05 04 84 84 00 00 00 94 09 08 57 
+50: 00 00 00 00 ff ff 01 01 60 55 ba 00 45 03 00 00 
+60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 

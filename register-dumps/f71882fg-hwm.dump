@@ -1,0 +1,19 @@
+chl ~ # isadump -y 0xa15 0xa16
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00: ff 03 00 00 ff ff ff ff ff ff 00 00 55 4c 00 00
+10: 00 00 00 00 ff ff ff ff ff ff ff ff ff ff ff ff
+20: d5 a1 74 79 77 8a a2 d4 cf ff ff ff ff ff ff ff
+30: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+40: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+50: ff ff ff ff ff ff ff ff ff ff 03 04 10 19 34 ff
+60: 00 88 88 00 ff ff 02 7b 00 00 ff 06 40 24 ff 00
+70: ff ff 22 ff 1c ff 7f ff ff ff ff ff ff ff ff ff
+80: ff ff 64 55 64 55 55 46 ff ff ff ff ff ff a8 ff
+90: 00 08 08 00 56 ff 5d ff 15 25 ff aa 55 55 ff 0a
+a0: 04 dd 00 a0 03 4d 37 32 2d 28 ff e5 ce b7 a0 0d
+b0: 05 f1 00 ff 03 ff 7f 7f 7f 14 ff e5 ce b7 a0 0e
+c0: 05 93 00 a0 03 ff 37 32 2d 28 ff e5 ce b7 a0 0e
+d0: 0f ff 00 ff 03 ff 3c 32 28 1e ff d9 b2 99 80 0f
+e0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+f0: 00 00 00 00 00 00 3b ff 00 00 ff 00 ff ff ff ff
+
