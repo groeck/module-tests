@@ -49,10 +49,10 @@ rv=$(($? + ${rv}))
 
 for i in $(seq 1 2)
 do
-	check_range -b ${base} -d 500 -r -v temp${i}_min # broken
+	check_range -b ${base} -s 1000 -d 0 -r -q temp${i}_min
 	rv=$(($? + ${rv}))
 	echo -127000 > temp${i}_min
-	check_range -b ${base} -d 500 -r -v temp${i}_max # broken
+	check_range -b ${base} -s 1000 -d 0 -r -q temp${i}_max
 	rv=$(($? + ${rv}))
 done
 
@@ -107,9 +107,9 @@ rv=$(($? + ${rv}))
 
 for i in $(seq 1 2)
 do
-	check_range -b ${base} -d 500 -r -v temp${i}_min # broken
+	check_range -b ${base} -s 1000 -d 0 -r -q temp${i}_min
 	rv=$(($? + ${rv}))
-	check_range -b ${base} -d 500 -r -v temp${i}_max # broken
+	check_range -b ${base} -s 1000 -d 0 -r -q temp${i}_max
 	rv=$(($? + ${rv}))
 done
 
