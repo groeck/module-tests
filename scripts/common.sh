@@ -90,6 +90,7 @@ check_range()
 
 	if [ ! -e ${attr} ]
 	then
+		echo $(basename ${attr}): No such attribute
 		return 1
 	fi
 	orig=$(cat ${attr})
