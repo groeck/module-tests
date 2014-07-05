@@ -125,23 +125,23 @@ done
 
 for i in $(seq 1 3)
 do
-	check_range -b ${base} -l 0 -r fan${i}_min
+	check_range -b ${base} -l 0 -r -q fan${i}_min
 	rv=$(($? + ${rv}))
-	check_range -b ${base} -l 0 -r fan${i}_smart_tach
+	check_range -b ${base} -l 0 -r -q fan${i}_smart_tach
 	rv=$(($? + ${rv}))
 done
 
 for i in $(seq 1 2)
 do
-	check_range -b ${base} -l 0 -u 255 -r pwm${i} # buggy, does not clear cache
+	check_range -b ${base} -l 0 -u 255 -r -q pwm${i} # buggy, does not clear cache
 	rv=$(($? + ${rv}))
 	check_range -b ${base} -l 0 -r -d 0 -q pwm${i}_auto_channels
 	rv=$(($? + ${rv}))
-	check_range -b ${base} -l 0 -r pwm${i}_auto_spinup_min
+	check_range -b ${base} -l 0 -r -q pwm${i}_auto_spinup_min
 	rv=$(($? + ${rv}))
-	check_range -b ${base} -l 0 -r pwm${i}_enable # buggy, does not clear cache
+	check_range -b ${base} -l 0 -r -q pwm${i}_enable # buggy, does not clear cache
 	rv=$(($? + ${rv}))
-	check_range -b ${base} -l 0 -r pwm${i}_freq
+	check_range -b ${base} -l 0 -r -q pwm${i}_freq
 	rv=$(($? + ${rv}))
 done
 
