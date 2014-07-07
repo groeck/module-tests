@@ -10,10 +10,6 @@ then
 	echo must be root
 	exit 1
 fi
-# Mask out smbus block mode support
-f=$(cat /sys/module/i2c_stub/parameters/functionality)
-f=$(($f & 0xC7F0000))
-echo $f > /sys/module/i2c_stub/parameters/functionality
 
 adapter=$(grep "SMBus stub driver" /sys/class/i2c-adapter/*/name | cut -f1 -d: | cut -f5 -d/ | cut -f2 -d-)
 
