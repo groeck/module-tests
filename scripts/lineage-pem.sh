@@ -6,7 +6,7 @@ dir=$(dirname $0)
 . ${dir}/common.sh
 
 modprobe -r i2c-stub 2>/dev/null
-modprobe i2c-stub chip_addr=0x${i2c_addr}
+modprobe i2c-stub chip_addr=0x${i2c_addr} functionality=0xffffffff
 if [ $? -ne 0 ]
 then
 	echo must be root
