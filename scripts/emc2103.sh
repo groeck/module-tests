@@ -74,9 +74,11 @@ done
 
 check_range -b ${base} -l 1 -u 2 -d 0 -r -q fan1_div
 rv=$(($? + ${rv}))
+check_range -b ${base} -l 4 -u 4 -d 0 -r -q fan1_div
+rv=$(($? + ${rv}))
 check_range -b ${base} -l 0 -u 0 -d 0 -r -q pwm1_enable
 rv=$(($? + ${rv}))
-check_range -b ${base} -r -d 815 -q fan1_target
+check_range -b ${base} -l 0 -r -d 815 -q fan1_target
 rv=$(($? + ${rv}))
 
 modprobe -r i2c-stub 2>/dev/null
