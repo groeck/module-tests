@@ -1,3 +1,6 @@
+dir=$(dirname $(pwd)/$0)
+getval=${dir}/../getval
+
 dotest ()
 {
     local val
@@ -8,7 +11,7 @@ dotest ()
     while [ $i -lt ${#a[*]} ]
     do
 	val=$(cat ${a[$i]})
-	if [ ${val} -ne ${v[$i]} ]
+	if [ "${val}" != "${v[$i]}" ]
 	then
 		echo ${a[$i]} bad value ${val} expected ${v[$i]}
 		return 1
@@ -16,6 +19,46 @@ dotest ()
 	i=$(($i + 1))
     done
     return 0
+}
+
+ecode=-19
+
+error_test()
+{
+	local i=0
+	local rv=0
+	local rc
+	local adapter=$1
+	local a=("${!2}")
+	local val
+	local efile=/sys/class/i2c-adapter/i2c-${adapter}/error
+
+	# If i2c-stub doesn't support error code insertion,
+	# there is nothing we can do.
+	if [ ! -e ${efile} ]
+	then
+		return 0
+	fi
+	echo ${ecode} > ${efile}
+	while [ $i -lt ${#a[*]} ]
+	do
+		val=$(${getval} ${a[$i]})
+		rc=$?
+		if [ ${rc} -eq 0 ]
+		then
+			echo ${a[$i]} returned no error
+			rv=1
+		else
+			if [ ${val} -ne ${ecode} ]
+			then
+				echo ${a[$i]} returned ${val}, expected ${ecode}
+				rv=1
+			fi
+		fi
+		i=$(($i + 1))
+	done
+	echo 0 > ${efile}
+	return ${rv}
 }
 
 getbase()
@@ -30,7 +73,7 @@ getbase()
 
     if [ -e "/sys/class/hwmon/${dev}/name" ]
     then
-    	echo /sys/class/hwmon/${dev}
+	echo /sys/class/hwmon/${dev}
     else
         echo /sys/class/hwmon/${dev}/device
     fi
@@ -63,11 +106,11 @@ check_range()
 	do
 	    case ${opt} in
 	    b)	base=${OPTARG}/
-	    	;;
+		;;
 	    d)	mdev=${OPTARG}	# maximum permitted deviation
 	        ;;
 	    l)	min=${OPTARG}
-	    	;;
+		;;
 	    q)	quiet=1
 		;;
 	    v)	disp=1
@@ -78,7 +121,7 @@ check_range()
 	    s)  stepsize=${OPTARG}
 		;;
 	    u)	max=${OPTARG}
-	    	;;
+		;;
 	    :)	echo "Option ${OPTARG} requires an argument"
 	        return 1
 		;;
@@ -123,7 +166,7 @@ check_range()
 	    stepsize=$((${range} / 100))
 	    if [ ${stepsize} -lt 1 ]
 	    then
-	    	stepsize=1
+		stepsize=1
 	    fi
 	fi
 	for i in $(seq ${min} ${stepsize} ${max})
@@ -156,7 +199,7 @@ check_range()
 	then
 		echo ${orig} > ${attr}
 	fi
-	if [ ${mdev} -lt ${deviation} -a ${quiet} -eq 0 ]
+	if [ ${mdev} -lt ${deviation} ]
 	then
 	    echo "$(basename ${attr}): Deviation out of range [max ${mdev}, seen ${deviation}]"
 	    rv=1
