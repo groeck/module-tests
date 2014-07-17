@@ -4,7 +4,7 @@ dir=$(dirname $0)
 . ${dir}/common.sh
 
 modprobe -r i2c-stub 2>/dev/null
-modprobe i2c-stub chip_addr=0x2c
+modprobe i2c-stub chip_addr=0x2c bank_reg=0x0 bank_mask=0x01 bank_start=0x01 bank_end=0xff
 if [ $? -ne 0 ]
 then
 	echo must be root
@@ -13,7 +13,7 @@ fi
 
 adapter=$(grep "SMBus stub driver" /sys/class/i2c-adapter/*/name | cut -f1 -d: | cut -f5 -d/ | cut -f2 -d-)
 
-regs=(00 54 7f f2 45 20 63 00 00 ce db 00 83 94 d2 40
+regs00=(00 54 7f f2 45 20 63 00 00 ce db 00 83 94 d2 40
 	ff ff ff f8 00 64 2f 02 04 12 30 02 00 10 00 30
 	02 81 7d 03 03 03 03 03 00 04 ee 80 f4 32 40 00
 	64 00 55 00 55 00 50 00 55 00 64 64 5a 64 64 ff
@@ -30,12 +30,38 @@ regs=(00 54 7f f2 45 20 63 00 00 ce db 00 83 94 d2 40
 	e4 00 00 00 00 00 00 00 00 00 00 00 00 00 10 f0
 	00 30 00 ff 00 05 ff ff 20 08 0f 01 ff 50 c3 21)
 
+regs01=(01 91 00 30 00 00 00 00 00 64 64 00 00 00 00 00
+	00 00 00 00 00 00 00 f1 fc f8 80 f8 80 f8 80 01
+	2b 03 06 00 00 09 00 31 00 f9 00 00 00 00 00 00
+	00 00 00 ff ff ff ff ff ff ff ff ff ff ff ff ff
+	01 91 00 30 00 00 00 00 00 64 64 00 00 00 00 00
+	00 00 00 00 00 00 00 f2 1d f8 80 f8 80 f8 80 01
+	2c 01 06 00 00 09 00 6e 00 f9 00 00 00 00 00 00
+	00 00 00 ff ff ff ff ff ff ff ff ff ff ff ff ff
+	01 91 00 30 00 00 00 00 00 64 64 00 00 00 00 00
+	00 00 00 00 00 00 00 f2 1d f8 80 f8 80 f8 80 01
+	2c 01 06 00 00 09 00 6e 00 f9 00 00 00 00 00 00
+	00 00 00 ff ff ff ff ff ff ff ff ff ff ff ff ff
+	01 91 00 30 00 00 00 00 00 64 64 00 00 00 00 00
+	00 00 00 00 00 00 00 f2 1d f8 80 f8 80 f8 80 01
+	2c 01 06 00 00 09 00 6e 00 f9 00 00 00 00 00 00
+	00 00 00 ff ff ff ff ff ff ff ff ff ff ff ff ff)
+
 i=0
-while [ $i -lt ${#regs[*]} ]
+while [ $i -lt ${#regs00[*]} ]
 do
-	i2cset -f -y ${adapter} 0x2c $i 0x${regs[$i]} b
+	i2cset -f -y ${adapter} 0x2c $i 0x${regs00[$i]} b
 	i=$(($i + 1))
 done
+
+i=0
+while [ $i -lt ${#regs01[*]} ]
+do
+	i2cset -f -y ${adapter} 0x2c $i 0x${regs01[$i]} b
+	i=$(($i + 1))
+done
+
+i2cset -y -f ${adapter} 0x2c 0 0	# re-select bank 0
 
 echo nct7802 0x2c > /sys/class/i2c-adapter/i2c-${adapter}/new_device
 
