@@ -18,7 +18,7 @@ MAKEFLAGS += --no-print-directory
 
 .PHONY: all install modules modules_install clean
 
-all: modules
+all: modules getval
 
 # Targets for running make directly in the external module directory:
 
@@ -30,3 +30,6 @@ install: modules_install
 modules_install:
 	cp TESTME.ko $(KERNEL_MODULES)/kernel/$(MOD_SUBDIR)
 	depmod -a -F $(SYSTEM_MAP) $(TARGET)
+
+getval: src/getval.c
+	cc -O -o getval src/getval.c
