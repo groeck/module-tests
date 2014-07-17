@@ -32,8 +32,11 @@ cd ${base}
 attrs=(humidity1_input temp1_input)
 vals=(33093 41052)
 
-dotest attrs[@] vals[@]
+error_test ${adapter} attrs[@]
 rv=$?
+
+dotest attrs[@] vals[@]
+rv=$((${rv} + $?))
 
 modprobe -r i2c-stub 2>/dev/null
 
