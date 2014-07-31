@@ -1,6 +1,22 @@
 dir=$(dirname $(pwd)/$0)
 getval=${dir}/../getval
 
+install_regs ()
+{
+    local adapter=$1
+    local i2c_addr=$2
+    local regs=("${!3}")
+    local i
+    local size=$4
+
+    i=0
+    while [ $i -lt ${#regs[*]} ]
+    do
+        i2cset -f -y ${adapter} 0x${i2c_addr} $i 0x${regs[$i]} ${size}
+	i=$(($i + 1))
+    done
+}
+
 dotest ()
 {
     local val
@@ -82,6 +98,7 @@ getbase()
 
 DEFAULT_MIN=-100000000
 DEFAULT_MAX=100000000
+OVERFLOW_MAX=4294967296000
 
 check_range()
 {
@@ -90,6 +107,7 @@ check_range()
 	local mdev=${DEFAULT_MAX}
 	local min=${DEFAULT_MIN}
 	local max=${DEFAULT_MAX}
+	local omax
 	local stepsize=0
 	local deviation=0
 	local OPTIND=1
@@ -153,6 +171,14 @@ check_range()
 		if [ ${quiet} -eq 0 ]; then
 			disp=1
 		fi
+		# Try to trigger an overflow
+		echo ${OVERFLOW_MAX} > ${attr} 2>/dev/null
+		omax=$(cat ${attr})
+		if [ ${omax} -ne ${max} ]
+		then
+			echo "$(basename ${attr}): Suspected overflow: [${max} vs. ${omax} ]"
+			return 1
+		fi
 	fi
 	if [ ${max} -lt ${min} ]
 	then
@@ -187,6 +213,7 @@ check_range()
 		fi
 		if [ $d -gt ${deviation} ]
 		then
+		    devi=$i
 		    deviation=$d
 		fi
 	done
@@ -201,7 +228,7 @@ check_range()
 	fi
 	if [ ${mdev} -lt ${deviation} ]
 	then
-	    echo "$(basename ${attr}): Deviation out of range [max ${mdev}, seen ${deviation}]"
+	    echo "$(basename ${attr}): Deviation out of range [max ${mdev}, seen ${deviation} with ${devi}]"
 	    rv=1
 	fi
 	return ${rv}
