@@ -119,8 +119,9 @@ check_range()
 	local orig
 	local rv=0
 	local quiet=0
+	local waittime=0
 
-	while getopts ":b:d:l:qrs:u:v" opt
+	while getopts ":b:d:l:qrs:u:vw:" opt
 	do
 	    case ${opt} in
 	    b)	base=${OPTARG}/
@@ -134,6 +135,8 @@ check_range()
 	    v)	disp=1
 	        quiet=0
 		;;
+	    w)  waittime=${OPTARG}
+	        ;;
 	    r)	restore=1
 		;;
 	    s)  stepsize=${OPTARG}
@@ -171,12 +174,22 @@ check_range()
 		if [ ${quiet} -eq 0 ]; then
 			disp=1
 		fi
+		if [ ${waittime} -ne 0 ]
+		then
+			sleep ${waittime}
+			omax=$(cat ${attr})
+			if [ ${omax} -ne ${max} ]
+			then
+			    echo "$(basename ${attr}): Cache mismatch: [${max} vs. ${omax}]"
+			    return 1
+			fi
+		fi
 		# Try to trigger an overflow
 		echo ${OVERFLOW_MAX} > ${attr} 2>/dev/null
 		omax=$(cat ${attr})
 		if [ ${omax} -ne ${max} ]
 		then
-			echo "$(basename ${attr}): Suspected overflow: [${max} vs. ${omax} ]"
+			echo "$(basename ${attr}): Suspected overflow: [${max} vs. ${omax}]"
 			return 1
 		fi
 	fi
