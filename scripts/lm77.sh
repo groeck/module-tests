@@ -71,13 +71,13 @@ rv=$?
 
 for t in $(seq 1 1)
 do
-	check_range -b ${base} -d 500 -r -v temp${t}_min
+	check_range -b ${base} -d 500 -r -q -w 2 temp${t}_min
 	rv=$(($? + ${rv}))
-	check_range -b ${base} -d 500 -r -v temp${t}_max
+	check_range -b ${base} -d 500 -r -q -w 2 temp${t}_max
 	rv=$(($? + ${rv}))
-	check_range -b ${base} -d 500 -r -v temp${t}_crit
+	check_range -b ${base} -d 500 -r -q -w 2 temp${t}_crit
 	rv=$(($? + ${rv}))
-	check_range -b ${base} -d 500 -r -v temp${t}_crit_hyst
+	check_range -b ${base} -d 500 -r -q -w 2 temp${t}_crit_hyst
 	rv=$(($? + ${rv}))
 done
 
