@@ -66,19 +66,19 @@ rv=$?
 
 for t in $(seq 1 4)
 do
-	check_range -b ${base} -d 500 -r -q temp${t}_min
+	check_range -b ${base} -d 500 -r -q -w 2 temp${t}_min
 	rv=$(($? + ${rv}))
-	check_range -b ${base} -d 500 -r -q temp${t}_max
+	check_range -b ${base} -d 500 -r -q -w 2 temp${t}_max
 	rv=$(($? + ${rv}))
 done
 
-check_range -b ${base} -l 1 -u 2 -d 0 -r -q fan1_div
+check_range -b ${base} -l 1 -u 2 -d 0 -r -q -w 2 fan1_div
 rv=$(($? + ${rv}))
 check_range -b ${base} -l 4 -u 4 -d 0 -r -q fan1_div
 rv=$(($? + ${rv}))
-check_range -b ${base} -l 0 -u 0 -d 0 -r -q pwm1_enable
+check_range -b ${base} -l 0 -u 0 -d 0 -r -q -w 2 pwm1_enable
 rv=$(($? + ${rv}))
-check_range -b ${base} -l 0 -r -d 815 -q fan1_target
+check_range -b ${base} -l 0 -r -d 815 -q -w 2 fan1_target
 rv=$(($? + ${rv}))
 
 modprobe -r i2c-stub 2>/dev/null
