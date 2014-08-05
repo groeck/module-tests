@@ -96,9 +96,9 @@ getbase()
     return 0
 }
 
-DEFAULT_MIN=-100000000
-DEFAULT_MAX=100000000
-OVERFLOW_MAX=4294967296000
+DEFAULT_MIN=-100000001
+DEFAULT_MAX=100000001
+OVERFLOW_MAX=4294967296001
 
 check_range()
 {
@@ -174,6 +174,14 @@ check_range()
 		if [ ${quiet} -eq 0 ]; then
 			disp=1
 		fi
+		# Try to trigger an overflow
+		echo ${OVERFLOW_MAX} > ${attr} 2>/dev/null
+		omax=$(cat ${attr})
+		if [ ${omax} -ne ${max} ]
+		then
+			echo "$(basename ${attr}): Suspected overflow: [${max} vs. ${omax}]"
+			return 1
+		fi
 		if [ ${waittime} -ne 0 ]
 		then
 			sleep ${waittime}
@@ -183,14 +191,6 @@ check_range()
 			    echo "$(basename ${attr}): Cache mismatch: [${max} vs. ${omax}]"
 			    return 1
 			fi
-		fi
-		# Try to trigger an overflow
-		echo ${OVERFLOW_MAX} > ${attr} 2>/dev/null
-		omax=$(cat ${attr})
-		if [ ${omax} -ne ${max} ]
-		then
-			echo "$(basename ${attr}): Suspected overflow: [${max} vs. ${omax}]"
-			return 1
 		fi
 	fi
 	if [ ${max} -lt ${min} ]
