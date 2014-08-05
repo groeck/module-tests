@@ -64,57 +64,29 @@ vals=(1614 300 0 300 2153 200 0 82 0 82 1822 1979 1640 1257 1703 781 3334
 
 rv=0
 dotest attrs[@] vals[@]
-if [ $? -ne 0 ]
-then
-	echo value test 1 failed
-	rv=1
-fi
+rv=$?
 
-echo 100 > fan1_min
-echo 200 > fan2_min
-echo 300 > fan3_min
-echo 400 > fan4_min
-echo 500 > fan5_min
+for t in $(seq 1 6)
+do
+	check_range -b ${base} -d 500 -r -q -w 2 temp${t}_min
+	rv=$(($? + ${rv}))
+	check_range -b ${base} -d 500 -r -q -w 2 temp${t}_max
+	rv=$(($? + ${rv}))
+done
 
-echo 2000 > in0_max
-echo 2100 > in1_max
-echo 2200 > in2_max
-echo 2300 > in3_max
-echo 2400 > in4_max
-echo 2500 > in5_max
+for i in $(seq 0 5)
+do
+	check_range -b ${base} -d 13 -r -q -w 2 "in${i}_min"
+	rv=$(($? + ${rv}))
+	check_range -b ${base} -d 13 -r -q -w 2 "in${i}_max"
+	rv=$(($? + ${rv}))
+done
 
-echo 100 > in0_min
-echo 200 > in1_min
-echo 300 > in2_min
-echo 400 > in3_min
-echo 500 > in4_min
-echo 600 > in5_min
-
-echo 80000 > temp1_max
-echo 81000 > temp2_max
-echo 82000 > temp3_max
-echo 83000 > temp4_max
-echo 84000 > temp5_max
-echo 85000 > temp6_max
-
-echo 10000 > temp1_min
-echo 11000 > temp2_min
-echo 12000 > temp3_min
-echo 13000 > temp4_min
-echo 14000 > temp5_min
-echo 15000 > temp6_min
-
-vals=(1614 100 0 200 2153 300 0 400 0 500 1822 2005 104 1257 1992 203 3334
-	2200 292 5104 2291 390 1507 1992 500 0 1992 601 54000 80000 10000 0
-	81000 11000 0 82000 12000 0 83000 13000 48000 84000 14000 44000 85000
-	15000)
-
-dotest attrs[@] vals[@]
-if [ $? -ne 0 ]
-then
-	echo value test 2 failed
-	rv=1
-fi
+for f in $(seq 1 5)
+do
+	check_range -b ${base} -l 0 -u 10000 -d 9 -r -q -w 2 "fan${f}_min"
+	rv=$(($? + ${rv}))
+done
 
 modprobe -r i2c-stub 2>/dev/null
 
