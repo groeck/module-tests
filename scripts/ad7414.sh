@@ -34,24 +34,12 @@ vals=(46250 100000 0 16000 0)
 
 rv=0
 dotest attrs[@] vals[@]
-if [ $? -ne 0 ]
-then
-	echo value test 1 failed
-	rv=1
-fi
+rv=$?
 
 check_range -b ${base} -d 500 -s 100 -q temp1_max
-if [ $? -ne 0 ]
-then
-	rv=$?
-	echo temp1_max range check failed
-fi
+rv=$((${rv} + $?))
 check_range -b ${base} -d 500 -s 100 -q temp1_min
-if [ $? -ne 0 ]
-then
-	rv=$?
-	echo temp1_min range check failed
-fi
+rv=$((${rv} + $?))
 
 modprobe -r i2c-stub 2>/dev/null
 
