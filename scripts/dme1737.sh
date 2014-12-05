@@ -88,47 +88,47 @@ rv=$?
 
 for t in $(seq 1 3)
 do
-	check_range -b ${base} -d 500 -r -v -w 2 temp${t}_min
+	check_range -b ${base} -d 500 -r -q -w 2 temp${t}_min
 	rv=$(($? + ${rv}))
-	check_range -b ${base} -d 500 -r -v -w 2 temp${t}_max
+	check_range -b ${base} -d 500 -r -q -w 2 temp${t}_max
 	rv=$(($? + ${rv}))
-	check_range -b ${base} -d 500 -r -v -w 2 temp${t}_offset
+	check_range -b ${base} -d 500 -r -q -w 2 temp${t}_offset
 	rv=$(($? + ${rv}))
 done
 
 for i in $(seq 0 6)
 do
-	check_range -b ${base} -d 500 -r -v -w 2 "in${i}_min"
+	check_range -b ${base} -d 31 -r -q -w 2 "in${i}_min"
 	rv=$(($? + ${rv}))
-	check_range -b ${base} -d 500 -r -v -w 2 "in${i}_max"
+	check_range -b ${base} -d 31 -r -q -w 2 "in${i}_max"
 	rv=$(($? + ${rv}))
 done
 
 for f in $(seq 1 4)
 do
-	check_range -b ${base} -l 0 -u 100000 -r -v -w 2 fan${f}_min
+	check_range -b ${base} -l 0 -u 100000 -d 1500 -r -q -w 2 fan${f}_min
 	rv=$(($? + ${rv}))
-	check_range -b ${base} -l 1 -u 2 -d 0 -r -v -w 2 fan${f}_type
+	check_range -b ${base} -l 1 -u 2 -d 0 -r -q -w 2 fan${f}_type
 	rv=$(($? + ${rv}))
 done
 
 for p in $(seq 1 3)
 do
-	check_range -b ${base} -r -v -w 2 pwm${p}_auto_point1_pwm
+	check_range -b ${base} -l 0 -u 255 -d 0 -r -v -w 2 pwm${p}_auto_point1_pwm
 	rv=$(($? + ${rv}))
-	check_range -b ${base} -r -v -w 2 pwm${p}_auto_pwm_min
+	check_range -b ${base} -l 0 -r -v -w 2 pwm${p}_auto_pwm_min
 	rv=$(($? + ${rv}))
-	check_range -b ${base} -l 0 -u 2 -r -v -w 2 pwm${p}_enable
+	check_range -b ${base} -l 0 -u 2 -d 0 -r -v -w 2 pwm${p}_enable
 	rv=$(($? + ${rv}))
-	check_range -b ${base} -r -v -w 2 pwm${p}_freq
+	check_range -b ${base} -l 0 -r -v -d 7500 -w 2 pwm${p}_freq
 	rv=$(($? + ${rv}))
-	check_range -b ${base} -r -v -w 2 pwm${p}_ramp_rate
+	check_range -b ${base} -l 0 -r -v -w 2 pwm${p}_ramp_rate
 	rv=$(($? + ${rv}))
 done
 
 for z in $(seq 1 3)
 do
-    check_range -b ${base} -r -v -w 2 zone${z}_auto_point1_temp_hyst
+    check_range -b ${base} -r -d 500 -v -w 2 zone${z}_auto_point1_temp_hyst
     rv=$(($? + ${rv}))
     for t in $(seq 1 3)
     do
@@ -137,7 +137,7 @@ do
     done
 done
 
-check_range -b ${base} -r -d 0 -v vrm
+check_range -b ${base} -l 0 -u 255 -r -d 0 -v vrm
 rv=$(($? + ${rv}))
 
 modprobe -r i2c-stub 2>/dev/null
