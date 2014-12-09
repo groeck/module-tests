@@ -7,7 +7,45 @@ dir=$(dirname $0)
 
 load_i2c_stub ${i2c_addr}
 
-regs=(
+regs_401=(
+	18 00 96 00 08 55 00 55 00 00 08 55 00 55 00 ff
+	00 00 00 00 00 80 00 00 00 55 1c 1c 1c 1c 1c 1c
+	55 0a 81 81 00 00 00 00 00 00 00 00 00 00 00 00
+	18 80 19 00 ff f0 00 00 00 00 00 00 00 00 00 00
+	00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	00 00 00 00 00 00 00 00 00 00 00 00 ff ff 55 11
+)
+
+regs_411=(
+	34 7f 92 00 08 55 00 55 00 00 08 55 00 55 00 ff
+	f0 00 00 00 00 80 00 00 00 55 1c ff ff ff ff ff
+	55 0a 81 ff 00 00 00 ff ff ff ff ff ff ff ff ff
+	22 80 72 80 7f f0 ff f0 ff ff ff ff ff ff ff ff
+	ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+	ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+	ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+	ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+	ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+	ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+	ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+	ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+	ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+	ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+	ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+	ff ff ff ff ff ff ff ff ff ff ff ff ff ff 55 12
+)
+
+regs_435=(
 	1a 1b 00 00 05 55 00 55 00 00 05 55 00 55 00 0d
 	70 00 00 00 00 90 00 00 00 55 1c ff ff ff ff 00
 	55 0a 70 ff ff 0f ff ff ff ff ff ff ff ff ff ff
@@ -27,9 +65,35 @@ regs=(
 )
 
 i=0
-while [ $i -lt ${#regs[*]} ]
+while [ $i -lt ${#regs_401[*]} ]
 do
-	i2cset -f -y ${i2c_adapter} ${i2c_addr} $i 0x${regs[$i]} b
+	i2cset -f -y ${i2c_adapter} ${i2c_addr} $i 0x${regs_401[$i]} b
+	i=$(($i + 1))
+done
+
+do_instantiate tmp401 ${i2c_addr}
+
+getbasedir ${i2c_addr}
+
+cd ${basedir}
+
+attrs=(temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input temp1_max
+	temp1_max_alarm temp1_min temp1_min_alarm
+	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault temp2_input
+	temp2_max temp2_max_alarm temp2_min temp2_min_alarm
+	update_interval
+)
+vals=(85000 0 75000 24500 85000 0 0 0 85000 1 75000 1 0 85000 1 0 0 500)
+
+dotest attrs[@] vals[@]
+rv=$?
+
+do_remove ${i2c_addr}
+
+i=0
+while [ $i -lt ${#regs_435[*]} ]
+do
+	i2cset -f -y ${i2c_adapter} ${i2c_addr} $i 0x${regs_435[$i]} b
 	i=$(($i + 1))
 done
 
