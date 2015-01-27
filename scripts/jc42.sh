@@ -7,7 +7,7 @@ dir=$(dirname $0)
 
 load_i2c_stub ${i2c_addr}
 
-regs=(2f00 0000 0000 0000 0000 a0c1 4a10 0100 0000 0000 0000 0000 0000)
+regs=(2f00 0000 0000 0000 f0c1 a0c1 4a10 0100 0000 0000 0000 0000 0000)
 
 i=0
 while [ $i -lt ${#regs[*]} ]
@@ -25,16 +25,18 @@ cd ${basedir}
 attrs=(temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
 	temp1_max temp1_max_alarm temp1_max_hyst temp1_min temp1_min_alarm)
 
-vals=(0 1 0 26000 0 1 0 0 0)
+vals=(31000 1 31000 26000 0 1 0 0 0)
 
 dotest attrs[@] vals[@]
 rv=$?
 
-check_range -b ${basedir} -d 500 -s 100 -q temp1_crit
+check_range -b ${basedir} -d 500 -s 100 -q -r temp1_crit
 rv=$((${rv} + $?))
 check_range -b ${basedir} -d 500 -s 100 -q temp1_max
 rv=$((${rv} + $?))
 check_range -b ${basedir} -d 500 -s 100 -q temp1_min
+rv=$((${rv} + $?))
+check_range -b ${basedir} -l 25000 -d 1500 -q temp1_crit_hyst
 rv=$((${rv} + $?))
 
 modprobe -r i2c-stub 2>/dev/null
