@@ -74,26 +74,62 @@ fi
 
 cd ${base}
 
-attrs=(fan1_alarm fan1_beep fan1_input fan1_min
+attrs=(pwm1 pwm1_auto_point1_pwm pwm1_auto_point1_temp pwm1_auto_point2_pwm
+	pwm1_auto_point2_temp pwm1_auto_point3_pwm pwm1_auto_point3_temp
+	pwm1_auto_point4_pwm pwm1_auto_point4_temp pwm1_auto_point5_pwm
+	pwm1_auto_point5_temp pwm1_enable pwm1_mode
+	pwm2 pwm2_auto_point1_pwm pwm2_auto_point1_temp pwm2_auto_point2_pwm
+	pwm2_auto_point2_temp pwm2_auto_point3_pwm pwm2_auto_point3_temp
+	pwm2_auto_point4_pwm pwm2_auto_point4_temp pwm2_auto_point5_pwm
+	pwm2_auto_point5_temp pwm2_enable pwm2_mode
+	pwm3 pwm3_auto_point1_pwm pwm3_auto_point1_temp pwm3_auto_point2_pwm
+	pwm3_auto_point2_temp pwm3_auto_point3_pwm pwm3_auto_point3_temp
+	pwm3_auto_point4_pwm pwm3_auto_point4_temp pwm3_auto_point5_pwm
+	pwm3_auto_point5_temp pwm3_enable pwm3_mode
+	fan1_alarm fan1_beep fan1_input fan1_min
 	fan2_alarm fan2_beep fan2_input fan2_min
 	in0_alarm in0_beep in0_input in0_max in0_min
 	in1_input in3_alarm in3_beep in3_input in3_max in3_min
 	in4_alarm in4_beep in4_input in4_max in4_min
+	pwm1 pwm1_enable pwm1_mode pwm2 pwm2_enable pwm2_mode pwm3 pwm3_enable pwm3_mode
 	temp1_beep temp1_crit temp1_crit_alarm temp1_fault temp1_input
-	temp1_max temp1_max_alarm temp1_min temp1_min_alarm
+	temp1_max temp1_max_alarm temp1_min temp1_min_alarm temp1_type
 	temp4_beep temp4_crit temp4_crit_alarm temp4_input temp4_max
 	temp4_max_alarm temp4_min temp4_min_alarm
 	temp5_beep temp5_crit temp5_crit_alarm temp5_input temp5_max
 	temp5_max_alarm temp5_min temp5_min_alarm
 	temp6_beep temp6_input)
 
-vals=(0 0 0 0 0 0 0 0 0 0 3300 4092 0 1754 0 0
-	1186 1500 0 0 0 1682 1400 0 0 100000 0 0 84125 100000 0 0
-	0 0 100000 0 69000 80000 0 0 0 0 100000 0 99000 85000 1 0
+vals=(255 0 59000 76 60000 165 75000 255 90000 255 95000 2 1
+      255 0 59000 76 60000 165 75000 255 90000 255 95000 1 1
+      127 0 54000 178 55000 216 67000 255 79000 255 95000 1 1
+	0 0 0 0 0 0 0 0 0 0 3300 4092 0 1754 0 0
+	1186 1500 0 0 0 1682 1400 0
+	255 2 1 255 1 1 127 1 1
+	0 100000 0 0 84125 100000 0 0 0 3
+	0 100000 0 69000 80000 0 0 0 0 100000 0 99000 85000 1 0
 	0 0 0)
 
 dotest attrs[@] vals[@]
 rv=$?
+
+for p in 1 2 3
+do
+	check_range -l 0 -u 255 -b ${base} -r -d 0 -q pwm${p}
+	rv=$(($? + ${rv}))
+	check_range -l 1 -u 2 -b ${base} -r -d 0 -q pwm${p}_enable
+	rv=$(($? + ${rv}))
+	for a in 1 2 3 4
+	do
+	    check_range -l 0 -u 255 -b ${base} -r -d 0 -q pwm${p}_auto_point${a}_pwm
+	    rv=$(($? + ${rv}))
+	done
+	for a in 1 2 3 4 5
+	do
+	    check_range -b ${base} -d 500 -r -q pwm${p}_auto_point${a}_temp
+	    rv=$(($? + ${rv}))
+	done
+done
 
 for t in 1 4 5
 do
