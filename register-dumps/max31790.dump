@@ -1,0 +1,34 @@
+> # i2cdump -y 2 0x20 w
+>       0,8  1,9  2,a  3,b  4,c  5,d  6,e  7,f
+> 00: bb27 40bb 4040 4040 4040 4040 4040 4c40
+> 08: 4c4c 4c4c 4c4c 4c4c 4c4c 004c 0000 0000
+> 10: 0000 3f00 3f3f 453f 0045 0000 0000 ff00
+> 18: e0ff ffe0 e0ff ffe0 e0ff ffe0 e0ff ffe0
+> 20: e0ff ffe0 e0ff ffe0 e0ff ffe0 e0ff ffe0
+> 28: e0ff ffe0 e0ff ffe0 e0ff ffe0 e0ff 80e0
+> 30: 0080 8000 0080 8000 0080 8000 0080 8000
+> 38: 0080 8000 0080 0000 0000 0000 0000 8000
+> 40: 0080 8000 0080 8000 0080 8000 0080 8000
+> 48: 0080 8000 0080 0000 0000 0000 0000 3c00
+> 50: 003c 3c00 003c 3c00 003c 3c00 003c 3c00
+> 58: 003c 3c00 003c 0000 0000 0000 0000 0000
+> 60: 0000 0000 0000 0000 0000 0000 0000 ff00
+> 68: ffff ffff ffff ffff ffff ffff ffff ffff
+> 70: ffff ffff ffff ffff ffff ffff ffff 00ff
+> 78: 0000 0000 0000 0000 0000 0000 0000 ff00
+> 80: ffff ffff ffff ffff ffff ffff ffff ffff
+> 88: ffff ffff ffff ffff ffff ffff ffff ffff
+> 90: ffff ffff ffff ffff ffff ffff ffff ffff
+> 98: ffff ffff ffff ffff ffff ffff ffff ffff
+> a0: ffff ffff ffff ffff ffff ffff ffff ffff
+> a8: ffff ffff ffff ffff ffff ffff ffff ffff
+> b0: ffff ffff ffff ffff ffff ffff ffff ffff
+> b8: ffff ffff ffff ffff ffff ffff ffff ffff
+> c0: ffff ffff ffff ffff ffff ffff ffff ffff
+> c8: ffff ffff ffff ffff ffff ffff ffff ffff
+> d0: ffff ffff ffff ffff ffff ffff ffff ffff
+> d8: ffff ffff ffff ffff ffff ffff ffff ffff
+> e0: ffff ffff ffff ffff ffff ffff ffff ffff
+> e8: ffff ffff ffff ffff ffff ffff ffff ffff
+> f0: ffff ffff ffff ffff ffff ffff ffff ffff
+> f8: ffff ffff ffff ffff ffff ffff ffff 27ff
