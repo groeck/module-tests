@@ -258,6 +258,7 @@ check_range()
 		if [ $d -gt ${deviation} ]
 		then
 		    devi=$i
+		    devv=$x
 		    deviation=$d
 		fi
 	done
@@ -272,7 +273,7 @@ check_range()
 	fi
 	if [ ${mdev} -lt ${deviation} ]
 	then
-	    pr_err "$(basename ${attr}): Deviation out of range [max ${mdev}, seen ${deviation} with ${devi}]"
+	    pr_err "$(basename ${attr}): Deviation out of range [max ${mdev}, seen ${deviation} (val=${devv}) with ${devi}]"
 	    rv=1
 	fi
 	return ${rv}
