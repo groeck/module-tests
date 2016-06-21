@@ -22,13 +22,46 @@ install_regs ()
     done
 }
 
+containsElement()
+{
+    local e
+
+    for e in "${@:2}"
+    do
+	if [ "$e" = "$1" ]
+	then
+		return 0
+	fi
+    done
+
+    return 1
+}
+
 dotest ()
 {
     local val
-    local i=0
+    local i
     local a=("${!1}")
     local v=("${!2}")
+    local p=("${!3}")
+    local f
+    local known=("device" "power" "subsystem" "uevent")
 
+    ls | while read f
+    do
+	containsElement "$f" "${known[@]}"
+	if [ $? -ne 0 ]
+	then
+		containsElement "$f" "${a[@]}"
+		if [ $? -ne 0 ]
+		then
+			pr_err "Unexpected attribute \"$f\""
+			return 1
+		fi
+	fi
+    done
+
+    i=0
     while [ $i -lt ${#a[*]} ]
     do
 	val=$(cat ${a[$i]})
@@ -36,6 +69,15 @@ dotest ()
 	then
 		pr_err ${a[$i]} bad value ${val} expected ${v[$i]}
 		return 1
+	fi
+	if [ -n "${p[$i]}" ]
+	then
+	    perm=$(ls -l ${a[$i]} | cut -f1 -d' ')
+	    if [ "${perm}" != "${p[$i]}" ]
+	    then
+		pr_err ${a[$i]} bad permissions ${perm} expected ${p[$i]}
+		return 1
+	    fi
 	fi
 	i=$(($i + 1))
     done
@@ -145,14 +187,17 @@ check_range()
 	local quiet=0
 	local waittime=0
 	local prev
+	local ignore=0
 
-	while getopts ":b:d:l:qrs:u:vw:" opt
+	while getopts ":b:d:il:qrs:u:vw:" opt
 	do
 	    case ${opt} in
 	    b)	base=${OPTARG}/
 		;;
 	    d)	mdev=${OPTARG}	# maximum permitted deviation
 	        ;;
+	    i)  ignore=1
+		;;
 	    l)	min=${OPTARG}
 		;;
 	    q)	quiet=1
@@ -179,6 +224,10 @@ check_range()
 
 	if [ ! -e ${attr} ]
 	then
+		if [ ${ignore} -eq 1 ]
+		then
+		    return 0
+		fi
 		pr_err $(basename ${attr}): No such attribute
 		return 1
 	fi
