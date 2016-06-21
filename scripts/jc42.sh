@@ -22,10 +22,10 @@ getbasedir ${i2c_addr}
 
 cd ${basedir}
 
-attrs=(temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
+attrs=(name temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
 	temp1_max temp1_max_alarm temp1_max_hyst temp1_min temp1_min_alarm)
 
-vals=(31000 1 31000 26000 0 1 0 0 0)
+vals=(jc42 31000 1 31000 26000 0 1 0 0 0)
 
 dotest attrs[@] vals[@]
 rv=$?
