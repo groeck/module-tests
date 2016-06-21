@@ -40,16 +40,16 @@ regs_lm75=(
 	7f1c ff00 7f4b 7f50 7f50 7f50 7f50 7f50
 )
 
-attrs_lm75=(temp1_input temp1_max temp1_max_hyst)
-vals_lm75=(28000 80000 75000)
+attrs_lm75=(name temp1_input temp1_max temp1_max_hyst update_interval)
+vals_lm75=(lm75 28000 80000 75000 500)
 
 regs_ds75=(
 	7f1c 0030 004b 0050 0050 0050 0050 0050
 	0050 0050 0050 0050 0050 0050 0050 0050
 )
 
-attrs_ds75=(temp1_input temp1_max temp1_max_hyst)
-vals_ds75=(28375 80000 75000)
+attrs_ds75=(name temp1_input temp1_max temp1_max_hyst update_interval)
+vals_ds75=(ds75 28375 80000 75000 1000)
 
 runtest()
 {
