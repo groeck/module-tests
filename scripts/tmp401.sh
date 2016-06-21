@@ -77,13 +77,13 @@ getbasedir ${i2c_addr}
 
 cd ${basedir}
 
-attrs=(temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input temp1_max
+attrs=(name temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input temp1_max
 	temp1_max_alarm temp1_min temp1_min_alarm
 	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault temp2_input
 	temp2_max temp2_max_alarm temp2_min temp2_min_alarm
 	update_interval
 )
-vals=(85000 0 75000 24500 85000 0 0 0 85000 1 75000 1 0 85000 1 0 0 500)
+vals=(tmp401 85000 0 75000 24500 85000 0 0 0 85000 1 75000 1 0 85000 1 0 0 500)
 
 dotest attrs[@] vals[@]
 rv=$?
@@ -103,13 +103,13 @@ getbasedir ${i2c_addr}
 
 cd ${basedir}
 
-attrs=(temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input temp1_max
+attrs=(name temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input temp1_max
 	temp1_max_alarm temp1_min temp1_min_alarm
 	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault temp2_input
 	temp2_max temp2_max_alarm temp2_min temp2_min_alarm
 	update_interval
 )
-vals=(85000 0 75000 26563 85000 0 0 0 85000 0 75000 0 27438 85000 0 0 0 500)
+vals=(tmp435 85000 0 75000 26563 85000 0 0 0 85000 0 75000 0 27438 85000 0 0 0 500)
 
 dotest attrs[@] vals[@]
 rv=$?
@@ -135,6 +135,8 @@ do_remove ${i2c_addr}
 i2cset -y -f ${i2c_adapter} ${i2c_addr} 0xff 0x31 b	# tmp431
 do_instantiate tmp431 ${i2c_addr}
 
+vals=(tmp431 85000 0 75000 26563 85000 0 0 0 85000 0 75000 0 27438 85000 0 0 0 500)
+
 cd ${basedir}
 
 dotest attrs[@] vals[@]
@@ -147,7 +149,7 @@ do_instantiate tmp432 ${i2c_addr}
 
 cd ${basedir}
 
-attrs=(temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
+attrs=(name temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
 	temp1_max temp1_max_alarm temp1_min temp1_min_alarm
 	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault
 	temp2_input temp2_max temp2_max_alarm temp2_min temp2_min_alarm
@@ -155,7 +157,7 @@ attrs=(temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
 	temp3_input temp3_max temp3_max_alarm temp3_min temp3_min_alarm
 	update_interval
 )
-vals=(85000 1 75000 26996 85996 1 996 1 85000 1 75000 1 27438 85000 1 0
+vals=(tmp432 85000 1 75000 26996 85996 1 996 1 85000 1 75000 1 27438 85000 1 0
 	1 28000 1 18000 1 255996 144000 1 0 1 500)
 
 dotest attrs[@] vals[@]
