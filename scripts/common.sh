@@ -55,7 +55,7 @@ dotest ()
 		containsElement "$f" "${a[@]}"
 		if [ $? -ne 0 ]
 		then
-			pr_err "Unexpected attribute \"$f\""
+			pr_err "Unexpected attribute \"$f\", value=\"$(cat $f)\""
 			return 1
 		fi
 	fi
