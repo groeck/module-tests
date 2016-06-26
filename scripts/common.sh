@@ -134,8 +134,14 @@ getbasedir()
     dev=$(ls /sys/class/i2c-adapter/i2c-${i2c_adapter}/${i2c_adapter}-${addr}/hwmon 2>/dev/null)
     if [ "${dev}" = "" ]
     then
-	pr_err "hwmon device entry not found"
-	exit 1
+	# Give it a second, then retry
+	sleep 1
+	dev=$(ls /sys/class/i2c-adapter/i2c-${i2c_adapter}/${i2c_adapter}-${addr}/hwmon 2>/dev/null)
+	if [ "${dev}" = "" ]
+	then
+	    pr_err "hwmon device entry not found"
+	    exit 1
+	fi
     fi
 
     if [ -e "/sys/class/hwmon/${dev}/name" ]
