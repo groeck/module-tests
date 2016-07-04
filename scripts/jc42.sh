@@ -9,6 +9,24 @@ load_i2c_stub ${i2c_addr}
 
 regs=(2f00 0000 0000 0000 f0c1 a0c1 4a10 0100 0000 0000 0000 0000 0000)
 
+attrs=(name temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
+	temp1_max temp1_max_alarm temp1_max_hyst temp1_min temp1_min_alarm)
+
+vals=(jc42 31000 1 31000 26000 0 1 0 0 0)
+
+permissions=(
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+)
+
 i=0
 while [ $i -lt ${#regs[*]} ]
 do
@@ -22,12 +40,7 @@ getbasedir ${i2c_addr}
 
 cd ${basedir}
 
-attrs=(name temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
-	temp1_max temp1_max_alarm temp1_max_hyst temp1_min temp1_min_alarm)
-
-vals=(jc42 31000 1 31000 26000 0 1 0 0 0)
-
-dotest attrs[@] vals[@]
+dotest attrs[@] vals[@] permissions[@]
 rv=$?
 
 check_range -b ${basedir} -d 500 -s 100 -q -r temp1_crit
