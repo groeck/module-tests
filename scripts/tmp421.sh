@@ -61,6 +61,28 @@ permissions_tmp423=(
 	"-r--r--r--"
 )
 
+attrs_tmp441=(name temp1_input temp2_fault temp2_input)
+vals_tmp441=(tmp441 25000 1 25000)
+
+permissions_tmp441=(
+	"-r--r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+)
+
+attrs_tmp442=(name temp1_input temp2_fault temp2_input temp3_fault temp3_input)
+vals_tmp442=(tmp442 25000 1 25000 0 25000)
+
+permissions_tmp442=(
+	"-r--r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+)
+
 doinit()
 {
     local regs=("${!1}")
@@ -103,12 +125,31 @@ runtest tmp421 attrs_tmp421[@] vals_tmp421[@] permissions_tmp421[@]
 rv=$?
 
 i2cset -y -f ${i2c_adapter} ${i2c_addr} 0xff 0x22 b	# tmp422
+
+sudo modprobe -r tmp421
+
 runtest tmp422 attrs_tmp422[@] vals_tmp422[@] permissions_tmp422[@]
 rv=$(($? + ${rv}))
 
 i2cset -y -f ${i2c_adapter} ${i2c_addr} 0xff 0x23 b	# tmp423
 
+sudo modprobe -r tmp421
+
 runtest tmp423 attrs_tmp423[@] vals_tmp423[@] permissions_tmp423[@]
+rv=$(($? + ${rv}))
+
+i2cset -y -f ${i2c_adapter} ${i2c_addr} 0xff 0x41 b	# tmp441
+
+sudo modprobe -r tmp421
+
+runtest tmp441 attrs_tmp441[@] vals_tmp441[@] permissions_tmp441[@]
+rv=$(($? + ${rv}))
+
+i2cset -y -f ${i2c_adapter} ${i2c_addr} 0xff 0x42 b	# tmp442
+
+sudo modprobe -r tmp421
+
+runtest tmp442 attrs_tmp442[@] vals_tmp442[@] permissions_tmp442[@]
 rv=$(($? + ${rv}))
 
 modprobe -r i2c-stub 2>/dev/null
