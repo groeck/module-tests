@@ -46,6 +46,7 @@ dotest ()
     local p=("${!3}")
     local f
     local known=("device" "power" "subsystem" "uevent")
+    local rv=0
 
     ls | while read f
     do
@@ -56,7 +57,7 @@ dotest ()
 		if [ $? -ne 0 ]
 		then
 			pr_err "Unexpected attribute \"$f\", value=\"$(cat $f)\""
-			return 1
+			rv=1
 		fi
 	fi
     done
@@ -68,20 +69,20 @@ dotest ()
 	if [ "${val}" != "${v[$i]}" ]
 	then
 		pr_err ${a[$i]} bad value ${val} expected ${v[$i]}
-		return 1
+		rv=1
 	fi
 	if [ -n "${p[$i]}" ]
 	then
 	    perm=$(ls -l ${a[$i]} | cut -f1 -d' ')
 	    if [ "${perm}" != "${p[$i]}" ]
 	    then
-		pr_err ${a[$i]} bad permissions ${perm} expected ${p[$i]}
-		return 1
+		pr_err "${a[$i]}: bad permissions: ${perm}, expected ${p[$i]}"
+		rv=1
 	    fi
 	fi
 	i=$(($i + 1))
     done
-    return 0
+    return ${rv}
 }
 
 ecode=-19
@@ -294,7 +295,7 @@ check_range()
 		echo ${i} > ${attr} 2>/dev/null
 		if [ $? -ne 0 ]
 		then
-			rv=1
+			return 1
 		fi
 		x=$(cat ${attr})
 		if [ $x -lt ${prev} ]
