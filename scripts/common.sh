@@ -65,10 +65,17 @@ dotest ()
     i=0
     while [ $i -lt ${#a[*]} ]
     do
+	if [ ! -e ${a[$i]} ]
+	then
+	    pr_err "${a[$i]}: Attribute not found"
+	    rv=1
+	    i=$(($i + 1))
+	    continue
+	fi
 	val=$(cat ${a[$i]})
 	if [ "${val}" != "${v[$i]}" ]
 	then
-		pr_err ${a[$i]} bad value ${val} expected ${v[$i]}
+		pr_err "${a[$i]}: bad value ${val}, expected ${v[$i]}"
 		rv=1
 	fi
 	if [ -n "${p[$i]}" ]
