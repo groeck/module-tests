@@ -51,15 +51,32 @@ fi
 
 cd ${base}
 
-attrs=(adc_ref_vdd fast_sampling
+attrs=(name adc_ref_vdd fast_sampling
 	in0_input in1_input in2_input in3_input
 	in4_input in5_input in6_input in7_input in8_input
 	no_average temp1_input
 )
 
-vals=(1 0 4033 19 1472 4029 4029 1472 106 0 0 0 25500)
+vals=(adt7411 1 0 4033 19 1472 4029 4029 1472 106 0 0 0 25500)
 
-dotest attrs[@] vals[@]
+permissions=(
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+)
+
+dotest attrs[@] vals[@] permissions[@]
 rv=$?
 
 check_range -b ${base} -l 0 -u 1 -d 0 -r -q fast_sampling
