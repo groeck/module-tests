@@ -48,10 +48,10 @@ fi
 
 cd ${base}
 
-attrs=(fan1_div fan1_input fan1_min fan2_div fan2_input fan2_min temp1_input
+attrs=(name fan1_div fan1_input fan1_min fan2_div fan2_input fan2_min temp1_input
 	temp1_max temp1_min temp2_input temp2_max temp2_min temp3_input
 	temp3_max temp3_min)
-vals=(2 0 0 2 0 0 25000 60000 55000 35000 70000 65000 -128000 -1000 -1000)
+vals=(adm1029 2 0 0 2 0 0 25000 60000 55000 35000 70000 65000 -128000 -1000 -1000)
 
 rv=0
 dotest attrs[@] vals[@]
