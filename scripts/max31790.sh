@@ -61,7 +61,7 @@ then
 	exit 1
 fi
 
-cd ${base}
+pushd ${base}
 
 attrs=(fan1_fault fan1_input fan1_target
 	fan2_fault fan2_input fan2_target
@@ -101,6 +101,19 @@ do
 	check_range -b ${base} -l 0 -u 255 -d 0 -r -w 2 pwm${p}
 	rv=$(($? + ${rv}))
 done
+
+popd
+
+modprobe -r max31790
+
+i2cset -f -y ${adapter} 0x${i2c_addr} 0x02 0x41 b
+
+modprobe max31790
+
+base=$(getbase ${adapter} 00${i2c_addr})
+
+cd ${base}
+ls -l
 
 modprobe -r i2c-stub 2>/dev/null
 
