@@ -50,7 +50,7 @@ fi
 
 cd ${base}
 
-attrs=(fan1_alarm fan1_input fan1_min fan2_alarm fan2_input fan2_min
+attrs=(name fan1_alarm fan1_input fan1_min fan2_alarm fan2_input fan2_min
 	fan3_alarm fan3_input fan3_min fan4_alarm fan4_input fan4_min
 	fan5_alarm fan5_input fan5_min fan6_alarm fan6_input fan6_min
 	fan7_alarm fan7_input fan7_min fan8_alarm fan8_input fan8_min
@@ -81,7 +81,7 @@ attrs=(fan1_alarm fan1_input fan1_min fan2_alarm fan2_input fan2_min
 	temp4_alarm temp4_auto_point1_hyst temp4_auto_point1_temp temp4_auto_point2_hyst
 	temp4_auto_point2_temp temp4_input temp4_label temp4_max temp4_min)
 
-vals=(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+vals=(adt7462 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 	0 0 0 6000 87 0 5800 87 1 0 3285 +3.3V 3543 3061 0 1521
 	+1.5 1638 1388 0 0 N/A 0 0 0 0 N/A 0 0 0 12000 +12V1
 	12875 11250 0 1187 Vccp1 3187 400 0 0 N/A 0 0 0 0 N/A 0
