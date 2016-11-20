@@ -49,12 +49,12 @@ fi
 
 cd ${base}
 
-attrs=(pwm1 pwm1_mode
+attrs=(name pwm1 pwm1_mode
 	temp1_alarm temp1_crit temp1_input temp1_max temp1_min
 	temp2_alarm temp2_crit temp2_fault temp2_input temp2_max temp2_min
 	)
 
-vals=(1 0 0 78000 55000 53000 -127000 0 78000 0 39000 53000 -127000)
+vals=(thmc50 1 0 0 78000 55000 53000 -127000 0 78000 0 39000 53000 -127000)
 
 dotest attrs[@] vals[@]
 rv=$?
@@ -115,13 +115,13 @@ fi
 
 cd ${base}
 
-attrs=(pwm1 pwm1_mode
+attrs=(name pwm1 pwm1_mode
 	temp1_alarm temp1_crit temp1_input temp1_max temp1_min
 	temp2_alarm temp2_crit temp2_fault temp2_input temp2_max temp2_min
 	temp3_alarm temp3_crit temp3_fault temp3_input temp3_max temp3_min
 	)
 
-vals=(1 0 0 90000 37000 127000 -128000 0 90000 0 32000 127000 0 0 90000 0
+vals=(adm1022 1 0 0 90000 37000 127000 -128000 0 90000 0 32000 127000 0 0 90000 0
 	33000 127000 0)
 
 dotest attrs[@] vals[@]
