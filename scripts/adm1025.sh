@@ -51,7 +51,7 @@ fi
 
 cd ${base}
 
-attrs=(alarms cpu0_vid in0_alarm in0_input in0_max in0_min
+attrs=(name alarms cpu0_vid in0_alarm in0_input in0_max in0_min
 	in1_alarm in1_input in1_max in1_min
 	in2_alarm in2_input in2_max in2_min
 	in3_alarm in3_input in3_max in3_min
@@ -61,7 +61,7 @@ attrs=(alarms cpu0_vid in0_alarm in0_input in0_max in0_min
 	temp2_alarm temp2_input temp2_max temp2_min
 	vrm)
 
-vals=(0 1538 0 2500 2747 2253 0 1465 1547 1406 0 3403 3627 2973 0 5026
+vals=(adm1025 0 1538 0 2500 2747 2253 0 1465 1547 1406 0 3403 3627 2973 0 5026
 	5495 4505 0 12125 13188 10813 0 3403 3627 2973 0 0 35000 60000 10000
 	0 33000 45000 10000 110)
 
