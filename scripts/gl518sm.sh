@@ -36,7 +36,7 @@ fi
 
 cd ${base}
 
-attrs=(alarms beep_enable beep_mask
+attrs=(name alarms beep_enable beep_mask
 	fan1_alarm fan1_auto fan1_beep fan1_div fan1_input fan1_min
 	fan2_alarm fan2_beep fan2_div fan2_input fan2_min
 	in0_alarm in0_beep in0_max in0_min
@@ -45,7 +45,7 @@ attrs=(alarms beep_enable beep_mask
 	in3_alarm in3_beep in3_input in3_max in3_min
 	temp1_alarm temp1_beep temp1_input temp1_max temp1_max_hyst)
 
-vals=(96 1 0 1 1 0 4 5217 0 1 0 4 0 0 0 0
+vals=(gl518sm 96 1 0 1 1 0 4 5217 0 1 0 4 0 0 0 0
 	5510 4513 0 0 3629 2964 0 0 3287 2698 0 0 1501 1615 1330 0
 	0 24000 80000 75000)
 
