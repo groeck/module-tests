@@ -44,7 +44,7 @@ fi
 
 cd ${base}
 
-attrs=(cpu0_vid
+attrs=(name cpu0_vid
 	in0_alarm in0_input in0_max in0_min
 	in1_alarm in1_input in1_max in1_min
 	in2_alarm in2_input in2_max in2_min
@@ -59,7 +59,7 @@ attrs=(cpu0_vid
 	vrm
 )
 
-vals=(1588 1 0 13 13 0 0 0 0 1 0 0 17 0 26 26
+vals=(smsc47m192 1588 1 0 13 13 0 0 0 0 1 0 0 17 0 26 26
 	26 0 63 313 313 0 17 69 69 1 0 1992 1992 0 0 9
 	9 0 1000 -124000 -124000 3000 0 0 1000 5000 4000 0 0 0 0 96000
 	85000 2000 110
