@@ -48,7 +48,7 @@ fi
 
 cd ${base}
 
-attrs=(alarms cpu0_vid cpu1_vid fan1_input fan1_min fan1_smart_tach
+attrs=(name alarms cpu0_vid cpu1_vid fan1_input fan1_min fan1_smart_tach
 	fan2_input fan2_min fan2_smart_tach
 	fan3_input fan3_min fan3_smart_tach
 	fan4_input fan4_min fan4_smart_tach
@@ -81,7 +81,7 @@ attrs=(alarms cpu0_vid cpu1_vid fan1_input fan1_min fan1_smart_tach
 	temp3_auto_offset_hyst temp3_auto_pwm_min temp3_input temp3_max temp3_min
 	vrdhot1 vrdhot2)
 
-vals=(0 1088 1088 21428 21428 0 21428 21428 0 21428 21428 0 21428 21428 0 211
+vals=(lm94 0 1088 1088 21428 21428 0 21428 21428 0 21428 21428 0 21428 21428 0 211
 	5070 6630 0 1503 3333 0 1760 2625 0 1091 1312 0 1219 1312 0 1236
 	1236 0 3326 4389 17 921 1236 0 916 1236 0 911 1236 0 1098 1600
 	0 1522 2000 0 1474 2000 0 1104 1600 0 1092 1600 0 3399 4400 0
