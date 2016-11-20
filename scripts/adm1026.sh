@@ -42,7 +42,7 @@ fi
 
 cd ${base}
 
-attrs=(alarm_mask alarms analog_out cpu0_vid
+attrs=(name alarm_mask alarms analog_out cpu0_vid
 	fan1_alarm fan1_div fan1_input fan1_min
 	fan2_alarm fan2_div fan2_input fan2_min
 	fan3_alarm fan3_div fan3_input fan3_min
@@ -83,7 +83,7 @@ attrs=(alarm_mask alarms analog_out cpu0_vid
 	vrm
 	)
 
-vals=(0 0 2500 0 0 2 -1 0 0 2 -1 0 0 2 -1 0
+vals=(adm1026 0 0 2500 0 0 2 -1 0 0 2 -1 0 0 2 -1 0
 	0 2 -1 0 0 2 -1 0 0 2 -1 0 0 2 -1 0
 	0 2 -1 0 0 0 0 0 2988 0 0 0 3984 0 0 0
 	4423 0 0 0 4423 0 0 0 6634 0 0 0 2988 0 0 0
