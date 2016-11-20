@@ -40,7 +40,7 @@ fi
 
 cd ${base}
 
-attrs=(alarms auto_fan1_channel auto_fan1_min_pwm auto_fan2_channel auto_fan2_min_pwm
+attrs=(name alarms auto_fan1_channel auto_fan1_min_pwm auto_fan2_channel auto_fan2_min_pwm
 	auto_temp1_max auto_temp1_min auto_temp1_off
 	auto_temp2_max auto_temp2_min auto_temp2_off
 	auto_temp3_max auto_temp3_min auto_temp3_off
@@ -56,7 +56,7 @@ attrs=(alarms auto_fan1_channel auto_fan1_min_pwm auto_fan2_channel auto_fan2_mi
 	update_interval
 	)
 
-vals=(0 2 80 4 80 42000 32000 27000 58000 48000 43000 58000 48000 43000 0 2
+vals=(adm1031 0 2 80 4 80 42000 32000 27000 58000 48000 43000 58000 48000 43000 0 2
 	0 0 1323 0 2 0 0 1323 80 80 70000 0 25750 60000 0 0
 	0 0 100000 0 0 28000 80000 0 0 0 0 100000 0 0 25500 80000
 	0 0 0 0 1000
