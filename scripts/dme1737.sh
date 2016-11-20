@@ -46,7 +46,7 @@ fi
 
 cd ${base}
 
-attrs=(cpu0_vid
+attrs=(name cpu0_vid
 	fan1_alarm fan1_input fan1_min fan1_type
 	fan2_alarm fan2_input fan2_min fan2_type
 	fan3_alarm fan3_input fan3_min fan3_type
@@ -75,7 +75,7 @@ attrs=(cpu0_vid
 	zone3_auto_channels_temp zone3_auto_point1_temp zone3_auto_point1_temp_hyst
 	zone3_auto_point2_temp zone3_auto_point3_temp)
 
-vals=(0 0 11203 0 2 0 11111 0 2 0 10953 0 2 0 11416 0
+vals=(dme1737 0 0 11203 0 2 0 11111 0 2 0 10953 0 2 0 11416 0
 	2 0 2624 6641 0 0 1378 2988 0 0 3360 4383 0 0 5122 6641
 	0 0 12020 15938 0 0 3324 4383 0 0 3017 4383 0 85 1 77
 	255 77 2 88 0 85 1 77 255 77 2 88 0 85 1 77
@@ -114,32 +114,33 @@ done
 
 for p in $(seq 1 3)
 do
-	check_range -b ${base} -l 0 -u 255 -d 0 -r -v -w 2 pwm${p}_auto_point1_pwm
+	check_range -b ${base} -l 0 -u 255 -d 0 -r -q -w 2 pwm${p}_auto_point1_pwm
 	rv=$(($? + ${rv}))
-	check_range -b ${base} -l 0 -r -v -w 2 pwm${p}_auto_pwm_min
+	check_range -b ${base} -l 0 -r -q -w 2 pwm${p}_auto_pwm_min
 	rv=$(($? + ${rv}))
-	check_range -b ${base} -l 0 -u 2 -d 0 -r -v -w 2 pwm${p}_enable
+	check_range -b ${base} -l 0 -u 2 -d 0 -r -q -w 2 pwm${p}_enable
 	rv=$(($? + ${rv}))
-	check_range -b ${base} -l 0 -r -v -d 7500 -w 2 pwm${p}_freq
+	check_range -b ${base} -l 0 -r -q -d 7500 -w 2 pwm${p}_freq
 	rv=$(($? + ${rv}))
-	check_range -b ${base} -l 0 -r -v -w 2 pwm${p}_ramp_rate
+	check_range -b ${base} -l 0 -r -q -w 2 pwm${p}_ramp_rate
 	rv=$(($? + ${rv}))
 done
 
 for z in $(seq 1 3)
 do
-    check_range -b ${base} -r -d 500 -v -w 2 zone${z}_auto_point1_temp_hyst
+    check_range -b ${base} -r -d 500 -q -w 2 zone${z}_auto_point1_temp_hyst
     rv=$(($? + ${rv}))
     for t in $(seq 1 3)
     do
-	check_range -b ${base} -r -v -w 2 zone${z}_auto_point${t}_temp
+	check_range -b ${base} -r -q -w 2 zone${z}_auto_point${t}_temp
 	rv=$(($? + ${rv}))
     done
 done
 
-check_range -b ${base} -l 0 -u 255 -r -d 0 -v vrm
+check_range -b ${base} -l 0 -u 255 -r -d 0 -q vrm
 rv=$(($? + ${rv}))
 
 modprobe -r i2c-stub 2>/dev/null
+modprobe -r dme1737
 
 exit ${rv}
