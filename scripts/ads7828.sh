@@ -54,10 +54,10 @@ getbasedir ${i2c_addr}
 
 cd ${basedir}
 
-attrs=(in0_input in1_input in2_input in3_input
+attrs=(name in0_input in1_input in2_input in3_input
 	in4_input in5_input in6_input in7_input)
 
-vals=(220 1 1 1 222 222 1 1)
+vals=(ads7828 220 1 1 1 222 222 1 1)
 
 dotest attrs[@] vals[@]
 rv=$?
@@ -75,14 +75,16 @@ do_instantiate ads7830 ${i2c_addr}
 
 cd ${basedir}
 
-attrs=(in0_input in1_input in2_input in3_input
+attrs=(name in0_input in1_input in2_input in3_input
 	in4_input in5_input in6_input in7_input)
 
-vals=(1367 1992 1523 2149 1680 2305 1836 2461)
+vals=(ads7830 1367 1992 1523 2149 1680 2305 1836 2461)
 
 dotest attrs[@] vals[@]
 rv=$(($? + ${rv}))
 
 do_remove ${i2c_addr}
+
+modprobe -r ads7828
 
 exit ${rv}
