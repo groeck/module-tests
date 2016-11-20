@@ -61,10 +61,10 @@ fi
 
 cd ${base}
 
-attrs=(temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input temp1_max
+attrs=(name temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input temp1_max
 	temp1_max_alarm temp1_max_hyst temp1_min temp1_min_alarm temp1_min_hyst)
 
-vals=(80000 0 78000 32500 64000 0 62000 10000 0 12000) 
+vals=(lm77 80000 0 78000 32500 64000 0 62000 10000 0 12000)
 
 dotest attrs[@] vals[@]
 rv=$?
@@ -82,5 +82,6 @@ do
 done
 
 modprobe -r i2c-stub 2>/dev/null
+modprobe -r lm77
 
 exit ${rv}
