@@ -35,7 +35,7 @@ fi
 
 cd ${base}
 
-attrs=(alarms beep_enable beep_mask cpu0_vid
+attrs=(name alarms beep_enable beep_mask cpu0_vid
 	fan1_alarm fan1_beep fan1_div fan1_input fan1_min fan1_off
 	fan2_alarm fan2_beep fan2_div fan2_input fan2_min
 	in0_alarm in0_beep in0_input in0_max in0_min
@@ -45,7 +45,7 @@ attrs=(alarms beep_enable beep_mask cpu0_vid
 	temp1_alarm temp1_beep temp1_input temp1_max temp1_max_hyst
 	temp2_alarm temp2_beep temp2_input temp2_max temp2_max_hyst)
 
-vals=(216 1 0 0 0 0 2 3934 1000 0 1 0 2 0 1000 0 0 5154 5201
+vals=(gl520sm 216 1 0 0 0 0 2 3934 1000 0 1 0 2 0 1000 0 0 5154 5201
 	4798 0 0 3382 3401 3192 0 0 3002 3097 2622 1 0 1729
 	2299 2109 1 0 35000 50000 -130000 1 0 35000 50000 -130000)
 
