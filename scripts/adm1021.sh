@@ -35,10 +35,10 @@ fi
 
 cd ${base}
 
-attrs=(low_power temp1_input temp1_max temp1_max_alarm temp1_min temp1_min_alarm
+attrs=(name alarms low_power temp1_input temp1_max temp1_max_alarm temp1_min temp1_min_alarm
 	temp2_fault temp2_input temp2_max temp2_max_alarm temp2_min temp2_min_alarm)
 
-vals=(0 19000 60000 0 20000 1 0 21000 60000 0 20000 0)
+vals=(max1617 32 0 19000 60000 0 20000 1 0 21000 60000 0 20000 0)
 
 rv=0
 dotest attrs[@] vals[@]
@@ -94,10 +94,10 @@ fi
 
 cd ${base}
 
-attrs=(low_power temp1_input temp1_max temp1_max_alarm temp1_min temp1_min_alarm
+attrs=(name alarms low_power temp1_input temp1_max temp1_max_alarm temp1_min temp1_min_alarm
 	temp2_fault temp2_input temp2_max temp2_max_alarm temp2_min temp2_min_alarm)
 
-vals=(0 30000 127000 0 -55000 0 0 28000 127000 0 -55000 0)
+vals=(max1617a 0 0 30000 127000 0 -55000 0 0 28000 127000 0 -55000 0)
 
 dotest attrs[@] vals[@]
 rv=$(($? + ${rv}))
