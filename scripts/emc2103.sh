@@ -51,14 +51,14 @@ fi
 
 cd ${base}
 
-attrs=(fan1_div fan1_fault fan1_input fan1_target pwm1_enable
+attrs=(name fan1_div fan1_fault fan1_input fan1_target pwm1_enable
 	temp1_fault temp1_input temp1_max temp1_max_alarm temp1_min temp1_min_alarm
 	temp2_fault temp2_input temp2_max temp2_max_alarm temp2_min temp2_min_alarm
 	temp3_fault temp3_input temp3_max temp3_max_alarm temp3_min temp3_min_alarm
 	temp4_fault temp4_input temp4_max temp4_max_alarm temp4_min temp4_min_alarm
 	)
 
-vals=(4 0 6710 0 0 0 26000 85000 0 0 0 0 25500 85000 0 0
+vals=(emc2103 4 0 6710 0 0 0 26000 85000 0 0 0 0 25500 85000 0 0
 	0 0 26000 85000 0 0 0 0 25875 85000 0 0 0
 )
 dotest attrs[@] vals[@]
