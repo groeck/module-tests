@@ -114,7 +114,7 @@ regs_lm85=(00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 	 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 )
 
-attrs_lm85=(alarms cpu0_vid
+attrs_lm85=(name alarms cpu0_vid
 	fan1_alarm fan1_input fan1_min
 	fan2_alarm fan2_input fan2_min
 	fan3_alarm fan3_input fan3_min
@@ -136,7 +136,7 @@ attrs_lm85=(alarms cpu0_vid
 	vrm
 )
 
-vals_lm85=(395 1588 0 3170 0 0 0 0 0 1143 0 0 1226 0 1 1536
+vals_lm85=(lm85 395 1588 0 3170 0 0 0 0 0 1143 0 0 1226 0 1 1536
 	3320 0 1 1734 2988 0 0 3300 4383 0 1 5130 6641 0 1 12125
 	15938 0 255 -1 128 1 0 38 255 -1 128 1 0 38 77 3
 	77 1 2 38 0 100000 122000 90000 86000 0 31000 127000 -127000 0 100000 122000
@@ -164,7 +164,7 @@ regs_emc6d102=(00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 	00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 12
 )
 
-attrs_emc6d102=(alarms cpu0_vid
+attrs_emc6d102=(name alarms cpu0_vid
 	fan1_alarm fan1_input fan1_min fan2_alarm fan2_input fan2_min
 	fan3_alarm fan3_input fan3_min fan4_alarm fan4_input fan4_min
 	in0_alarm in0_input in0_max in0_min in1_alarm in1_input in1_max in1_min
@@ -181,7 +181,7 @@ attrs_emc6d102=(alarms cpu0_vid
 	temp3_fault temp3_input temp3_max temp3_min
 	vrm)
 
-vals_emc6d102=(0 1531 0 2760 2000 0 0 0 0 2316 0 0 2750 0 0 1475
+vals_emc6d102=(emc6d102 0 1531 0 2760 2000 0 0 0 0 2316 0 0 2750 0 0 1475
 	1576 1419 0 1506 1605 1453 0 3374 3472 3128 0 5111 5260 4740 0 12145
 	12625 11375 255 -1 128 1 0 11 255 -1 128 0 0 11 255 -1
 	77 0 0 11 0 63000 63000 31000 27000 0 27688 55000 10000 0 45000 45000
