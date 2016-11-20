@@ -45,7 +45,7 @@ dotest ()
     local v=("${!2}")
     local p=("${!3}")
     local f
-    local known=("device" "power" "subsystem" "uevent")
+    local known=("device" "driver" "hwmon" "modalias" "power" "subsystem" "uevent")
     local rv=0
 
     ls | while read f
