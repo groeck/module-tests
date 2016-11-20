@@ -71,14 +71,16 @@ attrs=(name alarm_mask auto_update_interval fan1_alarm fan1_input fan1_max fan1_
 	temp6_alarm temp6_input temp6_max temp6_min
 	temp7_alarm temp7_input temp7_max temp7_min
 	temp8_alarm temp8_input temp8_max temp8_min
-	temp9_alarm temp9_input temp9_max temp9_min)
+	temp9_alarm temp9_input temp9_max temp9_min
+	pwm1_freq)
 
 vals=(adt7470 cf7f 2000 0 2201 0 82 0 1863 0 82 0 0 0 0 0 0
 	0 0 0 4 112 1 96 32000 255 52000 2 104 4 96 32000 255
 	52000 2 255 1023 128 90000 255 110000 1 255 1023 128 90000 255 110000 1
 	0 0 127000 -127000 0 34000 120000 -123000 0 1000 127000 -127000 0 33000 120000 -123000
 	0 1000 127000 -127000 0 0 127000 -127000 0 0 127000 -127000 0 0 127000 -127000
-	0 0 127000 -127000 0 0 127000 -127000)
+	0 0 127000 -127000 0 0 127000 -127000
+	22500)
 
 dotest attrs[@] vals[@]
 rv=$?
