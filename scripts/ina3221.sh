@@ -109,16 +109,16 @@ runtest()
     dotest attrs[@] vals[@] permissions[@]
     rv=$?
 
-    check_range -v -b ${basedir} -s 100 -d 200 -r -q curr1_max
+    check_range -b ${basedir} -s 100 -d 200 -r -q curr1_max
     rv=$(($? + ${rv}))
-    check_range -v -b ${basedir} -s 100 -d 200 -r -q curr1_crit
+    check_range -b ${basedir} -s 100 -d 200 -r -q curr1_crit
     rv=$(($? + ${rv}))
-    check_range -v -b ${basedir} -s 100 -d 200 -r -q curr2_max
+    check_range -b ${basedir} -s 100 -d 200 -r -q curr2_max
     rv=$(($? + ${rv}))
-    check_range -v -b ${basedir} -s 100 -d 200 -r -q curr2_crit
+    check_range -b ${basedir} -s 100 -d 200 -r -q curr2_crit
     rv=$(($? + ${rv}))
 
-    check_range -v -b ${basedir} -r -q shunt1_resistor
+    check_range -b ${basedir} -r -q shunt1_resistor
     rv=$(($? + ${rv}))
 
     modprobe -r i2c-stub 2>/dev/null
