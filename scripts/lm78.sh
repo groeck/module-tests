@@ -46,7 +46,7 @@ fi
 
 cd ${base}
 
-attrs=(alarms cpu0_vid
+attrs=(name alarms cpu0_vid
 	fan1_alarm fan1_div fan1_input fan1_min
 	fan2_alarm fan2_div fan2_input fan2_min
 	fan3_alarm fan3_div fan3_input fan3_min
@@ -60,7 +60,7 @@ attrs=(alarms cpu0_vid
 	temp1_alarm temp1_input temp1_max temp1_max_hyst
 )
 
-vals=(2048 3400 0 4 0 0 0 2 5487 4787 1 2 0 -1 0 2816
+vals=(lm78 2048 3400 0 4 0 0 0 2 5487 4787 1 2 0 -1 0 2816
 	2896 2704 0 2816 2896 2704 0 3248 3456 3136 0 3040 3120 2816 0 3184
 	3312 2992 0 3472 3616 3264 0 3376 3488 3152 0 28000 40000 38000
 	) 
