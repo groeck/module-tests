@@ -48,7 +48,7 @@ fi
 
 cd ${base}
 
-attrs=(fan1_input fan1_min fan2_input fan2_min fan3_input
+attrs=(name fan1_input fan1_min fan2_input fan2_min fan3_input
 	fan3_min fan4_input fan4_min fan5_input fan5_min
 	in0_input in0_max in0_min in1_input in1_max in1_min
 	in2_input in2_max in2_min in3_input in3_max in3_min
@@ -57,7 +57,7 @@ attrs=(fan1_input fan1_min fan2_input fan2_min fan3_input
 	temp3_input temp3_max temp3_min temp4_input temp4_max temp4_min
 	temp5_input temp5_max temp5_min temp6_input temp6_max temp6_min)
 
-vals=(1614 300 0 300 2153 200 0 82 0 82 1822 1979 1640 1257 1703 781 3334
+vals=(emc6w201 1614 300 0 300 2153 200 0 82 0 82 1822 1979 1640 1257 1703 781 3334
 	3523 3076 5104 5338 4661 1507 1601 1398 0 1703 781 54000 88000 -127000
 	0 88000 -127000 0 60000 -127000 0 55000 -127000 48000 75000 -127000
 	44000 80000 -127000)
