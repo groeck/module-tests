@@ -33,8 +33,8 @@ fi
 
 cd ${base}
 
-attrs=(in1_input temp1_input temp1_max temp1_max_hyst)
-vals=(2498 46000 80000 75000)
+attrs=(name in1_input temp1_input temp1_max temp1_max_hyst)
+vals=(ad7418 2498 46000 80000 75000)
 
 rv=0
 dotest attrs[@] vals[@]
