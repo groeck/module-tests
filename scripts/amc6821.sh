@@ -48,7 +48,7 @@ fi
 
 cd ${base}
 
-attrs=(fan1_div fan1_fault fan1_input fan1_max fan1_min
+attrs=(name fan1_div fan1_fault fan1_input fan1_max fan1_min
 	pwm1 pwm1_auto_channels_temp pwm1_auto_point1_pwm
 	pwm1_auto_point2_pwm pwm1_auto_point3_pwm pwm1_enable
 	temp1_auto_point1_temp temp1_auto_point2_temp temp1_auto_point3_temp
@@ -57,7 +57,7 @@ attrs=(fan1_div fan1_fault fan1_input fan1_max fan1_min
 	temp2_auto_point3_temp temp2_crit temp2_crit_alarm temp2_fault
 	temp2_input temp2_max temp2_max_alarm temp2_min temp2_min_alarm)
 
-vals=(2 0 1777 0 500 116 2 0 60 255 2 30000 60000 66000 80000 0 43000 60000
+vals=(amc6821 2 0 1777 0 500 116 2 0 60 255 2 30000 60000 66000 80000 0 43000 60000
 	0 0 0 30000 60000 84000 105000 0 0 70000 80000 0 0 0)
 
 rv=0
@@ -89,7 +89,7 @@ echo 99000 >temp2_crit
 echo 95000 >temp2_max
 echo 7000 >temp2_min
 
-vals=(4 0 1777 1000 100 100 0 0 100 255 1 40000 40000 49000 90000 0 43000
+vals=(amc6821 4 0 1777 1000 100 100 0 0 100 255 1 40000 40000 49000 90000 0 43000
 	80000 0 5000 0 40000 80000 84000 99000 0 0 70000 95000 0 7000 0)
 
 dotest attrs[@] vals[@]
