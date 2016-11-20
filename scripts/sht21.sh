@@ -29,8 +29,8 @@ fi
 
 cd ${base}
 
-attrs=(humidity1_input temp1_input)
-vals=(33093 41052)
+attrs=(name humidity1_input temp1_input)
+vals=(sht21 33093 41052)
 
 error_test ${adapter} attrs[@]
 rv=$?
