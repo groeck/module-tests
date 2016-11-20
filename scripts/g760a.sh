@@ -30,8 +30,8 @@ fi
 
 cd ${base}
 
-attrs=(fan1_alarm fan1_input pwm1)
-vals=(0 3840 128)
+attrs=(name fan1_alarm fan1_input pwm1)
+vals=(g760a 0 3840 128)
 
 dotest attrs[@] vals[@]
 rv=$?
