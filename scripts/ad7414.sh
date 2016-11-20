@@ -29,8 +29,8 @@ fi
 
 cd ${base}
 
-attrs=(temp1_input temp1_max temp1_max_alarm temp1_min temp1_min_alarm)
-vals=(46250 100000 0 16000 0)
+attrs=(name temp1_input temp1_max temp1_max_alarm temp1_min temp1_min_alarm)
+vals=(ad7414 46250 100000 0 16000 0)
 
 rv=0
 dotest attrs[@] vals[@]
