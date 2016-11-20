@@ -35,12 +35,12 @@ fi
 
 cd ${base}
 
-attrs=(curr1_alarm fan1_alarm in1_alarm in1_crit_alarm
+attrs=(name curr1_alarm fan1_alarm in1_alarm in1_crit_alarm
 	in1_input in2_alarm power1_alarm
 	temp1_alarm temp1_crit temp1_crit_alarm temp1_fault temp1_input
 	temp1_max)
 
-vals=(0 0 0 0 0 0 0 0 107000 0 0 0 97000)
+vals=(lineage_pem 0 0 0 0 0 0 0 0 107000 0 0 0 97000)
 
 dotest attrs[@] vals[@]
 rv=$?
