@@ -50,7 +50,7 @@ fi
 
 cd ${base}
 
-attrs=(alarm_mask auto_update_interval fan1_alarm fan1_input fan1_max fan1_min
+attrs=(name alarm_mask auto_update_interval fan1_alarm fan1_input fan1_max fan1_min
 	fan2_alarm fan2_input fan2_max fan2_min fan3_alarm fan3_input fan3_max fan3_min
 	fan4_alarm fan4_input fan4_max fan4_min
 	force_pwm_max num_temp_sensors
@@ -73,7 +73,7 @@ attrs=(alarm_mask auto_update_interval fan1_alarm fan1_input fan1_max fan1_min
 	temp8_alarm temp8_input temp8_max temp8_min
 	temp9_alarm temp9_input temp9_max temp9_min)
 
-vals=(cf7f 2000 0 2201 0 82 0 1863 0 82 0 0 0 0 0 0
+vals=(adt7470 cf7f 2000 0 2201 0 82 0 1863 0 82 0 0 0 0 0 0
 	0 0 0 4 112 1 96 32000 255 52000 2 104 4 96 32000 255
 	52000 2 255 1023 128 90000 255 110000 1 255 1023 128 90000 255 110000 1
 	0 0 127000 -127000 0 34000 120000 -123000 0 1000 127000 -127000 0 33000 120000 -123000
