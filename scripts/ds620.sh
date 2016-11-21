@@ -37,9 +37,9 @@ vals=(ds620 32000 100000 0 -16000 0)
 dotest attrs[@] vals[@]
 rv=$?
 
-check_range -b ${base} -d 50 -q temp1_max
+check_range -b ${base} -d 63 -q temp1_max
 rv=$(($? + ${rv}))
-check_range -b ${base} -d 50 -q temp1_min
+check_range -b ${base} -d 63 -q temp1_min
 rv=$(($? + ${rv}))
 
 modprobe -r i2c-stub 2>/dev/null
