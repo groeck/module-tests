@@ -86,10 +86,10 @@ vals=(lm94 0 1088 1088 21428 21428 0 21428 21428 0 21428 21428 0 21428 21428 0 2
 	1236 0 3326 4389 17 921 1236 0 916 1236 0 911 1236 0 1098 1600
 	0 1522 2000 0 1474 2000 0 1104 1600 0 1092 1600 0 3399 4400 0
 	0 0 146 255 0 0 0 146 255 0 0 0 0 0 0 0
-	2 22500 0 0 0 0 2 22500 0 0 0 60000 59960 0 0 0
+	2 22500 0 0 0 0 2 22500 0 0 0 60000 56000 0 0 0
 	0 0 0 0 0 0 0 0 0 0 0 53000 -128000 -128000 0 60000
-	59960 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -128000
-	-128000 -128000 0 35000 34960 0 0 0 0 0 0 0 0 0 0 0
+	56000 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -128000
+	-128000 -128000 0 35000 31000 0 0 0 0 0 0 0 0 0 0 0
 	0 0 0 34000 -128000 -128000 0 0)
 
 rv=0
@@ -110,15 +110,15 @@ do
 	rv=$(($? + ${rv}))
 	check_range -b ${base} -d 500 -r -q temp${t}_auto_boost
 	rv=$(($? + ${rv}))
-	check_range -b ${base} -d 2 -r -q temp${t}_auto_boost_hyst
+	check_range -b ${base} -d 250 -r -q temp${t}_auto_boost_hyst
 	rv=$(($? + ${rv}))
-	check_range -b ${base} -d 2 -r -q temp${t}_auto_offset_hyst
+	check_range -b ${base} -d 250 -r -q temp${t}_auto_offset_hyst
 	rv=$(($? + ${rv}))
 	check_range -b ${base} -d 500 -r -q temp${t}_auto_pwm_min
 	rv=$(($? + ${rv}))
 	for o in $(seq 1 12)
 	do
-		check_range -b ${base} -d 2 -r -q temp${t}_auto_offset${o}
+		check_range -b ${base} -d 250 -r -q temp${t}_auto_offset${o}
 		rv=$(($? + ${rv}))
 	done
 done
