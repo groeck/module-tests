@@ -9,10 +9,10 @@ pr_err()
 install_regs ()
 {
     local adapter=$1
-    local i2c_addr=$2
+    local i2c_addr=$(echo $2 | sed -e 's/0x//')
     local regs=("${!3}")
-    local i
     local size=$4
+    local i
 
     i=0
     while [ $i -lt ${#regs[*]} ]
