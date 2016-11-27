@@ -256,12 +256,7 @@ permissions_adm1024=(
 	"-rw-r--r--"
 )
 
-i=0
-while [ $i -lt ${#regs_lm87[*]} ]
-do
-	i2cset -f -y ${i2c_adapter} ${i2c_addr} $i 0x${regs_lm87[$i]} b
-	i=$(($i + 1))
-done
+install_regs ${i2c_adapter} ${i2c_addr} regs_lm87[@] b
 
 do_instantiate lm87 ${i2c_addr}
 
