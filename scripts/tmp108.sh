@@ -6,13 +6,13 @@ dir=$(dirname $0)
 . ${dir}/common.sh
 
 regs_tmp108=(
-	701c 1026 004b 0050
+	701c 1026 0010 0050
 )
 
 attrs_tmp108=(name temp1_input temp1_max temp1_max_alarm temp1_max_hyst temp1_min
 	temp1_min_alarm temp1_min_hyst update_interval)
 
-vals_tmp108=(tmp108 28437 80000 0 79000 75000 0 74000 1000)
+vals_tmp108=(tmp108 28437 80000 0 79000 16000 0 17000 1000)
 
 permissions_tmp108=(
 	"-r--r--r--"
