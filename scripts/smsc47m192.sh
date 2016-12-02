@@ -86,9 +86,10 @@ do
 	rv=$(($? + ${rv}))
 done
 
-check_range -b ${base} -l 0 -r -d 0 -q vrm
+check_range -b ${base} -l 0 -u 255 -r -d 0 -q vrm
 rv=$(($? + ${rv}))
 
 modprobe -r i2c-stub 2>/dev/null
+modprobe -r smsc47m192
 
 exit ${rv}
