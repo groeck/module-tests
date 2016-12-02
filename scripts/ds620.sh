@@ -43,5 +43,6 @@ check_range -b ${base} -d 63 -q temp1_min
 rv=$(($? + ${rv}))
 
 modprobe -r i2c-stub 2>/dev/null
+modprobe -r ds620
 
 exit ${rv}
