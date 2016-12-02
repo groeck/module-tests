@@ -17,7 +17,7 @@ install_regs ()
     i=0
     while [ $i -lt ${#regs[*]} ]
     do
-        i2cset -f -y ${adapter} 0x${i2c_addr} $i 0x${regs[$i]} ${size}
+	i2cset -f -y ${adapter} 0x${i2c_addr} $i 0x${regs[$i]} ${size}
 	i=$(($i + 1))
     done
 }
@@ -156,7 +156,7 @@ getbasedir()
     then
 	basedir="/sys/class/hwmon/${dev}"
     else
-        basedir="/sys/class/hwmon/${dev}/device"
+	basedir="/sys/class/hwmon/${dev}/device"
     fi
     if [ ! -d "${basedir}" ]
     then
@@ -178,7 +178,83 @@ getbase()
 
 DEFAULT_MIN=-100000001
 DEFAULT_MAX=100000001
-OVERFLOW_MAX=4294967296001
+
+OVERFLOW_MAX=4294967296001		# (0x100000000 * 1000) + 1
+OVERFLOW_MAX2=9223372036854775807	# 0x7fffffffffffffff
+OVERFLOW_MAX3=18446744073709551615	# 0xffffffffffffffff
+
+overflow_check_val()
+{
+    local attr=$1
+    local overflow=$2
+    local max=$3
+    local waittime=$4
+
+    # Make sure that the write doesn't fail because the value
+    # written is too high to be accepted by the infrastructure.
+    # Keep trying with lower values until the write succeeds or
+    # the overflow is 0.
+    while :
+    do
+	echo ${overflow} > ${attr} 2>/dev/null
+	if [ $? -eq 0 ]
+	then
+	    break
+	fi
+	if [ "${overflow}" = "${OVERFLOW_MAX3}" ]
+	then
+	    # Neither bash nor expr can handle this number
+	    overflow=${OVERFLOW_MAX2}
+	    continue
+	fi
+	if [ ${overflow} -eq 0 ]
+	then
+	    break
+	fi
+	overflow=$((${overflow} / 2))
+    done
+
+    omax=$(cat ${attr})
+    if [ ${omax} -ne ${max} ]
+    then
+	pr_err "$(basename ${attr}): Suspected overflow: [${max} vs. ${omax}]"
+	return 1
+    fi
+    if [ ${waittime} -ne 0 ]
+    then
+	sleep ${waittime}
+	omax=$(cat ${attr})
+	if [ ${omax} -ne ${max} ]
+	then
+	    pr_err "$(basename ${attr}): Cache mismatch: [${max} vs. ${omax}]"
+	    return 1
+	fi
+    fi
+    return 0
+}
+
+overflow_check()
+{
+    overflow_check_val $1 ${OVERFLOW_MAX} $2 $3
+    if [ $? -ne 0 ]
+    then
+	return 1
+    fi
+
+    overflow_check_val $1 ${OVERFLOW_MAX2} $2 $3
+    if [ $? -ne 0 ]
+    then
+	return 1
+    fi
+
+    overflow_check_val $1 ${OVERFLOW_MAX3} $2 $3
+    if [ $? -ne 0 ]
+    then
+	return 1
+    fi
+
+    return 0
+}
 
 check_range()
 {
@@ -209,7 +285,7 @@ check_range()
 	    b)	base=${OPTARG}/
 		;;
 	    d)	mdev=${OPTARG}	# maximum permitted deviation
-	        ;;
+		;;
 	    i)  ignore=1
 		;;
 	    l)	min=${OPTARG}
@@ -217,10 +293,10 @@ check_range()
 	    q)	quiet=1
 		;;
 	    v)	disp=1
-	        quiet=0
+		quiet=0
 		;;
 	    w)  waittime=${OPTARG}
-	        ;;
+		;;
 	    r)	restore=1
 		;;
 	    s)  stepsize=${OPTARG}
@@ -228,7 +304,7 @@ check_range()
 	    u)	max=${OPTARG}
 		;;
 	    :)	pr_err "Option ${OPTARG} requires an argument"
-	        return 1
+		return 1
 		;;
 	    esac
 	done
@@ -263,22 +339,10 @@ check_range()
 			disp=1
 		fi
 		# Try to trigger an overflow
-		echo ${OVERFLOW_MAX} > ${attr} 2>/dev/null
-		omax=$(cat ${attr})
-		if [ ${omax} -ne ${max} ]
+		overflow_check ${attr} ${max} ${waittime}
+		if [ $? -ne 0 ]
 		then
-			pr_err "$(basename ${attr}): Suspected overflow: [${max} vs. ${omax}]"
 			return 1
-		fi
-		if [ ${waittime} -ne 0 ]
-		then
-			sleep ${waittime}
-			omax=$(cat ${attr})
-			if [ ${omax} -ne ${max} ]
-			then
-			    pr_err "$(basename ${attr}): Cache mismatch: [${max} vs. ${omax}]"
-			    return 1
-			fi
 		fi
 	fi
 	if [ ${max} -lt ${min} ]
