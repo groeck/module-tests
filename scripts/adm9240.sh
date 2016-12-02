@@ -102,5 +102,6 @@ check_range -b ${base} -l 0 -u 0 -d 0 -r -q intrusion0_alarm
 rv=$(($? + ${rv}))
 
 modprobe -r i2c-stub 2>/dev/null
+modprobe -r adm9240
 
 exit ${rv}
