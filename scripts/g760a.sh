@@ -37,5 +37,6 @@ dotest attrs[@] vals[@]
 rv=$?
 
 modprobe -r i2c-stub 2>/dev/null
+modprobe -r g760a
 
 exit ${rv}
