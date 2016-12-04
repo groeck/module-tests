@@ -46,5 +46,6 @@ dotest attrs[@] vals[@]
 rv=$?
 
 modprobe -r i2c-stub 2>/dev/null
+modprobe -r lineage_pem
 
 exit ${rv}
