@@ -6,7 +6,10 @@ dir=$(dirname $0)
 . ${dir}/common.sh
 
 modprobe -r i2c-stub 2>/dev/null
-modprobe i2c-stub chip_addr=0x${i2c_addr}
+modprobe i2c-stub chip_addr=0x${i2c_addr} \
+	regmap_write=0x09,0x0a,0x0b,0x0c,0x0d,0x0e \
+	regmap_read=0x03,0x04,0x05,0x06,0x07,0x08
+
 if [ $? -ne 0 ]
 then
 	echo must be root
@@ -40,6 +43,8 @@ attrs=(name alarms low_power temp1_input temp1_max temp1_max_alarm temp1_min tem
 
 vals=(max1617 32 0 19000 60000 0 20000 1 0 21000 60000 0 20000 0)
 
+echo "Testing max1617"
+
 rv=0
 dotest attrs[@] vals[@]
 rv=$(($? + ${rv}))
@@ -59,7 +64,7 @@ done
 echo 0x${i2c_addr} > /sys/class/i2c-adapter/i2c-${adapter}/delete_device
 
 # max1617a
-regs=(1e 1c 00 00 04 7f c9 7f c9 01 01 01 01 01 01 01
+regs=(1e 1c 00 00 04 7f c9 7f c9 00 04 7f c9 7f c9 01
 	01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01
 	01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01
 	01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01
@@ -82,6 +87,8 @@ do
 	i2cset -f -y ${adapter} 0x${i2c_addr} $i 0x${regs[$i]} b
 	i=$(($i + 1))
 done
+
+echo "Testing max1617a"
 
 echo max1617a 0x${i2c_addr} > /sys/class/i2c-adapter/i2c-${adapter}/new_device
 
