@@ -123,5 +123,6 @@ check_range -b ${base} -l 0 -u 1 -d 0 -r -q force_pwm_max
 rv=$(($? + ${rv}))
 
 modprobe -r i2c-stub 2>/dev/null
+modprobe -r adt7470
 
 exit ${rv}
