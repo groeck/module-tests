@@ -179,9 +179,16 @@ getbase()
 DEFAULT_MIN=-100000001
 DEFAULT_MAX=100000001
 
-OVERFLOW_MAX=4294967296001		# (0x100000000 * 1000) + 1
-OVERFLOW_MAX2=9223372036854775807	# 0x7fffffffffffffff
-OVERFLOW_MAX3=18446744073709551615	# 0xffffffffffffffff
+OVERFLOW_MAX=(2147483647	# 0x7fffffff
+	2147483648		# 0x80000000
+	4294967295		# 0xffffffff
+	4294967296		# 0x100000000
+	4294967296001		# (0x100000000 * 1000) + 1
+	4611686018427387904	# 0x4000000000000000
+	9223372036854775807	# 0x7fffffffffffffff
+	9223372036854775808	# 0x8000000000000000
+	18446744073709551615	# 0xffffffffffffffff
+)
 
 overflow_check_val()
 {
@@ -201,13 +208,19 @@ overflow_check_val()
 	then
 	    break
 	fi
-	if [ "${overflow}" = "${OVERFLOW_MAX3}" ]
+	if [ "${overflow}" = "9223372036854775808" ]
 	then
 	    # Neither bash nor expr can handle this number
-	    overflow=${OVERFLOW_MAX2}
+	    overflow=4611686018427387904
 	    continue
 	fi
-	if [ ${overflow} -eq 0 ]
+	if [ "${overflow}" = "18446744073709551615" ]
+	then
+	    # Neither bash nor expr can handle this number
+	    overflow=9223372036854775807
+	    continue
+	fi
+	if [ ${overflow} -le ${max} ]
 	then
 	    break
 	fi
@@ -215,7 +228,7 @@ overflow_check_val()
     done
 
     omax=$(cat ${attr})
-    if [ ${omax} -ne ${max} ]
+    if [ ${omax} -ne ${max} -a "${omax}" != "${overflow}" ]
     then
 	pr_err "$(basename ${attr}): Suspected overflow: [${max} vs. ${omax}]"
 	return 1
@@ -235,25 +248,72 @@ overflow_check_val()
 
 overflow_check()
 {
-    overflow_check_val $1 ${OVERFLOW_MAX} $2 $3
-    if [ $? -ne 0 ]
-    then
-	return 1
-    fi
+    local i=0
 
-    overflow_check_val $1 ${OVERFLOW_MAX2} $2 $3
-    if [ $? -ne 0 ]
-    then
-	return 1
-    fi
-
-    overflow_check_val $1 ${OVERFLOW_MAX3} $2 $3
-    if [ $? -ne 0 ]
-    then
-	return 1
-    fi
+    while [ $i -lt ${#OVERFLOW_MAX[*]} ]
+    do
+	overflow_check_val $1 ${OVERFLOW_MAX[$i]} $2 $3
+	if [ $? -ne 0 ]
+	then
+	    return 1
+	fi
+	i=$(($i + 1))
+    done
 
     return 0
+}
+
+findmin()
+{
+	local attr=$1
+	local min=-134217728
+	local found=$(cat ${attr})
+	local tmp
+
+	# 0 is a good baseline
+	echo 0 > ${attr} 2>/dev/null
+	if [ $? -eq 0 ]
+	then
+		tmp=$(cat ${attr})
+		if [ ${tmp} -lt ${found} ]
+		then
+			found=${tmp}
+		fi
+	fi
+	while [ ${min} -gt -9223372036854775808 ]
+	do
+		min=$((${min} * 2))
+		echo ${min} > ${attr} 2>/dev/null
+		tmp=$(cat ${attr})
+		if [ ${tmp} -lt ${found} ]
+		then
+			found=${tmp}
+		fi
+	done
+
+	echo ${found}
+}
+
+findmax()
+{
+	local attr=$1
+	local max=134217727	# 7FFFFFF
+	local found=$(cat ${attr})
+	local tmp
+
+	while [ ${max} -lt 9223372036854775807 ]	# 7FFFFFFFFFFFFFFF
+	do
+		max=$((${max} * 2))
+		max=$((${max} + 1))
+		echo ${max} > ${attr} 2>/dev/null
+		tmp=$(cat ${attr})
+		if [ ${tmp} -gt ${found} ]
+		then
+			found=${tmp}
+		fi
+	done
+
+	echo ${found}
 }
 
 check_range()
@@ -325,16 +385,14 @@ check_range()
 
 	if [ ${min} -eq ${DEFAULT_MIN} ]
 	then
-		echo ${min} > ${attr} 2>/dev/null
-		min=$(cat ${attr})
+		min=$(findmin ${attr})
 		if [ ${quiet} -eq 0 ]; then
 			disp=1
 		fi
 	fi
 	if [ ${max} -eq ${DEFAULT_MAX} ]
 	then
-		echo ${max} > ${attr} 2>/dev/null
-		max=$(cat ${attr})
+		max=$(findmax ${attr})
 		if [ ${quiet} -eq 0 ]; then
 			disp=1
 		fi
@@ -371,7 +429,7 @@ check_range()
 		x=$(cat ${attr})
 		if [ $x -lt ${prev} ]
 		then
-			pr_err "suspected error: Decreased value $x when expecting at least ${prev}"
+			pr_err "$(basename ${attr}): suspected error: Decreased value $x when expecting at least ${prev}"
 		fi
 		prev=${x}
 		d=0
