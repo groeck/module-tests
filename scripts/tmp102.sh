@@ -33,5 +33,6 @@ check_range -b ${basedir} -d 50 -q temp1_max_hyst
 rv=$(($? + ${rv}))
 
 modprobe -r i2c-stub 2>/dev/null
+modprobe -r tmp102
 
 exit ${rv}
