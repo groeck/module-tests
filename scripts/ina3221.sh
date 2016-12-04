@@ -129,4 +129,6 @@ runtest()
 runtest ina3221 regs_ina3221[@] attrs_ina3221[@] vals_ina3221[@] permissions_ina3221[@]
 rv=$?
 
+modprobe -r ina3221
+
 exit ${rv}
