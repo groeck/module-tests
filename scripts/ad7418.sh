@@ -48,4 +48,6 @@ check_range -b ${base} -d 200 -s 100 -q temp1_max
 check_range -b ${base} -d 200 -s 100 -q temp1_max_hyst
 
 modprobe -r i2c-stub 2>/dev/null
+modprobe -r ad7418
+
 exit ${rv}
