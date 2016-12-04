@@ -42,5 +42,6 @@ check_range -b ${base} -d 500 -s 100 -q temp1_min
 rv=$((${rv} + $?))
 
 modprobe -r i2c-stub 2>/dev/null
+modprobe -r ad7414
 
 exit ${rv}
