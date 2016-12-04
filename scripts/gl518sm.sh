@@ -95,5 +95,6 @@ check_range -b ${base} -l 0 -u 127 -q -d 0 -r beep_mask
 rv=$(($? + ${rv}))
 
 modprobe -r i2c-stub 2>/dev/null
+modprobe -r gl518sm
 
 exit ${rv}
