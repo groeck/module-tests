@@ -58,5 +58,6 @@ check_range -b ${base} -l 4 -u 4 -r -d 0 -q fan1_pulses
 rv=$(($? + ${rv}))
 
 modprobe -r i2c-stub 2>/dev/null
+modprobe -r g762
 
 exit ${rv}
