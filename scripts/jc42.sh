@@ -53,5 +53,6 @@ check_range -b ${basedir} -l 25000 -d 1500 -q temp1_crit_hyst
 rv=$((${rv} + $?))
 
 modprobe -r i2c-stub 2>/dev/null
+modprobe -r jc42
 
 exit ${rv}
