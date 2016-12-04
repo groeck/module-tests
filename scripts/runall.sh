@@ -42,7 +42,8 @@ set -v
 ./lm93.sh
 ./lm95241.sh
 ./lm95245.sh
-./ltc2990.sh
+# Not yet, wait for new version of driver
+# ./ltc2990.sh
 ./ltc4245.sh
 # Incomplete / testing
 # ./max31790.sh
