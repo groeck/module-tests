@@ -117,5 +117,6 @@ runtest lm95231 attrs_lm95241[@] vals_lm95231[@] permissions_lm95241[@]
 rv=$(($? + ${rv}))
 
 modprobe -r i2c-stub 2>/dev/null
+modprobe -r lm95241
 
 exit ${rv}
