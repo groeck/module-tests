@@ -89,5 +89,6 @@ do
 done
 
 modprobe -r i2c-stub 2>/dev/null
+modprobe -r emc6w201
 
 exit ${rv}
