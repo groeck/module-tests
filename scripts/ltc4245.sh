@@ -108,4 +108,6 @@ runtest()
 runtest ltc4245 regs_ltc4245[@] attrs_ltc4245[@] vals_ltc4245[@] permissions_ltc4245[@]
 rv=$?
 
+modprobe -r ltc4245
+
 exit ${rv}
