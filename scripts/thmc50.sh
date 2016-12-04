@@ -139,5 +139,6 @@ check_range -b ${base} -l 0 -u 255 -d 0 -r -q pwm1
 rv=$(($? + ${rv}))
 
 modprobe -r i2c-stub 2>/dev/null
+modprobe -r thmc50
 
 exit ${rv}
