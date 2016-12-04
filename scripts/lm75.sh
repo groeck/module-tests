@@ -94,4 +94,6 @@ rv=$?
 runtest ds75 regs_ds75[@] attrs_ds75[@] vals_ds75[@]
 rv=$(($? + ${rv}))
 
+modprobe -r lm75
+
 exit ${rv}
