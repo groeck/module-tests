@@ -114,5 +114,6 @@ do
 done
 
 modprobe -r i2c-stub 2>/dev/null
+modprobe -r adm1021
 
 exit ${rv}
