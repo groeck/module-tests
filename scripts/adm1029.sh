@@ -67,5 +67,6 @@ check_values ${base} fan1_div values[@] failvals[@]
 rv=$?
 
 modprobe -r i2c-stub 2>/dev/null
+modprobe -r adm1029
 
 exit ${rv}
