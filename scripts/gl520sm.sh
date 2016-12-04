@@ -84,6 +84,8 @@ for i in $(seq 1 2)
 do
 	check_range -b ${base} -l 0 -u 1 -r -d 0 -q "fan${i}_beep"
 	rv=$(($? + ${rv}))
+	# Set fanX_div to ensure that fan_min deviation is not too large
+	echo 4 > "fan${i}_div"
 	# don't reset fanX_min to avoid beep_mask failure
 	check_range -b ${base} -l 0 -u 10000 -d 400 -q "fan${i}_min"
 	rv=$(($? + ${rv}))
@@ -98,5 +100,6 @@ check_range -b ${base} -l 0 -u 127 -q -d 0 -r beep_mask
 rv=$(($? + ${rv}))
 
 modprobe -r i2c-stub 2>/dev/null
+modprobe -r gl520sm
 
 exit ${rv}
