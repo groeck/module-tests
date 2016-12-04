@@ -159,5 +159,6 @@ check_range -b ${base} -d 0 -l 0 -u 255 -r -q vrm
 rv=$(($? + ${rv}))
 
 modprobe -r i2c-stub 2>/dev/null
+modprobe -r adm1026
 
 exit ${rv}
