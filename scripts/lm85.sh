@@ -84,7 +84,7 @@ do_tests ()
 	rv=$(($? + ${rv}))
 	check_range -b ${base} -l 0 -u 2 -r -q -d 0 "pwm${p}_enable"
 	rv=$(($? + ${rv}))
-	check_range -b ${base} -l 0 -r -q -d 16 "pwm${p}_freq"
+	check_range -b ${base} -l 0 -r -q -d 20 "pwm${p}_freq"
 	rv=$(($? + ${rv}))
     done
 
@@ -192,5 +192,6 @@ do_tests "emc6d102" regs_emc6d102[@] attrs_emc6d102[@] vals_emc6d102[@]
 rv=$(($? + ${rv}))
 
 modprobe -r i2c-stub 2>/dev/null
+modprobe -r lm85
 
 exit ${rv}
