@@ -561,4 +561,6 @@ rv=$(($? + ${rv}))
 runtest max6659 regs_max6659[@] attrs_max6659[@] vals_max6659[@] permissions_max6659[@]
 rv=$(($? + ${rv}))
 
+modprobe -r lm90
+
 exit ${rv}
