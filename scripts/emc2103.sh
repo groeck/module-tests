@@ -82,5 +82,6 @@ check_range -b ${base} -l 0 -r -d 815 -q -w 2 fan1_target
 rv=$(($? + ${rv}))
 
 modprobe -r i2c-stub 2>/dev/null
+modprobe -r emc2103
 
 exit ${rv}
