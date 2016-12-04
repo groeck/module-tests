@@ -99,5 +99,6 @@ check_range -b ${base} -l 0 -d 8000 -r -q update_interval
 rv=$(($? + ${rv}))
 
 modprobe -r i2c-stub 2>/dev/null
+modprobe -r adm1031
 
 exit ${rv}
