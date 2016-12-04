@@ -98,9 +98,9 @@ rv=$?
 # other voltages are disabled
 for i in $(seq 1 2)
 do
-	check_range -b ${base} -l 1 -d 32 -q "in${i}_min"
+	check_range -b ${base} -d 32 -q "in${i}_min"
 	rv=$(($? + ${rv}))
-	check_range -b ${base} -l 1 -d 32 -q "in${i}_max"
+	check_range -b ${base} -d 32 -q "in${i}_max"
 	rv=$(($? + ${rv}))
 done
 
@@ -146,5 +146,6 @@ check_range -b ${base} -l 0 -u 1 -d 0 -r -q force_pwm_max
 rv=$(($? + ${rv}))
 
 modprobe -r i2c-stub 2>/dev/null
+modprobe -r adt7462
 
 exit ${rv}
