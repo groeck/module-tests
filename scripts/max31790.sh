@@ -116,5 +116,6 @@ cd ${base}
 ls -l
 
 modprobe -r i2c-stub 2>/dev/null
+modprobe -r max31790
 
 exit ${rv}
