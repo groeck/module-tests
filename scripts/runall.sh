@@ -1,3 +1,10 @@
+uid=$(id -u)
+if [ ${uid} -ne 0 ]
+then
+	echo "$(basename $0): Must run as root"
+	exit 1
+fi
+
 set -v
 
 ./ad7414.sh
@@ -22,8 +29,6 @@ set -v
 ./g762.sh
 ./gl518sm.sh
 ./gl520sm.sh
-# not built by default
-# ./htu21.sh
 ./ina3221.sh
 ./jc42.sh
 ./lineage-pem.sh
@@ -37,6 +42,7 @@ set -v
 ./lm93.sh
 ./lm95241.sh
 ./lm95245.sh
+./ltc2990.sh
 ./ltc4245.sh
 # Incomplete / testing
 # ./max31790.sh
@@ -46,5 +52,6 @@ set -v
 ./smsc47m192.sh
 ./thmc50.sh
 ./tmp102.sh
+./tmp108.sh
 ./tmp401.sh
 ./tmp421.sh
