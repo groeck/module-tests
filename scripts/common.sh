@@ -514,7 +514,7 @@ check_values ()
 load_i2c_stub()
 {
     modprobe -r i2c-stub 2>/dev/null
-    modprobe i2c-stub chip_addr=$1
+    modprobe i2c-stub chip_addr=$1 $2 $3
     if [ $? -ne 0 ]
     then
 	pr_err "Failed to load i2c-stub driver"
