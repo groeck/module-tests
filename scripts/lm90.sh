@@ -6,7 +6,7 @@ dir=$(dirname $0)
 . ${dir}/common.sh
 
 regs_max6695=(
-	16 80 8c 00 06 46 c9 46 c9 c9 c9 c9 c9 c9 c9 c9
+	16 80 8c 00 06 46 c9 46 c9 00 06 46 c9 46 c9 00
 	00 00 5e 00 00 00 78 5a 5a 5a 5a 5a 5a 5a 5a 5a
 	46 0a 0a 0a 0a 0a 0a 0a 0a 0a 0a 0a 0a 0a 0a 0a
 	0a 0a 0a 0a 0a 0a 0a 0a 0a 0a 0a 0a 0a 0a 0a 0a
@@ -88,7 +88,7 @@ permissions_max6695=(
 )
 
 regs_lm86=(
-	30 37 00 00 05 46 00 46 00 00 00 00 00 00 00 00
+	30 37 00 00 05 46 00 46 00 00 05 46 00 46 00 00
 	00 00 00 00 00 00 00 00 00 55 00 00 00 00 00 00
 	55 0a 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 	00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
@@ -309,7 +309,7 @@ permissions_adm1032=(
 )
 
 regs_tmp451=(
-	5d 69 00 04 08 bf 00 ff 53 00 00 00 00 00 00 00
+	5d 69 00 04 08 bf 00 ff 53 04 08 bf 00 ff 53 00
 	a0 00 00 00 00 f0 00 00 00 a9 00 00 00 00 00 00
 	b8 0a 01 00 00 00 00 00 00 00 0e 00 00 00 00 00
 	00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
@@ -364,7 +364,7 @@ permissions_tmp451=(
 )
 
 regs_sa56004=(
-	36 7f 16 80 05 46 00 46 00 00 00 00 00 00 00 00
+	36 7f 16 80 05 46 00 46 00 80 05 46 00 46 00 00
 	2c 00 00 00 00 00 00 00 00 55 00 00 00 00 00 00
 	55 0a 80 00 00 00 00 00 00 00 00 00 00 00 00 00
 	00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
@@ -419,7 +419,7 @@ permissions_sa56004=(
 )
 
 regs_max6659=(
-	39 32 00 00 04 46 00 37 00 00 00 00 00 00 00 00
+	39 32 00 00 04 46 00 37 00 00 04 46 00 37 00 00
 	80 00 00 00 00 00 55 55 00 64 64 64 64 64 64 64
 	64 0a 0a 0a 0a 0a 0a 0a 0a 0a 0a 0a 0a 0a 0a 0a
 	0a 0a 0a 0a 0a 0a 0a 0a 0a 0a 0a 0a 0a 0a 0a 0a
@@ -478,6 +478,61 @@ permissions_max6659=(
 	"-rw-r--r--"
 )
 
+regs_lm90=(
+	 29 3e 00 00 05 46 05 46 05 00 00 00 00 00 00 00
+	 e0 00 00 00 00 00 00 00 00 55 00 00 00 00 00 00
+	 55 0a 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	 2a 20 0f b3 ab 00 0d 00 00 4b 4b 00 00 00 00 00
+	 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 21
+)
+
+attrs_lm90=(alarms name
+	temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
+	temp1_max temp1_max_alarm temp1_min temp1_min_alarm
+	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault temp2_input
+	temp2_max temp2_max_alarm temp2_min temp2_min_alarm temp2_offset
+	update_interval
+)
+
+vals_lm90=(0 lm90 85000 0 75000 41000 0 0 0 0 85000 0
+	75000 0 62875 0 0 0 0 0 500
+)
+
+permissions_lm90=(
+	"-r--r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-rw-r--r--"
+)
+
 # others:
 # ../register-dumps/w83l771-manuel.dump (similar to lm86)
 # ../register-dumps/lm99.dump (same as lm86)
@@ -494,7 +549,9 @@ runtest()
 
     echo Testing ${chip} ...
 
-    load_i2c_stub ${i2c_addr}
+    load_i2c_stub ${i2c_addr} \
+	"regmap_write=0x09,0x0a,0x0b,0x0c,0x0d,0x0e" \
+	"regmap_read=0x03,0x04,0x05,0x06,0x07,0x08"
 
     i=0
     while [ $i -lt ${#regs[*]} ]
@@ -516,26 +573,32 @@ runtest()
     dotest attrs[@] vals[@] permissions[@]
     rv=$?
 
-    # Most register ranges can not be checked this way because read and
-    # write registers are different.
-    check_range -i -b ${basedir} -s 200 -d 500 -r -q temp1_emergency
-    rv=$(($? + ${rv}))
-    check_range -b ${basedir} -s 200 -d 500 -r -q temp1_crit
-    rv=$(($? + ${rv}))
     check_range -b ${basedir} -s 200 -d 500 -r -q temp1_crit_hyst
     rv=$(($? + ${rv}))
     check_range -i -b ${basedir} -s 200 -d 500 -r -q temp2_offset
     rv=$(($? + ${rv}))
-    check_range -i -b ${basedir} -s 200 -d 500 -r -q temp2_emergency
-    rv=$(($? + ${rv}))
-    check_range -b ${basedir} -s 200 -d 500 -r -q temp2_crit
-    rv=$(($? + ${rv}))
     check_range -i -b ${basedir} -s 200 -d 500 -r -q temp3_emergency
+    rv=$(($? + ${rv}))
+    check_range -i -b ${basedir} -s 200 -d 500 -r -q temp3_min
+    rv=$(($? + ${rv}))
+    check_range -i -b ${basedir} -s 200 -d 500 -r -q temp3_max
     rv=$(($? + ${rv}))
     check_range -i -b ${basedir} -s 200 -d 500 -r -q temp3_crit
     rv=$(($? + ${rv}))
     check_range -b ${basedir} -s 200 -d 8000 -r -q update_interval
     rv=$(($? + ${rv}))
+
+    for i in $(seq 1 2)
+    do
+        check_range -i -b ${basedir} -s 200 -d 500 -r -q temp${i}_emergency
+        rv=$(($? + ${rv}))
+	check_range -b ${basedir} -s 200 -d 500 -r -q temp${i}_crit
+	rv=$(($? + ${rv}))
+	check_range -b ${basedir} -s 1000 -d 0 -r -q temp${i}_min
+	rv=$(($? + ${rv}))
+	check_range -b ${basedir} -s 1000 -d 0 -r -q temp${i}_max
+	rv=$(($? + ${rv}))
+    done
 
     modprobe -r i2c-stub 2>/dev/null
 
@@ -544,8 +607,10 @@ runtest()
 
 rv=0
 
+runtest lm90 regs_lm90[@] attrs_lm90[@] vals_lm90[@] permissions_lm90[@]
+rv=$(($? + ${rv}))
 runtest max6695 regs_max6695[@] attrs_max6695[@] vals_max6695[@] permissions_max6695[@]
-rv=$?
+rv=$(($? + ${rv}))
 runtest lm86 regs_lm86[@] attrs_lm86[@] vals_lm86[@] permissions_lm86[@]
 rv=$(($? + ${rv}))
 runtest g781 regs_g781[@] attrs_g781[@] vals_g781[@] permissions_g781[@]
