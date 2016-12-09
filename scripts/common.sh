@@ -297,7 +297,8 @@ findmin()
 findmax()
 {
 	local attr=$1
-	local max=134217727	# 7FFFFFF
+	# local max=134217727	# 7FFFFFF
+	local max=1048575	# FFFFF
 	local found=$(cat ${attr})
 	local tmp
 
@@ -310,6 +311,11 @@ findmax()
 		if [ ${tmp} -gt ${found} ]
 		then
 			found=${tmp}
+		fi
+		# The following suggests an overflow. Stop looking.
+		if [ ${tmp} -lt ${found} ]
+		then
+			break
 		fi
 	done
 
