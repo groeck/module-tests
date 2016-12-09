@@ -253,7 +253,7 @@ for i in $(seq 1 2)
 do
 	check_range -b ${base} -l 0 -u 1 -r -d 0 -q "fan${i}_beep"
 	rv=$(($? + ${rv}))
-	check_range -b ${base} -l 0 -u 10000 -d 100 -q "fan${i}_min"
+	check_range -b ${base} -d 445500 -q "fan${i}_min"
 	rv=$(($? + ${rv}))
 done
 
