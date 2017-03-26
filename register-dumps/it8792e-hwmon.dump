@@ -1,0 +1,18 @@
+sudo isadump -y 0xa65 0xa66
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00: 19 10 40 00 ff ff 00 00 00 80 48 00 30 ff ff ff 
+10: ff ff ff 77 c7 00 00 00 ff ff ff ff ff ff ff ff 
+20: 4c 68 6d 9a 7f 76 ff 9a 96 19 1d 1f 80 e6 30 30 
+30: ff 00 ff 00 ff 00 ff 00 ff 00 ff 00 ff 00 ff 00 
+40: 7f 7f 7f 7f 7f 7f 5f 40 ad 6a d4 00 ff ff ff ff 
+50: ff 38 7f 7f 7f 80 00 00 90 00 0c 12 60 00 00 00 
+60: 00 14 41 46 1c 03 00 ff 00 14 41 46 1c 03 00 ff 
+70: 00 14 41 46 1c 03 00 ff ff ff ff 80 ff ff ff ff 
+80: ff ff ff ff ff ff ff ff 00 00 00 00 00 d0 00 54 
+90: ff 00 00 00 ff 00 00 00 01 97 00 00 40 a3 c1 01 
+a0: 7d d7 df d6 7d 4f 24 3f 3a 8d fc 6a 3f 1b 00 00 
+b0: 73 70 71 71 70 70 ea bd ff ff ff ff ff ff ff ff 
+c0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
+d0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
+e0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
+f0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
