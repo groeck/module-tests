@@ -230,7 +230,7 @@ overflow_check_val()
     omax=$(cat ${attr})
     if [ ${omax} -ne ${max} -a "${omax}" != "${overflow}" ]
     then
-	pr_err "$(basename ${attr}): Suspected overflow: [${max} vs. ${omax}]"
+	pr_err "$(basename ${attr}): Suspected overflow: [max=${max}, read ${omax}, written ${overflow}]"
 	return 1
     fi
     if [ ${waittime} -ne 0 ]
@@ -298,7 +298,8 @@ findmax()
 {
 	local attr=$1
 	# local max=134217727	# 7FFFFFF
-	local max=1048575	# FFFFF
+	# local max=1048575	# FFFFF
+	local max=65535		# FFFF
 	local found=$(cat ${attr})
 	local tmp
 
