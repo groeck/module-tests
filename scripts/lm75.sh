@@ -80,9 +80,10 @@ runtest()
     rv=$?
 
     check_range -b ${basedir} -s 100 -d 200 -r -q temp1_max
-    rv=$(($? + ${rv}))
+    rv=$(($? + rv))
+
     check_range -b ${basedir} -s 100 -d 200 -r -q temp1_max_hyst
-    rv=$(($? + ${rv}))
+    rv=$(($? + rv))
 
     modprobe -r i2c-stub 2>/dev/null
 
