@@ -3,7 +3,7 @@ getval=${dir}/../getval
 
 pr_err()
 {
-    >&2 echo $*
+    echo $* >&2
 }
 
 install_regs ()
@@ -379,7 +379,7 @@ check_range()
 
 	attr=${base}$1
 
-	if [ ! -e ${attr} ]
+	if [ ! -e "${attr}" ]
 	then
 		if [ ${ignore} -eq 1 ]
 		then
@@ -431,6 +431,7 @@ check_range()
 		echo ${i} > ${attr} 2>/dev/null
 		if [ $? -ne 0 ]
 		then
+			pr_err "failed to write ${i} into ${attr}"
 			return 1
 		fi
 		x=$(cat ${attr})
