@@ -42,6 +42,50 @@ adm9240_vals=(adm9240 0 1250 0 0 8 1758 1205 0 4 0 0 0 1510 1641 1367 0
 	2573 2616 2250 0 0 33000 50000 45000
 	)
 
+adm9240_perm=(
+	"-r--r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-rw-r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-rw-r--r--"
+)
+
 lm81_regs=(
 	47 47 47 47 47 47 47 47 47 47 47 47 47 47 47 47
 	47 81 24 03 94 00 00 00 00 ff ff ff ff ff ff ff
@@ -66,6 +110,31 @@ lm81_vals=(lm81 8 1250 0 0 2 0 0 0 2 0 0 0 2487 3320 0
 	0 998 3586 0 0 0 36000 127000 127000
 )
 
+lm81_regs2=(
+	ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+	ff 81 24 03 94 00 00 00 00 ff ff ff ff ff ff ff
+	bf cc c1 00 c0 47 ec 1c ff ff 65 dc b4 ff c0 d3
+	ad ff 00 d3 ad 4e 40 71 a9 4b 46 ff ff 58 01 04
+	01 08 00 00 00 00 00 f0 2f 80 80 81 44 80 80 80
+	80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80
+	80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80
+	80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80
+	80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80
+	80 81 24 03 94 00 00 00 00 ff ff ff ff ff ff ff
+	bf cc c1 00 c0 47 ec 1c ff ff 65 dc b4 ff c0 d3
+	ad ff 00 d3 ad 4e 40 71 a9 4b 46 ff ff 58 01 04
+	01 00 00 00 00 00 00 f0 2f 80 80 81 44 80 80 80
+	80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80
+	80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80
+	80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80
+)
+
+lm81_vals2=(lm81 8 1250 0 0 8 0 0 0 8
+	0 0 0 2487 2865 2344 0 2869 3586 2700
+	0 3317 3627 2973 1 0 6641 0 0 12000
+	13188 10813 0 998 1097 900 0 0 28500 75000 70000
+)
+
 runtest()
 {
     local chip=$1
@@ -85,6 +154,9 @@ runtest()
     getbasedir ${i2c_addr}
 
     cd ${basedir}
+
+# grep . *
+# ls -l
 
     dotest attrs[@] vals[@]
     rv=${rv}
@@ -122,10 +194,13 @@ runtest()
     return ${rv}
 }
 
-runtest adm9240 adm9240_regs[@] adm9240_attrs[@] adm9240_vals[@]
+runtest adm9240 adm9240_regs[@] adm9240_attrs[@] adm9240_vals[@] adm9240_perm[@]
 rv=$?
 
-runtest lm81 lm81_regs[@] adm9240_attrs[@] lm81_vals[@]
+runtest lm81 lm81_regs[@] adm9240_attrs[@] lm81_vals[@] adm9240_perm[@]
+rv=$((rv + $?))
+
+runtest lm81 lm81_regs2[@] adm9240_attrs[@] lm81_vals2[@] adm9240_perm[@]
 rv=$((rv + $?))
 
 modprobe -r adm9240
