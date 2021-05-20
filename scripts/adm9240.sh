@@ -186,7 +186,7 @@ runtest()
     check_range -b ${basedir} -r -q -d 2 aout_output
     rv=$(($? + rv))
 
-    check_range -b ${basedir} -l 0 -u 0 -d 0 -r -q intrusion0_alarm
+    check_range -b ${basedir} -l 0 -u 0 -d 0 -r -q -S intrusion0_alarm
     rv=$(($? + rv))
 
     modprobe -r i2c-stub 2>/dev/null
