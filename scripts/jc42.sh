@@ -52,6 +52,8 @@ rv=$((${rv} + $?))
 check_range -b ${basedir} -l 25000 -d 1500 -q temp1_crit_hyst
 rv=$((${rv} + $?))
 
+check_volatile -s '1.1' "${i2c_adapter}" "${i2c_addr}" 0x05 ws 0x0100 0x0300 0x0040 temp1_input 16000 4000
+
 modprobe -r i2c-stub 2>/dev/null
 modprobe -r jc42
 
