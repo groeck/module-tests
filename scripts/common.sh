@@ -190,6 +190,21 @@ OVERFLOW_MAX=(2147483647	# 0x7fffffff
 	18446744073709551615	# 0xffffffffffffffff
 )
 
+fixup_writeattr()
+{
+    :
+}
+
+writeattr()
+{
+    local attr="$1"
+    local value="$2"
+
+    echo "${value}" > "${attr}" 2>/dev/null
+
+    fixup_writeattr "${attr}" "${value}"
+}
+
 overflow_check_val()
 {
     local attr=$1
@@ -203,7 +218,7 @@ overflow_check_val()
     # the overflow is 0.
     while :
     do
-	echo ${overflow} > ${attr} 2>/dev/null
+	writeattr ${attr} ${overflow}
 	if [ $? -eq 0 ]
 	then
 	    break
@@ -271,7 +286,7 @@ findmin()
 	local tmp
 
 	# 0 is a good baseline
-	echo 0 > ${attr} 2>/dev/null
+	writeattr "${attr}" 0
 	if [ $? -eq 0 ]
 	then
 		tmp=$(cat ${attr})
@@ -283,7 +298,7 @@ findmin()
 	while [ ${min} -gt -9223372036854775808 ]
 	do
 		min=$((${min} * 2))
-		echo ${min} > ${attr} 2>/dev/null
+		writeattr ${attr} ${min}
 		tmp=$(cat ${attr})
 		if [ ${tmp} -lt ${found} ]
 		then
@@ -307,7 +322,7 @@ findmax()
 	do
 		max=$((${max} * 2))
 		max=$((${max} + 1))
-		echo ${max} > ${attr} 2>/dev/null
+		writeattr ${attr} ${max}
 		tmp=$(cat ${attr})
 		if [ ${tmp} -gt ${found} ]
 		then
@@ -345,8 +360,9 @@ check_range()
 	local waittime=0
 	local prev
 	local ignore=0
+	local silent=0
 
-	while getopts ":b:d:il:qrs:u:vw:" opt
+	while getopts "Sb:d:il:qrs:u:vw:" opt
 	do
 	    case ${opt} in
 	    b)	base=${OPTARG}/
@@ -367,6 +383,8 @@ check_range()
 	    r)	restore=1
 		;;
 	    s)  stepsize=${OPTARG}
+		;;
+	    S)  silent=1
 		;;
 	    u)	max=${OPTARG}
 		;;
@@ -410,10 +428,12 @@ check_range()
 			return 1
 		fi
 	fi
-	if [ ${max} -lt ${min} ]
-	then
+	if [[ "${min}" -eq "${max}" && "${silent}" -eq 0 ]]; then
+		# Not necessarily an error but let's report it.
+		pr_err "$(basename ${attr}): min [${min}] is equal to max [${max}]"
+	elif [[ "${max}" -lt "${min}" ]]; then
 		pr_err "$(basename ${attr}): max [${max}] must be larger or equal to min [${min}]"
-		echo ${orig} > ${attr}
+		writeattr ${attr} ${orig}
 		return 1
 	fi
 	if [ "${stepsize}" = "" -o ${stepsize} -le 0 ]
@@ -428,7 +448,7 @@ check_range()
 	prev=${min}
 	for i in $(seq ${min} ${stepsize} ${max})
 	do
-		echo ${i} > ${attr} 2>/dev/null
+		writeattr ${attr} ${i}
 		if [ $? -ne 0 ]
 		then
 			pr_err "failed to write ${i} into ${attr}"
@@ -462,7 +482,7 @@ check_range()
 
 	if [ ${restore} -ne 0 ]
 	then
-		echo ${orig} > ${attr}
+		writeattr ${attr} ${orig}
 	fi
 	if [ ${mdev} -lt ${deviation} ]
 	then
@@ -487,7 +507,7 @@ check_values ()
     i=0
     while [ $i -lt ${#v[*]} ]
     do
-	echo ${v[$i]} > ${attr} 2>/dev/null
+	writeattr ${attr} ${v[$i]}
 	if [ $? -ne 0 ]
 	then
 	    pr_err $2: Did not accept write of ${v[$i]}
@@ -506,7 +526,7 @@ check_values ()
     i=0
     while [ $i -lt ${#f[*]} ]
     do
-	echo ${f[$i]} > ${attr} 2>/dev/null
+	writeattr ${attr} ${f[$i]}
 	if [ $? -eq 0 ]
 	then
 	    pr_err $2: Unexpected: write of ${f[$i]} succeeded
@@ -516,6 +536,75 @@ check_values ()
     done
 
     return 0
+}
+
+fixup_regwrite()
+{
+    :
+}
+
+check_volatile()
+{
+    local sleeptime=""
+    local val
+    local rval
+    local aval
+    local rv=0
+    local change_only=0
+    local OPTIND=1
+    local opt
+
+    while getopts "cs:" opt
+    do
+	case ${opt} in
+	c) change_only=1
+	   ;;
+	s) sleeptime="${OPTARG}"
+	   ;;
+	esac
+    done
+    shift $(($OPTIND - 1))
+
+    local i2c_adapter="$1"
+    local i2c_addr="${2//0x/}"
+    local reg=$3
+    local regsize=$4
+    local _regsize="${regsize//s/}"
+    local fromval=$5
+    local toval=$6
+    local stepsize=$7
+    local attribute=$8
+    local attr_startval="${9}"
+    local attr_stepsize="${10}"
+    local attrval="${attr_startval}"
+
+    for val in $(seq ${fromval} ${stepsize} ${toval}); do
+	rval="${val}"
+	if [[ "${regsize}" == "ws" ]]; then
+	    # swap register write value if needed
+	    rval=$((((val & 0xff) << 8) | ((val & 0xff00) >> 8)))
+	fi
+	i2cset -f -y "${i2c_adapter}" "0x${i2c_addr}" ${reg} ${rval} ${_regsize}
+	fixup_regwrite "${i2c_adapter}" "0x${i2c_addr}" ${reg} ${rval}
+	if [[ -n "${sleeptime}" ]]; then
+	    sleep "${sleeptime}"
+	fi
+	aval="$(cat ${attribute})"
+	if [[ "${change_only}" -eq 0 ]]; then
+	    if [[ "${aval}" != "${attrval}" ]]; then
+		echo "${attribute} error read ${aval} expected ${attrval}"
+		rv=1
+	    fi
+	    attrval="$((attrval + attr_stepsize))"
+	else
+	    if [[ "${val}" -ne "${fromval}" && "${aval}" == "${attrval}" ]]; then
+		echo "${attribute}: value did not change"
+		rv=1
+	    fi
+	    attrval="${aval}"
+	fi
+    done
+    return ${rv}
 }
 
 # Parameter: i2c address
