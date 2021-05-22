@@ -38,9 +38,9 @@ adapter=$(grep "SMBus stub driver" /sys/class/i2c-adapter/*/name | cut -f1 -d: |
 regs=(	27 bb 48 48 48 48 48 48
 	4c 4c 4c 4c 4c 4c 00 00
 	00 00 3f 3f 45 00 00 00
-	ff e0 ff e0 ff e0 ff e0
-	ff e0 ff e0 ff e0 ff e0
-	ff e0 ff e0 ff e0 ff e0
+	20 00 40 00 60 00 80 00
+	a0 00 ff e0 10 e0 20 e0
+	30 e0 40 e0 50 e0 ff e0
 	80 00 80 00 80 00 80 00
 	80 00 80 00 00 00 00 00
 	80 00 80 00 80 00 80 00
@@ -65,23 +65,23 @@ fi
 
 pushd ${base} >/dev/null
 
-attrs=(fan1_fault fan1_input fan1_target
-	fan2_fault fan2_input fan2_target
-	fan3_fault fan3_input fan3_target
-	fan4_fault fan4_input fan4_target
-	fan5_fault fan5_input fan5_target
-	fan6_fault fan6_input fan6_target
+attrs=(fan1_enable fan1_fault fan1_input fan1_target
+	fan2_enable fan2_fault fan2_input fan2_target
+	fan3_enable fan3_fault fan3_input fan3_target
+	fan4_enable fan4_fault fan4_input fan4_target
+	fan5_enable fan5_fault fan5_input fan5_target
+	fan6_enable fan6_fault fan6_input fan6_target
 	name
 	pwm1 pwm1_enable pwm2 pwm2_enable
 	pwm3 pwm3_enable pwm4 pwm4_enable
 	pwm5 pwm5_enable pwm6 pwm6_enable)
 
-vals=(0 480 2048
-	0 480 2048
-	0 480 2048
-	0 480 2048
-	0 480 2048
-	0 480 2048
+vals=(1 0 3840 2048
+	1 0 1920 2048
+	1 0 1280 2048
+	1 0 960 2048
+	1 0 768 2048
+	1 0 0 2048
 	max31790
 	128 1 128 1
 	128 1 128 1
@@ -92,6 +92,8 @@ rv=$?
 
 for f in $(seq 1 6)
 do
+	check_range -b ${base} -l 0 -u 1 -r -w 2 fan${f}_enable
+	rv=$(($? + ${rv}))
 	check_range -b ${base} -l 120 -u 7864320 -d 3932160 -r -w 2 fan${f}_target
 	rv=$(($? + ${rv}))
 done
@@ -129,9 +131,9 @@ modprobe -r max31790
 regs=(	27 bb 49 49 49 49 49 49
 	4c 4c 4c 4c 4c 4c 00 00
 	00 00 3f 3f 45 00 00 00
-	ff e0 ff e0 ff e0 ff e0
-	ff e0 ff e0 ff e0 ff e0
-	ff e0 ff e0 ff e0 ff e0
+	20 00 40 00 60 00 80 00
+	a0 00 ff e0 10 e0 20 e0
+	30 e0 40 e0 50 e0 ff e0
 	80 00 80 00 80 00 80 00
 	80 00 80 00 00 00 00 00
 	80 00 80 00 80 00 80 00
@@ -148,17 +150,19 @@ modprobe max31790
 base=$(getbase ${adapter} 00${i2c_addr})
 pushd ${base} >/dev/null
 
-attrs=(fan1_fault fan1_input fan2_fault fan2_input
-	fan3_fault fan3_input fan4_fault fan4_input
-	fan5_fault fan5_input fan6_fault fan6_input
+attrs=(fan1_enable fan1_fault fan1_input
+	fan2_enable fan2_fault fan2_input
+	fan3_enable fan3_fault fan3_input
+	fan4_enable fan4_fault fan4_input
+	fan5_enable fan5_fault fan5_input
+	fan6_enable fan6_fault fan6_input
 	fan7_fault fan7_input fan8_fault fan8_input
 	fan9_fault fan9_input fan10_fault fan10_input
 	fan11_fault fan11_input fan12_fault fan12_input
 	name)
 
-vals=(0 480 0 480 0 480 0 480
-	0 480 0 480 0 480 0 480
-	0 480 0 480 0 480 0 480
+vals=(1 0 3840 1 0 1920 1 0 1280 1 0 960 1 0 768 1 0 0
+	0 7281 0 3737 0 2514 0 1894 0 1519 0 0
 	max31790)
 
 dotest attrs[@] vals[@]
