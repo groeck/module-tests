@@ -181,6 +181,8 @@ DEFAULT_MAX=100000001
 
 UNDERFLOW_MIN=(-2147483648	# 0x80000000
 	-9223372036854775808	# 0x8000000000000000
+	-1
+	0
 )
 
 OVERFLOW_MAX=(2147483647	# 0x7fffffff
@@ -228,11 +230,20 @@ underflow_check_val()
 	if [ ${underflow} -ge ${min} ]; then
 	    break
 	fi
-	underflow=$((${underflow} / 2))
+	if [ ${underflow} -eq 0 ]; then
+	    break
+	fi
+	underflow=$((underflow / 2))
     done
 
+    # If the written value is larger than the expected minimum, we can't
+    # be sure if any observed differences are due to rounding or due to
+    # a real problem. Declare success in that case.
+    if [ ${underflow} -gt ${min} ]; then
+	return 0
+    fi
+
     omin=$(cat ${attr})
-    echo "  ${attr} min ${min} write ${underflow} read ${omin}"
     if [ ${omin} -ne ${min} -a "${omin}" != "${underflow}" ]; then
 	pr_err "$(basename ${attr}): Suspected underflow: [min=${min}, read ${omin}, written ${underflow}]"
 	return 1
@@ -251,8 +262,6 @@ underflow_check_val()
 underflow_check()
 {
     local i=0
-
-    echo "Checking underflow for $1, min=$2"
 
     while [ $i -lt ${#UNDERFLOW_MIN[*]} ]; do
 	if ! underflow_check_val $1 ${UNDERFLOW_MIN[$i]} $2 $3; then
