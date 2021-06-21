@@ -179,6 +179,10 @@ getbase()
 DEFAULT_MIN=-100000001
 DEFAULT_MAX=100000001
 
+UNDERFLOW_MIN=(-2147483648	# 0x80000000
+	-9223372036854775808	# 0x8000000000000000
+)
+
 OVERFLOW_MAX=(2147483647	# 0x7fffffff
 	2147483648		# 0x80000000
 	4294967295		# 0xffffffff
@@ -203,6 +207,61 @@ writeattr()
     echo "${value}" > "${attr}" 2>/dev/null
 
     fixup_writeattr "${attr}" "${value}"
+}
+
+underflow_check_val()
+{
+    local attr=$1
+    local underflow=$2
+    local min=$3
+    local waittime=$4
+    local omin
+
+    # Make sure that the write doesn't fail because the value
+    # written is too low to be accepted by the infrastructure.
+    # Keep trying with higher values until the write succeeds or
+    # the underflow is 0.
+    while :; do
+	if writeattr ${attr} ${underflow}; then
+	    break
+	fi
+	if [ ${underflow} -ge ${min} ]; then
+	    break
+	fi
+	underflow=$((${underflow} / 2))
+    done
+
+    omin=$(cat ${attr})
+    echo "  ${attr} min ${min} write ${underflow} read ${omin}"
+    if [ ${omin} -ne ${min} -a "${omin}" != "${underflow}" ]; then
+	pr_err "$(basename ${attr}): Suspected underflow: [min=${min}, read ${omin}, written ${underflow}]"
+	return 1
+    fi
+    if [ ${waittime} -ne 0 ]; then
+	sleep ${waittime}
+	omax=$(cat ${attr})
+	if [ ${omin} -ne ${min} ]; then
+	    pr_err "$(basename ${attr}): Cache mismatch: [${min} vs. ${omin}]"
+	    return 1
+	fi
+    fi
+    return 0
+}
+
+underflow_check()
+{
+    local i=0
+
+    echo "Checking underflow for $1, min=$2"
+
+    while [ $i -lt ${#UNDERFLOW_MIN[*]} ]; do
+	if ! underflow_check_val $1 ${UNDERFLOW_MIN[$i]} $2 $3; then
+	    return 1
+	fi
+	i=$((i + 1))
+    done
+
+    return 0
 }
 
 overflow_check_val()
@@ -408,11 +467,14 @@ check_range()
 	fi
 	orig=$(cat ${attr})
 
-	if [ ${min} -eq ${DEFAULT_MIN} ]
-	then
+	if [ ${min} -eq ${DEFAULT_MIN} ]; then
 		min=$(findmin ${attr})
 		if [ ${quiet} -eq 0 ]; then
 			disp=1
+		fi
+		# Try to trigger an underflow
+		if ! underflow_check ${attr} ${min} ${waittime}; then
+			return 1
 		fi
 	fi
 	if [ ${max} -eq ${DEFAULT_MAX} ]
