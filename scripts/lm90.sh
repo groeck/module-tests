@@ -142,6 +142,61 @@ permissions_lm86=(
 	"-rw-r--r--"
 )
 
+regs_lm99=(
+	27 24 00 00 05 69 00 59 f0 00 00 00 00 00 00 00
+	a0 00 00 00 00 00 00 00 00 7f 00 00 00 00 00 00
+	7f 0a 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	41 20 2f 35 fb 00 0d 00 00 75 75 00 00 00 00 00
+	00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+	00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 31
+)
+
+attrs_lm99=(alarms name
+	temp1_crit temp1_crit_alarm temp1_crit_hyst
+	temp1_input temp1_max temp1_max_alarm temp1_min temp1_min_alarm
+	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault
+	temp2_input temp2_max temp2_max_alarm temp2_min temp2_min_alarm
+	temp2_offset update_interval
+)
+
+vals_lm99=(0 lm99 127000 0 117000 39000 0 0 0 0
+	143000 0 133000 0 52625 16000 0 16000 0 0 500
+)
+
+permissions_lm99=(
+	"-r--r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-rw-r--r--"
+)
+
 regs_g781=(
 	11 0D 80 00 08 55 00 55 00 00 08 55 00 55 00 11
 	D0 00 00 00 00 11 11 11 11 55 11 11 11 11 11 11
@@ -535,7 +590,6 @@ permissions_lm90=(
 
 # others:
 # ../register-dumps/w83l771-manuel.dump (similar to lm86)
-# ../register-dumps/lm99.dump (same as lm86)
 
 runtest()
 {
@@ -612,6 +666,8 @@ rv=$(($? + ${rv}))
 runtest max6695 regs_max6695[@] attrs_max6695[@] vals_max6695[@] permissions_max6695[@]
 rv=$(($? + ${rv}))
 runtest lm86 regs_lm86[@] attrs_lm86[@] vals_lm86[@] permissions_lm86[@]
+rv=$(($? + ${rv}))
+runtest lm99 regs_lm99[@] attrs_lm99[@] vals_lm99[@] permissions_lm99[@]
 rv=$(($? + ${rv}))
 runtest g781 regs_g781[@] attrs_g781[@] vals_g781[@] permissions_g781[@]
 rv=$(($? + ${rv}))
