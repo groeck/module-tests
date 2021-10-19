@@ -23,10 +23,13 @@ fixup_writeattr()
     *)
 	;;
     esac
+    return 0
 }
 
 modprobe -r i2c-stub 2>/dev/null
-modprobe i2c-stub chip_addr=0x${i2c_addr}
+# modprobe i2c-stub chip_addr=0x${i2c_addr}
+modprobe i2c-stub chip_addr=0x${i2c_addr} width=8
+
 if [ $? -ne 0 ]
 then
 	echo must be root
@@ -65,23 +68,23 @@ fi
 
 pushd ${base} >/dev/null
 
-attrs=(fan1_enable fan1_fault fan1_input fan1_target
-	fan2_enable fan2_fault fan2_input fan2_target
-	fan3_enable fan3_fault fan3_input fan3_target
-	fan4_enable fan4_fault fan4_input fan4_target
-	fan5_enable fan5_fault fan5_input fan5_target
-	fan6_enable fan6_fault fan6_input fan6_target
+attrs=(fan1_enable fan1_fault fan1_input fan1_min fan1_target
+	fan2_enable fan2_fault fan2_input fan2_min fan2_target
+	fan3_enable fan3_fault fan3_input fan3_min fan3_target
+	fan4_enable fan4_fault fan4_input fan4_min fan4_target
+	fan5_enable fan5_fault fan5_input fan5_min fan5_target
+	fan6_enable fan6_fault fan6_input fan6_min fan6_target
 	name
 	pwm1 pwm1_enable pwm2 pwm2_enable
 	pwm3 pwm3_enable pwm4 pwm4_enable
 	pwm5 pwm5_enable pwm6 pwm6_enable)
 
-vals=(1 0 3840 2048
-	1 0 1920 2048
-	1 0 1280 2048
-	1 0 960 2048
-	1 0 768 2048
-	1 0 0 2048
+vals=(1 0 3840 2048 2048
+	1 0 1920 2048 2048
+	1 0 1280 2048 2048
+	1 0 960 2048 2048
+	1 0 768 2048 2048
+	1 0 0 2048 2048
 	max31790
 	128 1 128 1
 	128 1 128 1
@@ -150,19 +153,34 @@ modprobe max31790
 base=$(getbase ${adapter} 00${i2c_addr})
 pushd ${base} >/dev/null
 
-attrs=(fan1_enable fan1_fault fan1_input
-	fan2_enable fan2_fault fan2_input
-	fan3_enable fan3_fault fan3_input
-	fan4_enable fan4_fault fan4_input
-	fan5_enable fan5_fault fan5_input
-	fan6_enable fan6_fault fan6_input
-	fan7_fault fan7_input fan8_fault fan8_input
-	fan9_fault fan9_input fan10_fault fan10_input
-	fan11_fault fan11_input fan12_fault fan12_input
+# grep . *
+
+attrs=(fan1_enable fan1_fault fan1_input fan1_min
+	fan2_enable fan2_fault fan2_input fan2_min
+	fan3_enable fan3_fault fan3_input fan3_min
+	fan4_enable fan4_fault fan4_input fan4_min
+	fan5_enable fan5_fault fan5_input fan5_min
+	fan6_enable fan6_fault fan6_input fan6_min
+	fan7_enable fan7_fault fan7_input fan7_min
+	fan8_enable fan8_fault fan8_input fan8_min
+	fan9_enable fan9_fault fan9_input fan9_min
+	fan10_enable fan10_fault fan10_input fan10_min
+	fan11_enable fan11_fault fan11_input fan11_min
+	fan12_enable fan12_fault fan12_input fan12_min
 	name)
 
-vals=(1 0 3840 1 0 1920 1 0 1280 1 0 960 1 0 768 1 0 0
-	0 7281 0 3737 0 2514 0 1894 0 1519 0 0
+vals=(1 0 3840 2048
+	1 0 1920 2048
+	1 0 1280 2048
+	1 0 960 2048
+	1 0 768 2048
+	1 0 0 2048
+	1 0 7281 2048
+	1 0 3737 2048
+	1 0 2514 2048
+	1 0 1894 2048
+	1 0 1519 2048
+	1 0 0 2048
 	max31790)
 
 dotest attrs[@] vals[@]
