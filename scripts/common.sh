@@ -47,6 +47,7 @@ dotest ()
     local f
     local known=("device" "driver" "hwmon" "modalias" "power" "subsystem" "uevent")
     local rv=0
+    local perm
 
     ls | while read f
     do
@@ -72,15 +73,19 @@ dotest ()
 	    i=$(($i + 1))
 	    continue
 	fi
-	val=$(cat ${a[$i]})
-	if [ "${val}" != "${v[$i]}" ]
-	then
+	# Don't try to read the attribute if it is write-only 
+	perm="$(ls -l "${a[$i]}" | cut -f1 -d' ')"
+	# we can not use "test -r" because that does not work for root
+	if [[ "${perm}" != "--w-------" ]]; then
+	    val=$(cat "${a[$i]}")
+	    if [ "${val}" != "${v[$i]}" ]
+	    then
 		pr_err "${a[$i]}: bad value ${val}, expected ${v[$i]}"
 		rv=1
+	    fi
 	fi
 	if [ -n "${p[$i]}" ]
 	then
-	    perm=$(ls -l ${a[$i]} | cut -f1 -d' ')
 	    if [ "${perm}" != "${p[$i]}" ]
 	    then
 		pr_err "${a[$i]}: bad permissions: ${perm}, expected ${p[$i]}"
