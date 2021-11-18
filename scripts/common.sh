@@ -39,8 +39,11 @@ containsElement()
 
 dotest ()
 {
-    local val
-    local i
+    local permissive=0
+    if [[ $1 = "-p" ]]; then
+	permissive=1
+	shift
+    fi
     local a=("${!1}")
     local v=("${!2}")
     local p=("${!3}")
@@ -48,6 +51,8 @@ dotest ()
     local known=("device" "driver" "hwmon" "modalias" "power" "subsystem" "uevent")
     local rv=0
     local perm
+    local val
+    local i
 
     ls | while read f
     do
@@ -78,10 +83,14 @@ dotest ()
 	# we can not use "test -r" because that does not work for root
 	if [[ "${perm}" != "--w-------" ]]; then
 	    val=$(cat "${a[$i]}")
-	    if [ "${val}" != "${v[$i]}" ]
-	    then
-		pr_err "${a[$i]}: bad value ${val}, expected ${v[$i]}"
-		rv=1
+	    if [[ "${val}" != "${v[$i]}" ]]; then
+		if [[ ${permissive} -eq 0 || ${a[$i]%_input} = ${a[$i]} ]];
+		then
+		    pr_err "${a[$i]}: bad value ${val}, expected ${v[$i]}"
+		    rv=1
+		elif [[ ${permissive} -eq 1 ]]; then
+		    echo "Note: ${a[$i]}: value difference: reported ${val}, expected ${v[$i]}"
+		fi
 	    fi
 	fi
 	if [ -n "${p[$i]}" ]
