@@ -207,6 +207,8 @@ check_alarm()
 
 test_one()
 {
+    local a=("${!1}")
+    local channels
     local t
     local rv
     local temp
@@ -218,6 +220,15 @@ test_one()
     # basedir was re-created; need to repeat cd
     cd "${basedir}"
 
+    # determine number of channels to test
+    channels=0
+    for t in $(seq 9 -1 1); do
+	if [[ -e "temp${t}_input" ]]; then
+	    channels=$t
+	    break
+	fi
+    done
+
     # Make sure that updates happen as fast as possible
     if is_writeable update_interval; then
 	echo 1 > update_interval
@@ -226,12 +237,12 @@ test_one()
     sleep 0.2
 
     # dummy value read to give alarms time to settle
-    cat ${attrs[@]} >/dev/null 2>&1
+    cat ${a[@]} >/dev/null 2>&1
     sleep 0.2
 
-    local vals=($(cat ${attrs[@]} 2>/dev/null))
+    local vals=($(cat ${a[@]} 2>/dev/null))
 
-    dotest -p attrs[@] vals[@]
+    dotest -p a[@] vals[@]
     if [[ $? -ne 0 ]]; then
 	return 1
     fi
@@ -305,7 +316,7 @@ test_chip()
     i2cset -f -y ${i2c_adapter} ${i2c_addr} 0x9 0x0
     modprobe lm90
 
-    test_one
+    test_one attrs[@]
     rv=$?
 
     if [[ "${extended_range}" -ne 0 ]]; then
@@ -315,7 +326,7 @@ test_chip()
 	i2cset -f -y ${i2c_adapter} ${i2c_addr} 0x9 0x4
 	modprobe lm90
 
-	test_one
+	test_one attrs[@]
 	rv=$((rv + $?))
     fi
 
@@ -353,13 +364,6 @@ for hname in $(ls /sys/class/hwmon/*/name); do
 	continue
     fi
 
-
-    # set common defaults
-    channels=2
-    if [[ -e "temp3_input" ]]; then
-	channels=3
-    fi
-
     extended_range=0
     case "${chip}" in
     "adt7461"|"adt7481"|"adt7483a"|"tmp451"|"tmp461")
@@ -368,6 +372,7 @@ for hname in $(ls /sys/class/hwmon/*/name); do
     esac
 
     test_chip
+    rv=$((rv + $?))
 done
 
 exit ${rv}
