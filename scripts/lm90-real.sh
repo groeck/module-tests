@@ -1,7 +1,4 @@
 #!/bin/bash
-
-i2c_addr=0x4c
-
 dir=$(dirname $0)
 . ${dir}/common.sh
 
@@ -9,6 +6,11 @@ dir=$(dirname $0)
 
 modprobe -r i2c_diolan_u2c 2>/dev/null
 modprobe i2c_diolan_u2c 2>/dev/null
+
+modprobe -r adm1021 >/dev/null 2>&1
+modprobe -r max6642 >/dev/null 2>&1
+modprobe -r lm90 >/dev/null 2>&1
+modprobe lm90 >/dev/null 2>&1
 
 i2c_adapter=$(grep "i2c-diolan-u2c" /sys/class/i2c-adapter/*/name | cut -f1 -d: | cut -f5 -d/ | cut -f2 -d-)
 
@@ -53,6 +55,19 @@ attrs_adt7483a="name
 	update_interval
 "
 
+attrs_g781="alarms name
+	temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
+	temp1_max temp1_max_alarm temp1_min temp1_min_alarm
+	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault temp2_input
+	temp2_max temp2_max_alarm temp2_min temp2_min_alarm temp2_offset
+	update_interval
+"
+
+attrs_lm84="alarms name
+	temp1_input temp1_max temp1_max_alarm
+	temp2_fault temp2_input temp2_max temp2_max_alarm
+"
+
 attrs_lm86="alarms name
 	temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
 	temp1_max temp1_max_alarm temp1_min temp1_min_alarm
@@ -67,6 +82,20 @@ attrs_lm90="alarms name
 	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault temp2_input
 	temp2_max temp2_max_alarm temp2_min temp2_min_alarm temp2_offset
 	update_interval
+"
+
+attrs_lm99="alarms name
+	temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
+	temp1_max temp1_max_alarm temp1_min temp1_min_alarm
+	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault temp2_input
+	temp2_max temp2_max_alarm temp2_min temp2_min_alarm temp2_offset
+	update_interval
+"
+
+attrs_max1617="alarms name
+	temp1_input temp1_max temp1_max_alarm temp1_min temp1_min_alarm
+	temp2_fault temp2_input temp2_max temp2_max_alarm
+	temp2_min temp2_min_alarm update_interval
 "
 
 attrs_max6642="name
@@ -106,6 +135,14 @@ attrs_max6659="alarms name
 	update_interval
 "
 
+attrs_max6680="alarms name
+	temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
+	temp1_max temp1_max_alarm temp1_min temp1_min_alarm
+	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault temp2_input
+	temp2_max temp2_max_alarm temp2_min temp2_min_alarm temp2_offset
+	update_interval
+"
+
 attrs_max6690="alarms name
 	temp1_input temp1_max temp1_max_alarm temp1_min temp1_min_alarm
 	temp2_fault temp2_input temp2_max temp2_max_alarm temp2_min temp2_min_alarm
@@ -125,6 +162,14 @@ attrs_max6696="alarms name
 	temp3_emergency temp3_emergency_alarm temp3_emergency_hyst
 	temp3_fault temp3_input
 	temp3_max temp3_max_alarm temp3_min temp3_min_alarm
+	update_interval
+"
+
+attrs_nct214="name
+	temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
+	temp1_max temp1_max_alarm temp1_min temp1_min_alarm
+	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault temp2_input
+	temp2_max temp2_max_alarm temp2_min temp2_min_alarm temp2_offset
 	update_interval
 "
 
@@ -162,6 +207,7 @@ test_chip()
 
     modprobe -r lm90
     i2cset -f -y ${i2c_adapter} ${i2c_addr} 0x9 0x0
+    i2cset -f -y ${i2c_adapter} ${i2c_addr} 0xf 0x0
     modprobe lm90
 
     test_one attrs[@]
@@ -172,6 +218,7 @@ test_chip()
 
 	modprobe -r lm90
 	i2cset -f -y ${i2c_adapter} ${i2c_addr} 0x9 0x4
+	i2cset -f -y ${i2c_adapter} ${i2c_addr} 0xf 0x0
 	modprobe lm90
 
 	test_one attrs[@]
