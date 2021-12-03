@@ -78,7 +78,7 @@ dotest ()
 	    i=$(($i + 1))
 	    continue
 	fi
-	# Don't try to read the attribute if it is write-only 
+	# Don't try to read the attribute if it is write-only
 	perm="$(ls -l "${a[$i]}" | cut -f1 -d' ')"
 	# we can not use "test -r" because that does not work for root
 	if [[ "${perm}" != "--w-------" ]]; then
@@ -718,7 +718,7 @@ check_alarm()
 
 	val="$(cat ${input})"
 	echo "$((offset + val))" > "${limit}"
-	# echo "${limit}: $((offset + val)) [$(cat ${limit})]"
+	# echo "${input}: ${val} ${limit}: $((offset + val)) [$(cat ${limit})]"
 	if [[ -n "${hyst}" ]]; then
 	    echo "$((offset + val - 1000))" > "${hyst}"
 	    # echo "${hyst}: $((offset + val - 2000)) [$(cat ${hyst})]"
@@ -739,6 +739,12 @@ check_alarm()
 	aflag="$(cat ${alarm})"
 	if [[ "${aflag}" -ne "${expect}" ]]; then
 	    echo "${alarm} is ${aflag}, expected ${expect} (input=$(cat ${input}), limit=$(cat ${limit}))"
+	    grep . *
+	    sleep 1
+	    grep . *
+	    sleep 1
+	    grep . *
+	    exit 1
 	    rv=1
 	fi
 
@@ -752,9 +758,8 @@ test_one()
     local t
     local rv
     local temp
-    local limit
-    local alarm
-    local waitcmd=""
+    local temp2
+    local fault
     local temp_crit_hyst=""
 
     # basedir was re-created; need to repeat cd
@@ -776,11 +781,34 @@ test_one()
 
     sleep 0.2
 
-    # dummy value read to give alarms time to settle
+    temp="$(cat temp1_input)"
+    if [[ temp -le 0 || temp -gt 50000 ]]; then
+	local r
+
+	echo -n "Waiting for temperature to settle ..."
+	for r in $(seq 1 20); do
+	    temp="$(cat temp1_input)"
+	    if [[ temp -gt 0 && temp -lt 50000 ]]; then
+		break
+	    fi
+	    sleep 1
+	    echo -n "."
+	done
+        if [[ temp -le 0 || temp -gt 50000 ]]; then
+	    echo "Temperature failed to settle. Aborting."
+	    return 1
+	fi
+	echo
+    fi
+
+    # dummy value reads to give alarms time to settle
     cat ${a[@]} >/dev/null 2>&1
     sleep 0.2
 
     local vals=($(cat ${a[@]} 2>/dev/null))
+
+    # give alarms time to recover
+    sleep 0.2
 
     dotest -p a[@] vals[@]
     if [[ $? -ne 0 ]]; then
@@ -789,6 +817,30 @@ test_one()
 
     for t in $(seq 1 ${channels})
     do
+	if [[ -r "temp${t}_offset" ]]; then
+	    echo 0 > "temp${t}_offset"
+	    sleep 0.2
+	    temp="$(cat temp${t}_input)"
+	    echo 10000 > "temp${t}_offset"
+	    sleep 0.2
+	    temp2="$(cat temp${t}_input)"
+	    local d=$((temp - temp2 + 10000))
+	    if [[ d -gt 1000 || d -lt -1000 ]]; then
+		echo "Unexpected temperature offset ${diff}, expected < 1000"
+		rv=$((rv + 1))
+	    fi
+	    echo -10000 > "temp${t}_offset"
+	    sleep 0.2
+	    temp2="$(cat temp${t}_input)"
+	    d=$((temp2 - temp + 10000))
+	    if [[ diff -gt 1000 || d -lt -1000 ]]; then
+		echo "Unexpected temperature offset ${diff}, expected < 1000"
+		rv=$((rv + 1))
+	    fi
+	    check_range -b ${basedir} -d 500 -r -q -v temp${t}_offset
+	    rv=$((rv + $?))
+	    echo 0 > "temp${t}_offset"
+	fi
 	if [[ -e "temp${t}_min" ]]; then
 	    check_range -b ${basedir} -d 500 -r -q -v temp${t}_min
 	    rv=$((rv + $?))
@@ -815,6 +867,15 @@ test_one()
 	fi
 
 	# check alarm attributes
+	#
+	if [[ -e "temp${t}_fault" ]]; then
+	    fault="$(cat temp${t}_fault)"
+	    if [[ fault -ne 0 ]]; then
+		echo "temp${t} reports fault, skipping alarm attribute tests"
+		continue
+	    fi
+	fi
+
 	if [[ -e "temp${t}_min" ]]; then
 	    check_alarm "temp${t}_input" "temp${t}_min" "" "temp${t}_min_alarm" -5000 0
 	    rv=$((rv + $?))
