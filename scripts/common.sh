@@ -738,13 +738,7 @@ check_alarm()
 
 	aflag="$(cat ${alarm})"
 	if [[ "${aflag}" -ne "${expect}" ]]; then
-	    echo "${alarm} is ${aflag}, expected ${expect} (input=$(cat ${input}), limit=$(cat ${limit}))"
-	    grep . *
-	    sleep 1
-	    grep . *
-	    sleep 1
-	    grep . *
-	    exit 1
+	    echo "${alarm} is ${aflag}, expected ${expect} (${input}=$(cat ${input}), ${limit}=$(cat ${limit}))"
 	    rv=1
 	fi
 
@@ -818,6 +812,7 @@ test_one()
     for t in $(seq 1 ${channels})
     do
 	if [[ -r "temp${t}_offset" ]]; then
+	    # Check if temperature offsets are working
 	    echo 0 > "temp${t}_offset"
 	    sleep 0.2
 	    temp="$(cat temp${t}_input)"
@@ -825,21 +820,41 @@ test_one()
 	    sleep 0.2
 	    temp2="$(cat temp${t}_input)"
 	    local d=$((temp - temp2 + 10000))
-	    if [[ d -gt 1000 || d -lt -1000 ]]; then
-		echo "Unexpected temperature offset ${diff}, expected < 1000"
+	    if [[ d -gt 3000 || d -lt -3000 ]]; then
+		echo "temp${t}_input: Unexpected temperature difference ${d}, expected < 3000"
 		rv=$((rv + 1))
+	    elif [[ d -gt 1000 || d -lt -1000 ]]; then
+		echo "Note: temp${t}_input: Unusually high temperature difference ${d}"
 	    fi
 	    echo -10000 > "temp${t}_offset"
 	    sleep 0.2
 	    temp2="$(cat temp${t}_input)"
 	    d=$((temp2 - temp + 10000))
-	    if [[ diff -gt 1000 || d -lt -1000 ]]; then
-		echo "Unexpected temperature offset ${diff}, expected < 1000"
+	    if [[ diff -gt 3000 || d -lt -3000 ]]; then
+		echo "temp${t}_input: Unexpected temperature difference ${d}, expected < 3000"
+		rv=$((rv + 1))
+	    elif [[ diff -gt 1000 || d -lt -1000 ]]; then
+		echo "temp${t}_input: Unusually high temperature difference ${d}"
+	    fi
+	    # Now make sure that temperature ranges are as expected.
+	    echo 128000 > "temp${t}_offset"
+	    sleep 0.2
+	    temp="$(cat temp${t}_input)"
+	    if [[ temp -lt 0 ]]; then
+	        echo "temp${t}_input: Bad high temperature: Expected value > 0, got ${temp}"
+		rv=$((rv + 1))
+	    fi
+	    echo -128000 > "temp${t}_offset"
+	    sleep 0.2
+	    temp="$(cat temp${t}_input)"
+	    if [[ temp -gt 0 ]]; then
+	        echo "temp${t}_input: Bad low temperature: Expected value <= 0, got ${temp}"
 		rv=$((rv + 1))
 	    fi
 	    check_range -b ${basedir} -d 500 -r -q -v temp${t}_offset
 	    rv=$((rv + $?))
 	    echo 0 > "temp${t}_offset"
+	    sleep 0.2
 	fi
 	if [[ -e "temp${t}_min" ]]; then
 	    check_range -b ${basedir} -d 500 -r -q -v temp${t}_min
