@@ -19,6 +19,13 @@ if [[ -z "${i2c_adapter}" ]]; then
 	exit 1
 fi
 
+attrs_adm1023="alarms name
+	temp1_input temp1_max temp1_max_alarm temp1_min temp1_min_alarm
+	temp2_fault temp2_input temp2_max temp2_max_alarm
+	temp2_min temp2_min_alarm temp2_offset
+	update_interval
+"
+
 attrs_adm1032="alarms name
 	temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
 	temp1_max temp1_max_alarm temp1_min temp1_min_alarm
@@ -269,7 +276,7 @@ for hname in $(ls /sys/class/hwmon/*/name); do
 
     extended_range=0
     case "${chip}" in
-    "adt7461"|"adt7481"|"adt7483a"|"tmp451"|"tmp461")
+    "adt7461"|"adt7481"|"adt7483a"|"tmp451"|"tmp461"|"nct72"|"nct214")
 	extended_range=1
 	;;
     esac
@@ -277,5 +284,11 @@ for hname in $(ls /sys/class/hwmon/*/name); do
     test_chip
     rv=$((rv + $?))
 done
+
+if [[ rv -gt 0 ]]; then
+    echo "### ${rv} test failure(s) ###"
+else
+    echo "### All tests passed ###"
+fi
 
 exit ${rv}
