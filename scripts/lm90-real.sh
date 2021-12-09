@@ -19,6 +19,13 @@ if [[ -z "${i2c_adapter}" ]]; then
 	exit 1
 fi
 
+attrs_adm1021="alarms name
+	temp1_input temp1_max temp1_max_alarm temp1_min temp1_min_alarm
+	temp2_fault temp2_input temp2_max temp2_max_alarm
+	temp2_min temp2_min_alarm
+	update_interval
+"
+
 attrs_adm1023="alarms name
 	temp1_input temp1_max temp1_max_alarm temp1_min temp1_min_alarm
 	temp2_fault temp2_input temp2_max temp2_max_alarm
