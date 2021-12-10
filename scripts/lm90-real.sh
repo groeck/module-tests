@@ -49,6 +49,14 @@ attrs_adt7461="alarms name
 	update_interval
 "
 
+attrs_adt7461a="alarms name
+	temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
+	temp1_max temp1_max_alarm temp1_min temp1_min_alarm
+	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault temp2_input
+	temp2_max temp2_max_alarm temp2_min temp2_min_alarm temp2_offset
+	update_interval
+"
+
 attrs_adt7481="name
 	temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
 	temp1_max temp1_max_alarm temp1_min temp1_min_alarm
@@ -283,7 +291,7 @@ for hname in $(ls /sys/class/hwmon/*/name); do
 
     extended_range=0
     case "${chip}" in
-    "adt7461"|"adt7481"|"adt7483a"|"tmp451"|"tmp461"|"nct72"|"nct214")
+    "adt7461"|"adt7461a"|"adt7481"|"adt7483a"|"tmp451"|"tmp461"|"nct72"|"nct214")
 	extended_range=1
 	;;
     esac
