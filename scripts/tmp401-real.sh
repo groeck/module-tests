@@ -18,8 +18,11 @@ modprobe i2c_diolan_u2c 2>/dev/null
 i2c_adapter=$(grep "i2c-diolan-u2c" /sys/class/i2c-adapter/*/name | cut -f1 -d: | cut -f5 -d/ | cut -f2 -d-)
 
 if [[ -z "${i2c_adapter}" ]]; then
+    i2c_adapter=$(grep "i2c-devantech-iss" /sys/class/i2c-adapter/*/name | cut -f1 -d: | cut -f5 -d/ | cut -f2 -d-)
+    if [[ -z "${i2c_adapter}" ]]; then
 	echo "i2c adapter not found"
 	exit 1
+    fi
 fi
 
 attrs_tmp401="name temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input temp1_max
@@ -79,6 +82,8 @@ test_chip()
 
     modprobe -r tmp401
     i2cset -f -y ${i2c_adapter} ${i2c_addr} 0x9 0x4
+    # alarms need time to settle
+    sleep 0.1
     modprobe tmp401
 
     test_one attrs[@]
