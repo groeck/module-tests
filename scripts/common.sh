@@ -61,15 +61,11 @@ dotest ()
 
     ls | while read f
     do
-	containsElement "$f" "${known[@]}"
-	if [ $? -ne 0 ]
-	then
-		containsElement "$f" "${a[@]}"
-		if [ $? -ne 0 ]
-		then
-			pr_err "Unexpected attribute \"$f\", value=\"$(cat $f)\""
-			rv=1
-		fi
+	if ! containsElement "$f" "${known[@]}"; then
+	    if ! containsElement "$f" "${a[@]}"; then
+		pr_err "Unexpected attribute \"$f\", value=\"$(cat $f)\""
+		rv=1
+	    fi
 	fi
     done
 
@@ -878,8 +874,10 @@ _test_one()
 	    check_range -b ${basedir} -d 500 -r -q temp${t}_min
 	    rv=$((rv + $?))
 	fi
-	check_range -b ${basedir} -d 500 -r -q temp${t}_max
-	rv=$((rv + $?))
+	if [[ -e "temp${t}_max" ]]; then
+	    check_range -b ${basedir} -d 500 -r -q temp${t}_max
+	    rv=$((rv + $?))
+	fi
 	if [[ -e "temp${t}_crit" ]]; then
 	    check_range -b ${basedir} -d 500 -r -q temp${t}_crit
 	    rv=$((rv + $?))
@@ -916,10 +914,12 @@ _test_one()
 	    rv=$((rv + $?))
 	fi
 
-	check_alarm "temp${t}_input" "temp${t}_max" "" "temp${t}_max_alarm" -5000 1
-	rv=$((rv + $?))
-	check_alarm "temp${t}_input" "temp${t}_max" "" "temp${t}_max_alarm" 5000 0
-	rv=$((rv + $?))
+	if [[ -e "temp${t}_max" ]]; then
+	    check_alarm "temp${t}_input" "temp${t}_max" "" "temp${t}_max_alarm" -5000 1
+	    rv=$((rv + $?))
+	    check_alarm "temp${t}_input" "temp${t}_max" "" "temp${t}_max_alarm" 5000 0
+	    rv=$((rv + $?))
+	fi
 
 	if [[ -e "temp${t}_crit" && -e "temp${t}_crit_alarm" ]]; then
 	    check_alarm "temp${t}_input" "temp${t}_crit" "${temp_crit_hyst_index}" "temp${t}_crit_alarm" -5000 1
@@ -930,7 +930,7 @@ _test_one()
 
     done
 
-    if [[ -w update_interval ]]; then
+    if is_writeable update_interval; then
 	check_range -b ${basedir} -d 4000 -r -q update_interval
 	rv=$((rv + $?))
     fi
