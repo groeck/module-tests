@@ -6,7 +6,10 @@ dir=$(dirname $0)
 
 modprobe -r i2c_diolan_u2c 2>/dev/null
 modprobe i2c_diolan_u2c 2>/dev/null
+modprobe -r i2c_devantech_iss 2>/dev/null
+modprobe i2c_devantech_iss 2>/dev/null
 
+modprobe -r tmp401 >/dev/null 2>&1
 modprobe -r adm1021 >/dev/null 2>&1
 modprobe -r max6642 >/dev/null 2>&1
 modprobe -r lm90 >/dev/null 2>&1
@@ -15,8 +18,11 @@ modprobe lm90 >/dev/null 2>&1
 i2c_adapter=$(grep "i2c-diolan-u2c" /sys/class/i2c-adapter/*/name | cut -f1 -d: | cut -f5 -d/ | cut -f2 -d-)
 
 if [[ -z "${i2c_adapter}" ]]; then
+    i2c_adapter=$(grep "i2c-devantech-iss" /sys/class/i2c-adapter/*/name | cut -f1 -d: | cut -f5 -d/ | cut -f2 -d-)
+    if [[ -z "${i2c_adapter}" ]]; then
 	echo "i2c adapter not found"
 	exit 1
+    fi
 fi
 
 attrs_adm1021="alarms name
@@ -34,6 +40,14 @@ attrs_adm1023="alarms name
 "
 
 attrs_adm1032="alarms name
+	temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
+	temp1_max temp1_max_alarm temp1_min temp1_min_alarm
+	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault temp2_input
+	temp2_max temp2_max_alarm temp2_min temp2_min_alarm temp2_offset
+	update_interval
+"
+
+attrs_adt7421="alarms name
 	temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
 	temp1_max temp1_max_alarm temp1_min temp1_min_alarm
 	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault temp2_input
@@ -195,6 +209,14 @@ attrs_nct214="name
 	update_interval
 "
 
+attrs_nct218="name
+	temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
+	temp1_max temp1_max_alarm temp1_min temp1_min_alarm
+	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault temp2_input
+	temp2_max temp2_max_alarm temp2_min temp2_min_alarm temp2_offset
+	update_interval
+"
+
 attrs_nct72="name
 	temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
 	temp1_max temp1_max_alarm temp1_min temp1_min_alarm
@@ -211,6 +233,19 @@ attrs_sa56004="alarms name
 	update_interval
 "
 
+attrs_nct1008="alarms name
+	temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
+	temp1_max temp1_max_alarm temp1_min temp1_min_alarm
+	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault temp2_input
+	temp2_max temp2_max_alarm temp2_min temp2_min_alarm temp2_offset
+	update_interval
+"
+
+attrs_thmc10="alarms name
+	temp1_input temp1_max temp1_max_alarm temp1_min temp1_min_alarm
+	temp2_fault temp2_input temp2_max temp2_max_alarm temp2_min temp2_min_alarm
+	update_interval
+"
 attrs_tmp451="alarms name
 	temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
 	temp1_max temp1_max_alarm temp1_min temp1_min_alarm
@@ -233,7 +268,9 @@ test_chip()
 
     echo "Running tests for ${chip}"
 
-    echo "Testing default temperature range"
+    if [[ "${extended_range}" -ne 0 ]]; then
+        echo " Testing default temperature range"
+    fi
 
     modprobe -r lm90
     i2cset -f -y ${i2c_adapter} ${i2c_addr} 0x9 0x0
@@ -244,7 +281,7 @@ test_chip()
     rv=$?
 
     if [[ "${extended_range}" -ne 0 ]]; then
-	echo "Testing extended temperature range"
+	echo " Testing extended temperature range"
 
 	modprobe -r lm90
 	i2cset -f -y ${i2c_adapter} ${i2c_addr} 0x9 0x4
@@ -291,7 +328,8 @@ for hname in $(ls /sys/class/hwmon/*/name); do
 
     extended_range=0
     case "${chip}" in
-    "adt7461"|"adt7461a"|"adt7481"|"adt7483a"|"tmp451"|"tmp461"|"nct72"|"nct214")
+    "adt7421"|"adt7461"|"adt7461a"|"adt7481"|"adt7483a"|\
+    "tmp451"|"tmp461"|"nct72"|"nct214"|"nct1008")
 	extended_range=1
 	;;
     esac
