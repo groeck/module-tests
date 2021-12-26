@@ -44,6 +44,11 @@ dotest ()
 	permissive=1
 	shift
     fi
+    local quiet=0
+    if [[ $1 = "-q" ]]; then
+	quiet=1
+	shift
+    fi
     local a=("${!1}")
     local v=("${!2}")
     local p=("${!3}")
@@ -88,7 +93,7 @@ dotest ()
 		then
 		    pr_err "${a[$i]}: bad value ${val}, expected ${v[$i]}"
 		    rv=1
-		elif [[ ${permissive} -eq 1 ]]; then
+		elif [[ ${permissive} -eq 1 && ${quiet} -eq 0 ]]; then
 		    echo "Note: ${a[$i]}: value difference: reported ${val}, expected ${v[$i]}"
 		fi
 	    fi
@@ -707,7 +712,7 @@ check_alarm()
 {
 	local input=$1
 	local limit=$2
-	local hyst=$3
+	local hyst_index=$3
 	local alarm=$4
 	local offset=$5
 	local expect=$6
@@ -715,13 +720,24 @@ check_alarm()
 	local aflag
 	local rv=0
 	local index
+	local limit_val="$(cat ${limit})"
+	local hyst_base_attr
+	local hyst_attr
+	local hyst_val
+
+	if [[ -n "${hyst_index}" ]]; then
+	    hyst_base_attr="temp${hyst_index}_crit"
+	    hyst_attr="temp${hyst_index}_crit_hyst"
+	fi
 
 	val="$(cat ${input})"
 	echo "$((offset + val))" > "${limit}"
 	# echo "${input}: ${val} ${limit}: $((offset + val)) [$(cat ${limit})]"
-	if [[ -n "${hyst}" ]]; then
-	    echo "$((offset + val - 1000))" > "${hyst}"
-	    # echo "${hyst}: $((offset + val - 2000)) [$(cat ${hyst})]"
+	if [[ -n "${hyst_index}" ]]; then
+	    hyst_val="$(cat ${hyst_attr})"
+	    hyst_base_val="$(cat ${hyst_base_attr})"
+	    echo "$((offset + hyst_base_val - 1000))" > "${hyst_attr}"
+	    # echo "${hyst_attr}: $((offset + hyst_base_val - 1000)) [$(cat ${hyst_attr})]"
 	fi
 
 	# wait up to one second for the alarm to clear/set
@@ -742,10 +758,15 @@ check_alarm()
 	    rv=1
 	fi
 
+	echo "${limit_val}" > "${limit}"
+	if [[ -n "${hyst_index}" ]]; then
+	    echo "${hyst_val}" > "${hyst_attr}"
+	fi
+
 	return $rv
 }
 
-test_one()
+_test_one()
 {
     local a=("${!1}")
     local channels
@@ -754,10 +775,7 @@ test_one()
     local temp
     local temp2
     local fault
-    local temp_crit_hyst=""
-
-    # basedir was re-created; need to repeat cd
-    cd "${basedir}"
+    local temp_crit_hyst_index=""
 
     # determine number of channels to test
     channels=0
@@ -804,7 +822,7 @@ test_one()
     # give alarms time to recover
     sleep 0.2
 
-    dotest -p a[@] vals[@]
+    dotest -p -q a[@] vals[@]
     if [[ $? -ne 0 ]]; then
 	return 1
     fi
@@ -821,7 +839,7 @@ test_one()
 	    temp2="$(cat temp${t}_input)"
 	    local d=$((temp - temp2 + 10000))
 	    if [[ d -gt 3000 || d -lt -3000 ]]; then
-		echo "temp${t}_input: Unexpected temperature difference ${d}, expected < 3000"
+		pr_err "temp${t}_input: Unexpected temperature difference ${d}, expected < 3000"
 		rv=$((rv + 1))
 	    elif [[ d -gt 1000 || d -lt -1000 ]]; then
 		echo "Note: temp${t}_input: Unusually high temperature difference ${d}"
@@ -831,7 +849,7 @@ test_one()
 	    temp2="$(cat temp${t}_input)"
 	    d=$((temp2 - temp + 10000))
 	    if [[ diff -gt 3000 || d -lt -3000 ]]; then
-		echo "temp${t}_input: Unexpected temperature difference ${d}, expected < 3000"
+		pr_err "temp${t}_input: Unexpected temperature difference ${d}, expected < 3000"
 		rv=$((rv + 1))
 	    elif [[ diff -gt 1000 || d -lt -1000 ]]; then
 		echo "temp${t}_input: Unusually high temperature difference ${d}"
@@ -851,24 +869,24 @@ test_one()
 	        echo "temp${t}_input: Bad low temperature: Expected value <= 0, got ${temp}"
 		rv=$((rv + 1))
 	    fi
-	    check_range -b ${basedir} -d 500 -r -q -v temp${t}_offset
+	    check_range -b ${basedir} -d 500 -r -q temp${t}_offset
 	    rv=$((rv + $?))
 	    echo 0 > "temp${t}_offset"
 	    sleep 0.2
 	fi
 	if [[ -e "temp${t}_min" ]]; then
-	    check_range -b ${basedir} -d 500 -r -q -v temp${t}_min
+	    check_range -b ${basedir} -d 500 -r -q temp${t}_min
 	    rv=$((rv + $?))
 	fi
-	check_range -b ${basedir} -d 500 -r -q -v temp${t}_max
+	check_range -b ${basedir} -d 500 -r -q temp${t}_max
 	rv=$((rv + $?))
 	if [[ -e "temp${t}_crit" ]]; then
-	    check_range -b ${basedir} -d 500 -r -q -v temp${t}_crit
+	    check_range -b ${basedir} -d 500 -r -q temp${t}_crit
 	    rv=$((rv + $?))
 	    if is_writeable "temp${t}_crit_hyst"; then
-	        check_range -b ${basedir} -d 500 -r -q -v temp${t}_crit_hyst
+	        check_range -b ${basedir} -d 500 -r -q temp${t}_crit_hyst
 	        rv=$((rv + $?))
-	        temp_crit_hyst="temp${t}_crit_hyst"
+	        temp_crit_hyst_index="${t}"
 	    fi
 	fi
 
@@ -876,7 +894,7 @@ test_one()
 	    check_range -b ${basedir} -d 500 -r -q -v temp${t}_emergency
 	    rv=$((rv + $?))
 	    if is_writeable "temp${t}_emergency_hyst"; then
-	        check_range -b ${basedir} -d 500 -r -q -v temp${t}_emergency_hyst
+	        check_range -b ${basedir} -d 500 -r -q temp${t}_emergency_hyst
 	        rv=$((rv + $?))
 	    fi
 	fi
@@ -904,19 +922,45 @@ test_one()
 	rv=$((rv + $?))
 
 	if [[ -e "temp${t}_crit" && -e "temp${t}_crit_alarm" ]]; then
-	    check_alarm "temp${t}_input" "temp${t}_crit" "${temp_crit_hyst}" "temp${t}_crit_alarm" -5000 1
+	    check_alarm "temp${t}_input" "temp${t}_crit" "${temp_crit_hyst_index}" "temp${t}_crit_alarm" -5000 1
 	    rv=$((rv + $?))
-	    check_alarm "temp${t}_input" "temp${t}_crit" "${temp_crit_hyst}" "temp${t}_crit_alarm" 5000 0
+	    check_alarm "temp${t}_input" "temp${t}_crit" "${temp_crit_hyst_index}" "temp${t}_crit_alarm" 5000 0
 	    rv=$((rv + $?))
 	fi
 
     done
 
     if [[ -w update_interval ]]; then
-	check_range -b ${basedir} -d 4000 -r -q -v update_interval
+	check_range -b ${basedir} -d 4000 -r -q update_interval
 	rv=$((rv + $?))
     fi
 
+    return ${rv}
+}
+
+test_one()
+{
+    local a=("${!1}")
+    local rv
+
+    # basedir was re-created; need to repeat cd
+    cd "${basedir}"
+
+    if [[ -e "device/pec" ]]; then
+	echo "  Testing with PEC disabled"
+	echo 0 > "device/pec"
+    fi
+
+    _test_one a[@]
+    rv=$?
+
+    if [[ -e "device/pec" ]]; then
+	echo "  Testing with PEC enabled"
+	echo 1 > "device/pec"
+	_test_one a[@]
+	rv=$((rv + $?))
+	echo 0 > "device/pec"
+    fi
     return ${rv}
 }
 
