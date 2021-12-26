@@ -4,6 +4,7 @@
 *.ko
 *.tmp_versions
 *.cmd
+*.mod
 Makefile
 modules.order
 Module.symvers
