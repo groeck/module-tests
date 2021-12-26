@@ -67,9 +67,7 @@ test_chip()
 {
     local rv
 
-    echo "Running tests for ${chip}"
-
-    echo "Testing default temperature range"
+    echo "  Testing default temperature range"
 
     modprobe -r tmp401
     i2cset -f -y ${i2c_adapter} ${i2c_addr} 0x9 0x0
@@ -78,7 +76,7 @@ test_chip()
     test_one attrs[@]
     rv=$?
 
-    echo "Testing extended temperature range"
+    echo "  Testing extended temperature range"
 
     modprobe -r tmp401
     i2cset -f -y ${i2c_adapter} ${i2c_addr} 0x9 0x4
@@ -92,38 +90,7 @@ test_chip()
     return ${rv}
 }
 
-rv=0
-
-for hname in $(ls /sys/class/hwmon/*/name); do
-    chip="$(cat ${hname})"
-    basedir="$(dirname ${hname})"
-
-    if [[ ! -e "${basedir}/device/subsystem" ]]; then
-	continue
-    fi
-
-    subsystem="$(readlink ${basedir}/device/subsystem | grep i2c)"
-    if [[ -z "${subsystem}" ]]; then
-	continue
-    fi
-
-    i2c_addr="0x$(readlink ${basedir}/device | cut -f2 -d- | sed -e 's/^00//')"
-    if [[ "${i2c_addr}" = "0x" ]]; then
-	echo "Can not determine I2C base address for ${chip}, skipping test"
-	continue
-    fi
-
-    cd "${basedir}"
-
-    tmp="attrs_${chip}"
-    attrs=(${!tmp})
-    if [[ -z "${attrs[@]}" ]]; then
-	echo "Unsupported chip \"${chip}\", skipping"
-	continue
-    fi
-
-    test_chip
-    rv=$((rv + $?))
-done
+test_chips
+rv=$?
 
 exit ${rv}

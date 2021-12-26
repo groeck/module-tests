@@ -964,6 +964,65 @@ test_one()
     return ${rv}
 }
 
+# Test supported chips
+# Conditions:
+# - Calling code provides test_chip function
+# - Calling code provides attrs_XXX strings listing attributes
+#   supported by supported chips
+# Function:
+# - Determine and set global basedir, i2c_addr, attrs variables
+# - Call test_chip for each supported chip; parameter: chip name
+# Return value: Number of failed tests
+test_chips()
+{
+    local hname
+    local chip
+    local subsystem
+    local tmp
+
+    for hname in $(ls /sys/class/hwmon/*/name); do
+	chip="$(cat ${hname})"
+	basedir="$(dirname ${hname})"
+
+	if [[ ! -e "${basedir}/device/subsystem" ]]; then
+	    continue
+	fi
+
+	subsystem="$(readlink ${basedir}/device/subsystem | grep i2c)"
+	if [[ -z "${subsystem}" ]]; then
+	    continue
+	fi
+
+	i2c_addr="0x$(readlink ${basedir}/device | cut -f2 -d- | sed -e 's/^00//')"
+	if [[ "${i2c_addr}" = "0x" ]]; then
+	    echo "Can not determine I2C base address for ${chip}, skipping test"
+	    continue
+	fi
+
+	cd "${basedir}"
+
+	tmp="attrs_${chip}"
+	attrs=(${!tmp})
+	if [[ -z "${attrs[@]}" ]]; then
+	    echo "Unsupported chip \"${chip}\", skipping"
+	    continue
+	fi
+
+	echo "Running tests for ${chip}"
+
+	test_chip "${chip}"
+	rv=$((rv + $?))
+    done
+
+    if [[ rv -gt 0 ]]; then
+	echo "### ${rv} test failure(s) ###"
+    else
+	echo "### All tests passed ###"
+    fi
+
+    return ${rv}
+}
+
 # Parameter: i2c address
 load_i2c_stub()
 {

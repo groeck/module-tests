@@ -264,9 +264,16 @@ attrs_tmp461="alarms name
 
 test_chip()
 {
+    local chip="$1"
     local rv
+    local extended_range=0
 
-    echo "Running tests for ${chip}"
+    case "${chip}" in
+    "adt7421"|"adt7461"|"adt7461a"|"adt7481"|"adt7483a"|\
+    "tmp451"|"tmp461"|"nct72"|"nct214"|"nct1008")
+	extended_range=1
+	;;
+    esac
 
     if [[ "${extended_range}" -ne 0 ]]; then
         echo " Testing default temperature range"
@@ -295,53 +302,7 @@ test_chip()
     return ${rv}
 }
 
-extended_range=0
-rv=0
-
-for hname in $(ls /sys/class/hwmon/*/name); do
-    chip="$(cat ${hname})"
-    basedir="$(dirname ${hname})"
-
-    if [[ ! -e "${basedir}/device/subsystem" ]]; then
-	continue
-    fi
-
-    subsystem="$(readlink ${basedir}/device/subsystem | grep i2c)"
-    if [[ -z "${subsystem}" ]]; then
-	continue
-    fi
-
-    i2c_addr="0x$(readlink ${basedir}/device | cut -f2 -d- | sed -e 's/^00//')"
-    if [[ "${i2c_addr}" = "0x" ]]; then
-	echo "Can not determine I2C base address for ${chip}, skipping test"
-	continue
-    fi
-
-    cd "${basedir}"
-
-    tmp="attrs_${chip}"
-    attrs=(${!tmp})
-    if [[ -z "${attrs[@]}" ]]; then
-	echo "Unsupported chip \"${chip}\", skipping"
-	continue
-    fi
-
-    extended_range=0
-    case "${chip}" in
-    "adt7421"|"adt7461"|"adt7461a"|"adt7481"|"adt7483a"|\
-    "tmp451"|"tmp461"|"nct72"|"nct214"|"nct1008")
-	extended_range=1
-	;;
-    esac
-
-    test_chip
-    rv=$((rv + $?))
-done
-
-if [[ rv -gt 0 ]]; then
-    echo "### ${rv} test failure(s) ###"
-else
-    echo "### All tests passed ###"
-fi
+test_chips
+rv=$?
 
 exit ${rv}
