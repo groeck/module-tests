@@ -748,7 +748,6 @@ check_alarm()
 	    sleep 0.1
 	done
 
-	aflag="$(cat ${alarm})"
 	if [[ "${aflag}" -ne "${expect}" ]]; then
 	    echo "${alarm} is ${aflag}, expected ${expect} (${input}=$(cat ${input}), ${limit}=$(cat ${limit}))"
 	    rv=1
@@ -787,6 +786,13 @@ _test_one()
 	echo 1 > update_interval
     fi
 
+    # Clear temperature offsets
+    for t in $(seq 1 ${channels}); do
+	if is_writeable "temp${t}_offset"; then
+	    echo 0 > "temp${t}_offset"
+	fi
+    done
+
     sleep 0.2
 
     temp="$(cat temp1_input)"
@@ -802,7 +808,7 @@ _test_one()
 	    sleep 1
 	    echo -n "."
 	done
-        if [[ temp -le 0 || temp -gt 50000 ]]; then
+	if [[ temp -le 0 || temp -gt 50000 ]]; then
 	    echo "Temperature failed to settle. Aborting."
 	    return 1
 	fi
@@ -823,16 +829,50 @@ _test_one()
 	return 1
     fi
 
-    for t in $(seq 1 ${channels})
-    do
-	if [[ -r "temp${t}_offset" ]]; then
+    for t in $(seq 1 ${channels}); do
+	if [[ -e "temp${t}_min" ]]; then
+	    check_range -b ${basedir} -d 500 -r -q temp${t}_min
+	    rv=$((rv + $?))
+	fi
+	if [[ -e "temp${t}_max" ]]; then
+	    check_range -b ${basedir} -d 500 -r -q temp${t}_max
+	    rv=$((rv + $?))
+	fi
+	if is_writeable "temp${t}_crit"; then
+	    check_range -b ${basedir} -d 500 -r -q temp${t}_crit
+	    rv=$((rv + $?))
+	    if is_writeable "temp${t}_crit_hyst"; then
+		check_range -b ${basedir} -d 500 -r -q temp${t}_crit_hyst
+		rv=$((rv + $?))
+		temp_crit_hyst_index="${t}"
+	    fi
+	fi
+
+	if [[ -e "temp${t}_emergency" ]]; then
+	    check_range -b ${basedir} -d 500 -r -q temp${t}_emergency
+	    rv=$((rv + $?))
+	    if is_writeable "temp${t}_emergency_hyst"; then
+		check_range -b ${basedir} -d 500 -r -q temp${t}_emergency_hyst
+		rv=$((rv + $?))
+	    fi
+	fi
+
+	if [[ -e "temp${t}_fault" ]]; then
+	    fault="$(cat temp${t}_fault)"
+	    if [[ fault -ne 0 ]]; then
+		echo "temp${t} reports fault, skipping offset and alarm attribute tests"
+		continue
+	    fi
+	fi
+
+	if is_writeable "temp${t}_offset"; then
 	    # Check if temperature offsets are working
-	    echo 0 > "temp${t}_offset"
-	    sleep 0.2
 	    temp="$(cat temp${t}_input)"
+	    # echo "temp${t}_offset: $(cat temp${t}_offset) temp${t}_input: $(cat temp${t}_input)"
 	    echo 10000 > "temp${t}_offset"
-	    sleep 0.2
+	    sleep 0.3
 	    temp2="$(cat temp${t}_input)"
+	    # echo "temp${t}_offset: $(cat temp${t}_offset) temp${t}_input: $(cat temp${t}_input)"
 	    local d=$((temp - temp2 + 10000))
 	    if [[ d -gt 3000 || d -lt -3000 ]]; then
 		pr_err "temp${t}_input: Unexpected temperature difference ${d}, expected < 3000"
@@ -841,7 +881,7 @@ _test_one()
 		echo "Note: temp${t}_input: Unusually high temperature difference ${d}"
 	    fi
 	    echo -10000 > "temp${t}_offset"
-	    sleep 0.2
+	    sleep 0.3
 	    temp2="$(cat temp${t}_input)"
 	    d=$((temp2 - temp + 10000))
 	    if [[ diff -gt 3000 || d -lt -3000 ]]; then
@@ -852,60 +892,35 @@ _test_one()
 	    fi
 	    # Now make sure that temperature ranges are as expected.
 	    echo 128000 > "temp${t}_offset"
-	    sleep 0.2
+	    sleep 0.1
 	    temp="$(cat temp${t}_input)"
 	    if [[ temp -lt 0 ]]; then
-	        echo "temp${t}_input: Bad high temperature: Expected value > 0, got ${temp}"
-		rv=$((rv + 1))
+		# Some chips (G781) may take longer to update the temperature
+		sleep 0.5
+		temp="$(cat temp${t}_input)"
+		if [[ temp -lt 0 ]]; then
+		    pr_err "temp${t}_input: Bad high temperature: Expected value > 0, got ${temp}"
+		    rv=$((rv + 1))
+		fi
 	    fi
 	    echo -128000 > "temp${t}_offset"
-	    sleep 0.2
+	    sleep 0.1
 	    temp="$(cat temp${t}_input)"
 	    if [[ temp -gt 0 ]]; then
-	        echo "temp${t}_input: Bad low temperature: Expected value <= 0, got ${temp}"
-		rv=$((rv + 1))
+		sleep 0.5
+		temp="$(cat temp${t}_input)"
+		if [[ temp -gt 0 ]]; then
+		    pr_err "temp${t}_input: Bad low temperature: Expected value <= 0, got ${temp}"
+		    rv=$((rv + 1))
+		fi
 	    fi
 	    check_range -b ${basedir} -d 500 -r -q temp${t}_offset
 	    rv=$((rv + $?))
 	    echo 0 > "temp${t}_offset"
-	    sleep 0.2
-	fi
-	if [[ -e "temp${t}_min" ]]; then
-	    check_range -b ${basedir} -d 500 -r -q temp${t}_min
-	    rv=$((rv + $?))
-	fi
-	if [[ -e "temp${t}_max" ]]; then
-	    check_range -b ${basedir} -d 500 -r -q temp${t}_max
-	    rv=$((rv + $?))
-	fi
-	if [[ -e "temp${t}_crit" ]]; then
-	    check_range -b ${basedir} -d 500 -r -q temp${t}_crit
-	    rv=$((rv + $?))
-	    if is_writeable "temp${t}_crit_hyst"; then
-	        check_range -b ${basedir} -d 500 -r -q temp${t}_crit_hyst
-	        rv=$((rv + $?))
-	        temp_crit_hyst_index="${t}"
-	    fi
-	fi
-
-	if [[ -e "temp${t}_emergency" ]]; then
-	    check_range -b ${basedir} -d 500 -r -q -v temp${t}_emergency
-	    rv=$((rv + $?))
-	    if is_writeable "temp${t}_emergency_hyst"; then
-	        check_range -b ${basedir} -d 500 -r -q temp${t}_emergency_hyst
-	        rv=$((rv + $?))
-	    fi
+	    sleep 0.3
 	fi
 
 	# check alarm attributes
-	#
-	if [[ -e "temp${t}_fault" ]]; then
-	    fault="$(cat temp${t}_fault)"
-	    if [[ fault -ne 0 ]]; then
-		echo "temp${t} reports fault, skipping alarm attribute tests"
-		continue
-	    fi
-	fi
 
 	if [[ -e "temp${t}_min" ]]; then
 	    check_alarm "temp${t}_input" "temp${t}_min" "" "temp${t}_min_alarm" -5000 0
@@ -921,7 +936,7 @@ _test_one()
 	    rv=$((rv + $?))
 	fi
 
-	if [[ -e "temp${t}_crit" && -e "temp${t}_crit_alarm" ]]; then
+	if is_writeable "temp${t}_crit" && [[ -e "temp${t}_crit_alarm" ]]; then
 	    check_alarm "temp${t}_input" "temp${t}_crit" "${temp_crit_hyst_index}" "temp${t}_crit_alarm" -5000 1
 	    rv=$((rv + $?))
 	    check_alarm "temp${t}_input" "temp${t}_crit" "${temp_crit_hyst_index}" "temp${t}_crit_alarm" 5000 0
@@ -1008,7 +1023,7 @@ test_chips()
 	    continue
 	fi
 
-	echo "Running tests for ${chip}"
+	echo "Running tests for ${chip}@${i2c_addr##0x}"
 
 	test_chip "${chip}"
 	rv=$((rv + $?))
