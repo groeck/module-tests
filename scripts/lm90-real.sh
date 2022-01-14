@@ -12,8 +12,12 @@ modprobe i2c_devantech_iss 2>/dev/null
 modprobe -r tmp401 >/dev/null 2>&1
 modprobe -r adm1021 >/dev/null 2>&1
 modprobe -r max6642 >/dev/null 2>&1
+
 modprobe -r lm90 >/dev/null 2>&1
 modprobe lm90 >/dev/null 2>&1
+
+modprobe -r lm83 >/dev/null 2>&1
+modprobe lm83 >/dev/null 2>&1
 
 i2c_adapter=$(grep "i2c-diolan-u2c" /sys/class/i2c-adapter/*/name | cut -f1 -d: | cut -f5 -d/ | cut -f2 -d-)
 
@@ -24,6 +28,13 @@ if [[ -z "${i2c_adapter}" ]]; then
 	exit 1
     fi
 fi
+
+attrs_adm1020="alarms name
+	temp1_input temp1_max temp1_max_alarm temp1_min temp1_min_alarm
+	temp2_fault temp2_input temp2_max temp2_max_alarm
+	temp2_min temp2_min_alarm
+	update_interval
+"
 
 attrs_adm1021="alarms name
 	temp1_input temp1_max temp1_max_alarm temp1_min temp1_min_alarm
@@ -81,6 +92,16 @@ attrs_adt7481="name
 	update_interval
 "
 
+attrs_adt7482="name
+	temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
+	temp1_max temp1_max_alarm temp1_min temp1_min_alarm
+	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault temp2_input
+	temp2_max temp2_max_alarm temp2_min temp2_min_alarm temp2_offset
+	temp3_crit temp3_crit_alarm temp3_crit_hyst temp3_fault temp3_input
+	temp3_max temp3_max_alarm temp3_min temp3_min_alarm
+	update_interval
+"
+
 attrs_adt7483a="name
 	temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input temp1_max
 	temp1_max_alarm temp1_min temp1_min_alarm
@@ -97,6 +118,13 @@ attrs_g781="alarms name
 	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault temp2_input
 	temp2_max temp2_max_alarm temp2_min temp2_min_alarm temp2_offset
 	update_interval
+"
+
+attrs_lm83="alarms name
+	temp1_crit_alarm temp1_max temp1_crit temp1_input temp1_max_alarm
+	temp2_crit temp2_fault temp2_max temp2_crit_alarm temp2_input temp2_max_alarm
+	temp3_crit temp3_fault temp3_max temp3_crit_alarm temp3_input temp3_max_alarm
+	temp4_crit temp4_fault temp4_max temp4_crit_alarm temp4_input temp4_max_alarm
 "
 
 attrs_lm84="alarms name
@@ -155,6 +183,12 @@ attrs_max6649="alarms name
 	update_interval
 "
 
+attrs_max6654="alarms name
+	temp1_input temp1_max temp1_max_alarm temp1_min temp1_min_alarm
+	temp2_fault temp2_input temp2_max temp2_max_alarm temp2_min temp2_min_alarm
+	update_interval
+"
+
 attrs_max6657="alarms name
 	temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
 	temp1_max temp1_max_alarm temp1_min temp1_min_alarm
@@ -201,6 +235,13 @@ attrs_max6696="alarms name
 	update_interval
 "
 
+attrs_nct210="alarms name
+	temp1_input temp1_max temp1_max_alarm temp1_min temp1_min_alarm
+	temp2_fault temp2_input temp2_max temp2_max_alarm
+	temp2_min temp2_min_alarm
+	update_interval
+"
+
 attrs_nct214="name
 	temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
 	temp1_max temp1_max_alarm temp1_min temp1_min_alarm
@@ -222,6 +263,13 @@ attrs_nct72="name
 	temp1_max temp1_max_alarm temp1_min temp1_min_alarm
 	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault temp2_input
 	temp2_max temp2_max_alarm temp2_min temp2_min_alarm temp2_offset
+	update_interval
+"
+
+attrs_ne1618="name
+	temp1_input temp1_max temp1_max_alarm temp1_min temp1_min_alarm
+	temp2_fault temp2_input temp2_max temp2_max_alarm
+	temp2_min temp2_min_alarm
 	update_interval
 "
 
@@ -267,9 +315,19 @@ test_chip()
     local chip="$1"
     local rv
     local extended_range=0
+    local driver
 
     case "${chip}" in
-    "adt7421"|"adt7461"|"adt7461a"|"adt7481"|"adt7483a"|\
+	"lm82"|"lm83")
+	    driver="lm83"
+	    ;;
+	*)
+	    driver="lm90"
+	    ;;
+    esac
+
+    case "${chip}" in
+    "adt7421"|"adt7461"|"adt7461a"|"adt7481"|"adt7482"|"adt7483a"|\
     "tmp451"|"tmp461"|"nct72"|"nct214"|"nct1008")
 	extended_range=1
 	;;
@@ -279,10 +337,11 @@ test_chip()
         echo " Testing default temperature range"
     fi
 
-    modprobe -r lm90
+    modprobe -r "${driver}"
+    # clear configuration register, trigger conversion
     i2cset -f -y ${i2c_adapter} ${i2c_addr} 0x9 0x0
     i2cset -f -y ${i2c_adapter} ${i2c_addr} 0xf 0x0
-    modprobe lm90
+    modprobe "${driver}"
 
     test_one attrs[@]
     rv=$?
@@ -290,10 +349,10 @@ test_chip()
     if [[ "${extended_range}" -ne 0 ]]; then
 	echo " Testing extended temperature range"
 
-	modprobe -r lm90
+	modprobe -r "${driver}"
 	i2cset -f -y ${i2c_adapter} ${i2c_addr} 0x9 0x4
 	i2cset -f -y ${i2c_adapter} ${i2c_addr} 0xf 0x0
-	modprobe lm90
+	modprobe "${driver}"
 
 	test_one attrs[@]
 	rv=$((rv + $?))
