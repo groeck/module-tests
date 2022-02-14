@@ -18,7 +18,7 @@ install_regs ()
     while [ $i -lt ${#regs[*]} ]
     do
 	i2cset -f -y ${adapter} 0x${i2c_addr} $i 0x${regs[$i]} ${size}
-	i=$(($i + 1))
+	i=$((i + 1))
     done
 }
 
@@ -59,12 +59,11 @@ dotest ()
     local val
     local i
 
-    ls | while read f
-    do
+    for f in $(ls); do
 	if ! containsElement "$f" "${known[@]}"; then
 	    if ! containsElement "$f" "${a[@]}"; then
 		pr_err "Unexpected attribute \"$f\", value=\"$(cat $f)\""
-		rv=1
+		rv=$((rv + 1))
 	    fi
 	fi
     done
@@ -75,8 +74,8 @@ dotest ()
 	if [ ! -e ${a[$i]} ]
 	then
 	    pr_err "${a[$i]}: Attribute not found"
-	    rv=1
-	    i=$(($i + 1))
+	    rv=$((rv + 1))
+	    i=$((i + 1))
 	    continue
 	fi
 	# Don't try to read the attribute if it is write-only
@@ -88,7 +87,7 @@ dotest ()
 		if [[ ${permissive} -eq 0 || ${a[$i]%_input} = ${a[$i]} ]];
 		then
 		    pr_err "${a[$i]}: bad value ${val}, expected ${v[$i]}"
-		    rv=1
+		    rv=$((rv + 1))
 		elif [[ ${permissive} -eq 1 && ${quiet} -eq 0 ]]; then
 		    echo "Note: ${a[$i]}: value difference: reported ${val}, expected ${v[$i]}"
 		fi
@@ -99,10 +98,10 @@ dotest ()
 	    if [ "${perm}" != "${p[$i]}" ]
 	    then
 		pr_err "${a[$i]}: bad permissions: ${perm}, expected ${p[$i]}"
-		rv=1
+		rv=$((rv + 1))
 	    fi
 	fi
-	i=$(($i + 1))
+	i=$((i + 1))
     done
     return ${rv}
 }
@@ -141,7 +140,7 @@ error_test()
 				rv=1
 			fi
 		fi
-		i=$(($i + 1))
+		i=$((i + 1))
 	done
 	echo 0 > ${efile}
 	return ${rv}
@@ -322,7 +321,7 @@ overflow_check_val()
 	then
 	    break
 	fi
-	overflow=$((${overflow} / 2))
+	overflow=$((overflow / 2))
     done
 
     omax=$(cat ${attr})
@@ -355,7 +354,7 @@ overflow_check()
 	then
 	    return 1
 	fi
-	i=$(($i + 1))
+	i=$((i + 1))
     done
 
     return 0
@@ -380,7 +379,7 @@ findmin()
 	fi
 	while [ ${min} -gt -9223372036854775808 ]
 	do
-		min=$((${min} * 2))
+		min=$((min * 2))
 		writeattr ${attr} ${min}
 		tmp=$(cat ${attr})
 		if [ ${tmp} -lt ${found} ]
@@ -403,8 +402,8 @@ findmax()
 
 	while [ ${max} -lt 9223372036854775807 ]	# 7FFFFFFFFFFFFFFF
 	do
-		max=$((${max} * 2))
-		max=$((${max} + 1))
+		max=$((max * 2))
+		max=$((max + 1))
 		writeattr ${attr} ${max}
 		tmp=$(cat ${attr})
 		if [ ${tmp} -gt ${found} ]
@@ -476,7 +475,7 @@ check_range()
 		;;
 	    esac
 	done
-	shift $(($OPTIND-1))
+	shift $((OPTIND - 1))
 
 	attr=${base}$1
 
@@ -524,8 +523,8 @@ check_range()
 	fi
 	if [ "${stepsize}" = "" -o ${stepsize} -le 0 ]
 	then
-	    range=$((${max} - ${min}))
-	    stepsize=$((${range} / 100))
+	    range=$((max - min))
+	    stepsize=$((range / 100))
 	    if [ ${stepsize} -lt 1 ]
 	    then
 		stepsize=1
@@ -549,10 +548,10 @@ check_range()
 		d=0
 		if [ $i -gt $x ]
 		then
-			d=$(($i - $x))
+			d=$((i - x))
 		elif [ $i -lt $x ]
 		then
-			d=$(($x - $i))
+			d=$((x - i))
 		fi
 		if [ $d -gt ${deviation} ]
 		then
@@ -606,7 +605,7 @@ check_values ()
 		pr_err ${attr}: bad value ${val} expected ${v[$i]}
 		return 1
 	fi
-	i=$(($i + 1))
+	i=$((i + 1))
     done
 
     i=0
@@ -618,7 +617,7 @@ check_values ()
 	    pr_err $2: Unexpected: write of ${f[$i]} succeeded
 	    return 1
 	fi
-	i=$(($i + 1))
+	i=$((i + 1))
     done
 
     return 0
@@ -722,8 +721,13 @@ check_alarm()
 	local hyst_val
 
 	if [[ -n "${hyst_index}" ]]; then
-	    hyst_base_attr="temp${hyst_index}_crit"
-	    hyst_attr="temp${hyst_index}_crit_hyst"
+	    if is_writeable "temp${hyst_index}_crit_hyst"; then
+		hyst_base_attr="temp${hyst_index}_crit"
+		hyst_attr="temp${hyst_index}_crit_hyst"
+	    else
+		hyst_base_attr="temp${hyst_index}_max"
+		hyst_attr="temp${hyst_index}_max_hyst"
+	    fi
 	fi
 
 	val="$(cat ${input})"
@@ -750,6 +754,9 @@ check_alarm()
 
 	if [[ "${aflag}" -ne "${expect}" ]]; then
 	    echo "${alarm} is ${aflag}, expected ${expect} (${input}=$(cat ${input}), ${limit}=$(cat ${limit}))"
+	    if [[ -e "${hyst_base_attr}" ]]; then
+	    	echo "  ${hyst_base_attr}: $(cat ${hyst_base_attr}) ${hyst_attr}: $(cat ${hyst_attr})"
+	    fi
 	    rv=1
 	fi
 
@@ -770,6 +777,7 @@ _test_one()
     local temp
     local temp2
     local fault
+    local temp_max_hyst_index=""
     local temp_crit_hyst_index=""
 
     # determine number of channels to test
@@ -784,6 +792,9 @@ _test_one()
     # Make sure that updates happen as fast as possible
     if is_writeable update_interval; then
 	echo 1 > update_interval
+    fi
+    if is_writeable temp_samples; then
+	echo 1 > temp_samples
     fi
 
     # Clear temperature offsets
@@ -837,6 +848,11 @@ _test_one()
 	if [[ -e "temp${t}_max" ]]; then
 	    check_range -b ${basedir} -d 500 -r -q temp${t}_max
 	    rv=$((rv + $?))
+	    if is_writeable "temp${t}_max_hyst"; then
+		check_range -b ${basedir} -d 500 -r -q temp${t}_max_hyst
+		rv=$((rv + $?))
+		temp_max_hyst_index="${t}"
+	    fi
 	fi
 	if is_writeable "temp${t}_crit"; then
 	    check_range -b ${basedir} -d 500 -r -q temp${t}_crit
@@ -930,9 +946,9 @@ _test_one()
 	fi
 
 	if [[ -e "temp${t}_max" ]]; then
-	    check_alarm "temp${t}_input" "temp${t}_max" "" "temp${t}_max_alarm" -5000 1
+	    check_alarm "temp${t}_input" "temp${t}_max" "${temp_max_hyst_index}" "temp${t}_max_alarm" -5000 1
 	    rv=$((rv + $?))
-	    check_alarm "temp${t}_input" "temp${t}_max" "" "temp${t}_max_alarm" 5000 0
+	    check_alarm "temp${t}_input" "temp${t}_max" "${temp_max_hyst_index}" "temp${t}_max_alarm" 5000 0
 	    rv=$((rv + $?))
 	fi
 
@@ -947,6 +963,11 @@ _test_one()
 
     if is_writeable update_interval; then
 	check_range -b ${basedir} -d 4000 -r -q update_interval
+	rv=$((rv + $?))
+    fi
+
+    if is_writeable temp_samples; then
+        check_range -b ${basedir} -r -q -v temp_samples
 	rv=$((rv + $?))
     fi
 
