@@ -58,7 +58,7 @@ attrs_adm1032="alarms name
 	update_interval
 "
 
-attrs_adt7421="alarms name
+attrs_adt7421="alarms name temp_samples
 	temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
 	temp1_max temp1_max_alarm temp1_min temp1_min_alarm
 	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault temp2_input
@@ -66,7 +66,7 @@ attrs_adt7421="alarms name
 	update_interval
 "
 
-attrs_adt7461="alarms name
+attrs_adt7461="alarms name temp_samples
 	temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
 	temp1_max temp1_max_alarm temp1_min temp1_min_alarm
 	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault temp2_input
@@ -74,7 +74,7 @@ attrs_adt7461="alarms name
 	update_interval
 "
 
-attrs_adt7461a="alarms name
+attrs_adt7461a="alarms name temp_samples
 	temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
 	temp1_max temp1_max_alarm temp1_min temp1_min_alarm
 	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault temp2_input
@@ -82,17 +82,7 @@ attrs_adt7461a="alarms name
 	update_interval
 "
 
-attrs_adt7481="name
-	temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
-	temp1_max temp1_max_alarm temp1_min temp1_min_alarm
-	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault temp2_input
-	temp2_max temp2_max_alarm temp2_min temp2_min_alarm temp2_offset
-	temp3_crit temp3_crit_alarm temp3_crit_hyst temp3_fault temp3_input
-	temp3_max temp3_max_alarm temp3_min temp3_min_alarm
-	update_interval
-"
-
-attrs_adt7482="name
+attrs_adt7481="name temp_samples
 	temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
 	temp1_max temp1_max_alarm temp1_min temp1_min_alarm
 	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault temp2_input
@@ -102,7 +92,17 @@ attrs_adt7482="name
 	update_interval
 "
 
-attrs_adt7483a="name
+attrs_adt7482="name temp_samples
+	temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
+	temp1_max temp1_max_alarm temp1_min temp1_min_alarm
+	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault temp2_input
+	temp2_max temp2_max_alarm temp2_min temp2_min_alarm temp2_offset
+	temp3_crit temp3_crit_alarm temp3_crit_hyst temp3_fault temp3_input
+	temp3_max temp3_max_alarm temp3_min temp3_min_alarm
+	update_interval
+"
+
+attrs_adt7483a="name temp_samples
 	temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input temp1_max
 	temp1_max_alarm temp1_min temp1_min_alarm
 	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault temp2_input
@@ -112,7 +112,7 @@ attrs_adt7483a="name
 	update_interval
 "
 
-attrs_g781="alarms name
+attrs_g781="alarms name temp_samples
 	temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
 	temp1_max temp1_max_alarm temp1_min temp1_min_alarm
 	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault temp2_input
@@ -132,7 +132,7 @@ attrs_lm84="alarms name
 	temp2_fault temp2_input temp2_max temp2_max_alarm
 "
 
-attrs_lm86="alarms name
+attrs_lm86="alarms name temp_samples
 	temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
 	temp1_max temp1_max_alarm temp1_min temp1_min_alarm
 	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault temp2_input
@@ -140,7 +140,7 @@ attrs_lm86="alarms name
 	update_interval
 "
 
-attrs_lm90="alarms name
+attrs_lm90="alarms name temp_samples
 	temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
 	temp1_max temp1_max_alarm temp1_min temp1_min_alarm
 	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault temp2_input
@@ -148,7 +148,7 @@ attrs_lm90="alarms name
 	update_interval
 "
 
-attrs_lm99="alarms name
+attrs_lm99="alarms name temp_samples
 	temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
 	temp1_max temp1_max_alarm temp1_min temp1_min_alarm
 	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault temp2_input
@@ -162,7 +162,7 @@ attrs_max1617="alarms name
 	temp2_min temp2_min_alarm update_interval
 "
 
-attrs_max6642="name
+attrs_max6642="name temp_samples
 	temp1_input temp1_max temp1_max_alarm
 	temp2_fault temp2_input temp2_max temp2_max_alarm
 "
@@ -219,7 +219,7 @@ attrs_max6690="alarms name
 	update_interval
 "
 
-attrs_max6696="alarms name
+attrs_max6696="alarms name temp_samples
 	temp1_crit temp1_crit_alarm temp1_crit_hyst
 	temp1_emergency temp1_emergency_alarm temp1_emergency_hyst
 	temp1_input
@@ -242,7 +242,7 @@ attrs_nct210="alarms name
 	update_interval
 "
 
-attrs_nct214="name
+attrs_nct214="name temp_samples
 	temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
 	temp1_max temp1_max_alarm temp1_min temp1_min_alarm
 	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault temp2_input
@@ -250,7 +250,7 @@ attrs_nct214="name
 	update_interval
 "
 
-attrs_nct218="name
+attrs_nct218="name temp_samples
 	temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
 	temp1_max temp1_max_alarm temp1_min temp1_min_alarm
 	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault temp2_input
@@ -258,7 +258,7 @@ attrs_nct218="name
 	update_interval
 "
 
-attrs_nct72="name
+attrs_nct72="name temp_samples
 	temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
 	temp1_max temp1_max_alarm temp1_min temp1_min_alarm
 	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault temp2_input
@@ -273,7 +273,7 @@ attrs_ne1618="name
 	update_interval
 "
 
-attrs_sa56004="alarms name
+attrs_sa56004="alarms name temp_samples
 	temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
 	temp1_max temp1_max_alarm temp1_min temp1_min_alarm
 	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault temp2_input
@@ -294,7 +294,7 @@ attrs_thmc10="alarms name
 	temp2_fault temp2_input temp2_max temp2_max_alarm temp2_min temp2_min_alarm
 	update_interval
 "
-attrs_tmp451="alarms name
+attrs_tmp451="alarms name temp_samples
 	temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
 	temp1_max temp1_max_alarm temp1_min temp1_min_alarm
 	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault temp2_input
@@ -302,7 +302,7 @@ attrs_tmp451="alarms name
 	update_interval
 "
 
-attrs_tmp461="alarms name
+attrs_tmp461="alarms name temp_samples
 	temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
 	temp1_max temp1_max_alarm temp1_min temp1_min_alarm
 	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault temp2_input
