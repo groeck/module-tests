@@ -777,6 +777,7 @@ _test_one()
     local temp
     local temp2
     local fault
+    local enable
     local temp_max_hyst_index=""
     local temp_crit_hyst_index=""
 
@@ -870,6 +871,23 @@ _test_one()
 	    if is_writeable "temp${t}_emergency_hyst"; then
 		check_range -b ${basedir} -d 500 -r -q temp${t}_emergency_hyst
 		rv=$((rv + $?))
+	    fi
+	fi
+
+	if [[ -e "temp${t}_enable" ]]; then
+	    enable="$(cat temp${t}_enable)"
+	    if [[ enable -eq 0 ]]; then
+		echo "temp${t} disabled, skipping offset and alarm attribute tests"
+		continue
+	    fi
+	    if is_writeable "temp${t}_enable"; then
+		echo 0 > "temp${t}_enable"
+		if ! cat temp${t}_input |& grep -q "No data available"; then
+		    echo "Failed to disable temp${t}"
+		    rv=$((rv + 1))
+		fi
+		echo 1 > "temp${t}_enable"
+		sleep 0.2
 	    fi
 	fi
 
@@ -967,7 +985,7 @@ _test_one()
     fi
 
     if is_writeable temp_samples; then
-        check_range -b ${basedir} -r -q -v temp_samples
+	check_range -b ${basedir} -r -q -v temp_samples
 	rv=$((rv + $?))
     fi
 
