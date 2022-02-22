@@ -29,35 +29,35 @@ modprobe "${adapter_module}" 2>/dev/null
 
 attrs_tmp464="name
 	temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
-	temp1_max temp1_max_alarm temp1_max_hyst
-	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault
+	temp1_max temp1_max_alarm temp1_max_hyst temp1_enable
+	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault temp2_enable
 	temp2_input temp2_max temp2_max_alarm temp2_max_hyst temp2_offset
-	temp3_crit temp3_crit_alarm temp3_crit_hyst temp3_fault
+	temp3_crit temp3_crit_alarm temp3_crit_hyst temp3_fault temp3_enable
 	temp3_input temp3_max temp3_max_alarm temp3_max_hyst temp3_offset
-	temp4_crit temp4_crit_alarm temp4_crit_hyst temp4_fault
+	temp4_crit temp4_crit_alarm temp4_crit_hyst temp4_fault temp4_enable
 	temp4_input temp4_max temp4_max_alarm temp4_max_hyst temp4_offset
-	temp5_crit temp5_crit_alarm temp5_crit_hyst temp5_fault
+	temp5_crit temp5_crit_alarm temp5_crit_hyst temp5_fault temp5_enable
 	temp5_input temp5_max temp5_max_alarm temp5_max_hyst temp5_offset
 	update_interval"
 
 attrs_tmp468="name
 	temp1_crit temp1_crit_alarm temp1_crit_hyst temp1_input
-	temp1_max temp1_max_alarm temp1_max_hyst
-	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault
+	temp1_max temp1_max_alarm temp1_max_hyst temp1_enable
+	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault temp2_enable
 	temp2_input temp2_max temp2_max_alarm temp2_max_hyst temp2_offset
-	temp3_crit temp3_crit_alarm temp3_crit_hyst temp3_fault
+	temp3_crit temp3_crit_alarm temp3_crit_hyst temp3_fault temp3_enable
 	temp3_input temp3_max temp3_max_alarm temp3_max_hyst temp3_offset
-	temp4_crit temp4_crit_alarm temp4_crit_hyst temp4_fault
+	temp4_crit temp4_crit_alarm temp4_crit_hyst temp4_fault temp4_enable
 	temp4_input temp4_max temp4_max_alarm temp4_max_hyst temp4_offset
-	temp5_crit temp5_crit_alarm temp5_crit_hyst temp5_fault
+	temp5_crit temp5_crit_alarm temp5_crit_hyst temp5_fault temp5_enable
 	temp5_input temp5_max temp5_max_alarm temp5_max_hyst temp5_offset
-	temp6_crit temp6_crit_alarm temp6_crit_hyst temp6_fault
+	temp6_crit temp6_crit_alarm temp6_crit_hyst temp6_fault temp6_enable
 	temp6_input temp6_max temp6_max_alarm temp6_max_hyst temp6_offset
-	temp7_crit temp7_crit_alarm temp7_crit_hyst temp7_fault
+	temp7_crit temp7_crit_alarm temp7_crit_hyst temp7_fault temp7_enable
 	temp7_input temp7_max temp7_max_alarm temp7_max_hyst temp7_offset
-	temp8_crit temp8_crit_alarm temp8_crit_hyst temp8_fault
+	temp8_crit temp8_crit_alarm temp8_crit_hyst temp8_fault temp8_enable
 	temp8_input temp8_max temp8_max_alarm temp8_max_hyst temp8_offset
-	temp9_crit temp9_crit_alarm temp9_crit_hyst temp9_fault
+	temp9_crit temp9_crit_alarm temp9_crit_hyst temp9_fault temp9_enable
 	temp9_input temp9_max temp9_max_alarm temp9_max_hyst temp9_offset
 	update_interval"
 
