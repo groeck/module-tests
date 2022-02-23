@@ -52,13 +52,14 @@ attrs_tmp464=(name
 	temp4_input temp4_max temp4_max_alarm temp4_max_hyst temp4_offset
 	temp5_crit temp5_crit_alarm temp5_crit_hyst temp5_fault
 	temp5_input temp5_max temp5_max_alarm temp5_max_hyst temp5_offset
+	temp1_enable temp2_enable temp3_enable temp4_enable temp5_enable
 	update_interval)
 
 vals_tmp464=(tmp464
 	255500 0 245500 21625 191500 0 181500 255500 0 245500 0 19938
 	191500 0 181500 0 255500 0 245500 0 20063 191500 0 181500 0
 	255500 0 245500 0 19938 191500 0 181500 0 255500 0 245500 0
-	20000 191500 0 181500 0
+	20000 191500 0 181500 0 1 1 1 1 1
 	500)
 
 regs_tmp468=(d00a f809 080a f809 000a 080a f809 f009
@@ -114,6 +115,8 @@ attrs_tmp468=(name
 	temp8_input temp8_max temp8_max_alarm temp8_max_hyst temp8_offset
 	temp9_crit temp9_crit_alarm temp9_crit_hyst temp9_fault
 	temp9_input temp9_max temp9_max_alarm temp9_max_hyst temp9_offset
+	temp1_enable temp2_enable temp3_enable temp4_enable temp5_enable
+	temp6_enable temp7_enable temp8_enable temp9_enable
 	update_interval)
 
 vals_tmp468=(tmp468
@@ -122,7 +125,8 @@ vals_tmp468=(tmp468
 	255500 0 245500 0 19938 191500 0 181500 0 255500 0 245500 0
 	20000 191500 0 181500 0 255500 0 245500 0 20063 191500 0 181500
 	0 255500 0 245500 0 19938 191500 0 181500 0 255500 0 245500 0 19875
-	191500 0 181500 0 255500 0 245500 0 19813 191500 0 181500 0 500)
+	191500 0 181500 0 255500 0 245500 0 19813 191500 0 181500 0
+	1 1 1 1 1 1 1 1 1 500)
 
 # permissions_tmp468=(
 # 	"-r--r--r--"
