@@ -37,13 +37,13 @@ attrs_max6695=(alarms name
 	temp3_emergency temp3_emergency_alarm temp3_emergency_hyst
 	temp3_fault temp3_input
 	temp3_max temp3_max_alarm temp3_min temp3_min_alarm
-	update_interval
+	update_interval temp_samples
 )
 
-vals_max6695=(24204 max6695 70000 0 60000 90000 0 80000
+vals_max6695=(24076 max6695 70000 0 60000 90000 0 80000
 	22000 70000 0 -55000 0 90000 0 80000 120000
 	0 110000 1 -128000 70000 0 -55000 1 90000 1 80000
-	120000 1 110000 1 -128000 70000 1 -55000 1 500
+	120000 1 110000 1 -128000 70000 1 -55000 1 500 1
 )
 
 permissions_max6695=(
@@ -85,6 +85,7 @@ permissions_max6695=(
 	"-rw-r--r--"
 	"-r--r--r--"
 	"-rw-r--r--"
+	"-rw-r--r--"
 )
 
 regs_lm86=(
@@ -111,11 +112,11 @@ attrs_lm86=(alarms name
 	temp1_input temp1_max temp1_max_alarm temp1_min temp1_min_alarm
 	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault
 	temp2_input temp2_max temp2_max_alarm temp2_min temp2_min_alarm
-	temp2_offset update_interval
+	temp2_offset update_interval temp_samples
 )
 
 vals_lm86=(0 lm86 85000 0 75000 48000 70000 0
-	0 0 85000 0 75000 0 55000 70000 0 0 0 0 500
+	0 0 85000 0 75000 0 55000 70000 0 0 0 0 500 1
 )
 
 permissions_lm86=(
@@ -138,6 +139,7 @@ permissions_lm86=(
 	"-r--r--r--"
 	"-rw-r--r--"
 	"-r--r--r--"
+	"-rw-r--r--"
 	"-rw-r--r--"
 	"-rw-r--r--"
 )
@@ -166,11 +168,11 @@ attrs_lm99=(alarms name
 	temp1_input temp1_max temp1_max_alarm temp1_min temp1_min_alarm
 	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault
 	temp2_input temp2_max temp2_max_alarm temp2_min temp2_min_alarm
-	temp2_offset update_interval
+	temp2_offset update_interval temp_samples
 )
 
 vals_lm99=(0 lm99 127000 0 117000 39000 0 0 0 0
-	143000 0 133000 0 52625 16000 0 16000 0 0 500
+	143000 0 133000 0 52625 16000 0 16000 0 0 500 1
 )
 
 permissions_lm99=(
@@ -193,6 +195,7 @@ permissions_lm99=(
 	"-r--r--r--"
 	"-rw-r--r--"
 	"-r--r--r--"
+	"-rw-r--r--"
 	"-rw-r--r--"
 	"-rw-r--r--"
 )
@@ -221,11 +224,11 @@ attrs_g781=(alarms name
 	temp1_max_alarm temp1_min temp1_min_alarm
 	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault temp2_input
 	temp2_max temp2_max_alarm temp2_min temp2_min_alarm temp2_offset
-	update_interval
+	update_interval temp_samples
 )
 
-vals_g781=(128 g781 85000 0 75000 17000 85000 0
-	0 0 85000 0 75000 0 13750 85000 0 0 0 0 500
+vals_g781=(0 g781 85000 0 75000 17000 85000 0
+	0 0 85000 0 75000 0 13750 85000 0 0 0 0 500 1
 )
 
 permissions_g781=(
@@ -248,6 +251,7 @@ permissions_g781=(
 	"-r--r--r--"
 	"-rw-r--r--"
 	"-r--r--r--"
+	"-rw-r--r--"
 	"-rw-r--r--"
 	"-rw-r--r--"
 )
@@ -276,11 +280,11 @@ attrs_adt7461=(alarms name
 	temp1_max temp1_max_alarm temp1_min temp1_min_alarm
 	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault temp2_input
 	temp2_max temp2_max_alarm temp2_min temp2_min_alarm temp2_offset
-	update_interval
+	update_interval temp_samples
 )
 
 vals_adt7461=(83 adt7461 21000 1 11000 39000 21000 1 -64000 0
-	21000 1 11000 0 53000 21000 1 -64000 0 0 500
+	21000 1 11000 0 53000 21000 1 -64000 0 0 500 1
 )
 
 permissions_adt7461=(
@@ -303,6 +307,7 @@ permissions_adt7461=(
 	"-r--r--r--"
 	"-rw-r--r--"
 	"-r--r--r--"
+	"-rw-r--r--"
 	"-rw-r--r--"
 	"-rw-r--r--"
 	"-rw-r--r--"
@@ -332,11 +337,11 @@ attrs_adm1032=(alarms name
 	temp1_max temp1_max_alarm temp1_min temp1_min_alarm
 	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault
 	temp2_input temp2_max temp2_max_alarm temp2_min
-	temp2_min_alarm temp2_offset update_interval
+	temp2_min_alarm temp2_offset update_interval temp_samples
 )
 
-vals_adm1032=(128 adm1032 85000 0 75000 24000 85000 0 0 0
-	85000 0 75000 0 25000 85000 0 0 0 0 500
+vals_adm1032=(0 adm1032 85000 0 75000 24000 85000 0 0 0
+	85000 0 75000 0 25000 85000 0 0 0 0 500 1
 )
 
 permissions_adm1032=(
@@ -359,6 +364,7 @@ permissions_adm1032=(
 	"-r--r--r--"
 	"-rw-r--r--"
 	"-r--r--r--"
+	"-rw-r--r--"
 	"-rw-r--r--"
 	"-rw-r--r--"
 )
@@ -387,11 +393,11 @@ attrs_tmp451=(alarms name
 	temp1_max temp1_max_alarm temp1_min temp1_min_alarm
 	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault
 	temp2_input temp2_max temp2_max_alarm temp2_min
-	temp2_min_alarm temp2_offset update_interval
+	temp2_min_alarm temp2_offset update_interval temp_samples
 )
 
 vals_tmp451=(0 tmp451 120000 0 110000 29937 127000 0 -64000 0
-	105000 0 95000 0 41625 191000 0 19000 0 0 500
+	105000 0 95000 0 41625 191000 0 19000 0 0 500 1
 )
 
 permissions_tmp451=(
@@ -414,6 +420,7 @@ permissions_tmp451=(
 	"-r--r--r--"
 	"-rw-r--r--"
 	"-r--r--r--"
+	"-rw-r--r--"
 	"-rw-r--r--"
 	"-rw-r--r--"
 )
@@ -461,14 +468,14 @@ attrs_tmp461=(alarms name
 	temp1_max temp1_max_alarm temp1_min temp1_min_alarm
 	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault
 	temp2_input temp2_max temp2_max_alarm temp2_min
-	temp2_min_alarm temp2_offset update_interval
+	temp2_min_alarm temp2_offset update_interval temp_samples
 )
 
 vals_tmp461=(44 tmp461 127000 0 117000 90500 0 0
-	0 1 127000 0 117000 1 0 937 0 0 1 0 500)
+	0 1 127000 0 117000 1 0 937 0 0 1 0 500 1)
 
 vals_tmp461_ext=(44 tmp461 63000 0 53000 26500 -64000 0 -64000
-	1 63000 0 53000 1 -64000 -63063 0 -64000 1 0 500)
+	1 63000 0 53000 1 -64000 -63063 0 -64000 1 0 500 1)
 
 permissions_tmp461=(
 	"-r--r--r--"
@@ -490,6 +497,7 @@ permissions_tmp461=(
 	"-r--r--r--"
 	"-rw-r--r--"
 	"-r--r--r--"
+	"-rw-r--r--"
 	"-rw-r--r--"
 	"-rw-r--r--"
 )
@@ -518,11 +526,11 @@ attrs_sa56004=(alarms name
 	temp1_max temp1_max_alarm temp1_min temp1_min_alarm
 	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault
 	temp2_input temp2_max temp2_max_alarm temp2_min
-	temp2_min_alarm temp2_offset update_interval
+	temp2_min_alarm temp2_offset update_interval temp_samples
 )
 
 vals_sa56004=(22 sa56004 85000 0 75000 54500 70000 0 0
-	0 85000 1 75000 1 127125 70000 1 0 0 0 500
+	0 85000 1 75000 1 127125 70000 1 0 0 0 500 1
 )
 
 permissions_sa56004=(
@@ -545,6 +553,7 @@ permissions_sa56004=(
 	"-r--r--r--"
 	"-rw-r--r--"
 	"-r--r--r--"
+	"-rw-r--r--"
 	"-rw-r--r--"
 	"-rw-r--r--"
 )
@@ -633,11 +642,11 @@ attrs_lm90=(alarms name
 	temp1_max temp1_max_alarm temp1_min temp1_min_alarm
 	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault temp2_input
 	temp2_max temp2_max_alarm temp2_min temp2_min_alarm temp2_offset
-	update_interval
+	update_interval temp_samples
 )
 
 vals_lm90=(0 lm90 85000 0 75000 41000 0 0 0 0 85000 0
-	75000 0 62875 0 0 0 0 0 500
+	75000 0 62875 0 0 0 0 0 500 1
 )
 
 permissions_lm90=(
@@ -660,6 +669,7 @@ permissions_lm90=(
 	"-r--r--r--"
 	"-rw-r--r--"
 	"-r--r--r--"
+	"-rw-r--r--"
 	"-rw-r--r--"
 	"-rw-r--r--"
 )
