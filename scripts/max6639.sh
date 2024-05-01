@@ -104,6 +104,8 @@ runtest()
 
     for i in $(seq 1 2)
     do
+	check_range -b ${basedir} -l 0 -u 255 -d 2 -r -q pwm${i}
+	rv=$(($? + ${rv}))
 	check_range -b ${basedir} -s 500 -d 500 -r -q temp${i}_crit
 	rv=$(($? + ${rv}))
 	check_range -b ${basedir} -s 500 -d 500 -r -q temp${i}_emergency
