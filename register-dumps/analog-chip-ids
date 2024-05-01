@@ -1,0 +1,35 @@
+chip		0x3d	0x3e	0x3f	0xfe	0xff	Notes
+adm1021		00	00	00	41	03
+adm1021a	00	00	00	41	3c
+adm1022		ff	41	c9	ff	ff
+adm1023		00	00	00	41	3c	Same as adm1021a
+adm1024		00	41	1b	-	-
+adm1025		-	41	29	-	-
+adm1026		00	00	00	-	-
+adm1029		00	00	-	-	-
+adm1031		31	41	83	-	-
+adm1032		00	00	00	41	42
+adm9240		ff	23	02	-	-
+adt7410		-
+adt7411		-
+adt7421		?	?	?	41	?	from datasheet
+adt7461		00	00	00	41	51
+adt7461a	61	41	05	41	57
+adt7462		62	41	04	00	00
+adt7470		70	41	02	00	00
+adt7473		73	41	68	00	00
+		73	41	69
+adt7475		75	41	69	00	00
+adt7476		76	41	69	00	00
+adt7481		81	41	02	41	62
+adt7482		?	?	?	41	65	from datasheet
+adt7483		83	41	04	41	94
+adt7490		fb	41	6f	00	00
+
+nct72		61	41	07	41	55
+nct210		?	?	?	41	3x	from datasheet
+nct214		61	41	08	41	5a
+nct1008		?	?	?	41	?	from datasheet
+
+nct203		?	?	?	1a	?	from datasheet
+nct218		00	00	00	1a	ca
