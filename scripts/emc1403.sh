@@ -68,6 +68,7 @@ attrs_emc1402=(name power_state
 	temp2_crit temp2_crit_alarm temp2_crit_hyst temp2_fault temp2_input
 	temp2_max temp2_max_alarm temp2_max_hyst temp2_min temp2_min_alarm
 	temp2_min_hyst
+	update_interval
 )
 
 attrs_emc1403=(name power_state
@@ -79,6 +80,7 @@ attrs_emc1403=(name power_state
 	temp3_crit temp3_crit_alarm temp3_crit_hyst temp3_fault temp3_input
 	temp3_max temp3_max_alarm temp3_max_hyst temp3_min temp3_min_alarm
 	temp3_min_hyst
+	update_interval
 )
 
 attrs_emc1404=(name power_state
@@ -93,17 +95,20 @@ attrs_emc1404=(name power_state
 	temp4_crit temp4_crit_alarm temp4_crit_hyst temp4_fault temp4_input
 	temp4_max temp4_max_alarm temp4_max_hyst temp4_min temp4_min_alarm
 	temp4_min_hyst
+	update_interval
 )
 
 vals_emc1402=(emc1402 0
 	85000 0 75000 0 85000 0 75000 0 0 10000
 	85000 0 75000 0 0 85000 0 75000 0 0 10000
+	250
 )
 
 vals_emc1403=(emc1403 0
 	85000 0 75000 0 85000 0 75000 0 0 10000
 	85000 0 75000 0 0 85000 0 75000 0 0 10000
 	85000 0 75000 0 0 85000 0 75000 0 0 10000
+	250
 )
 
 vals_emc1404=(emc1404 0
@@ -111,6 +116,7 @@ vals_emc1404=(emc1404 0
 	85000 0 75000 0 0 85000 0 75000 0 0 10000
 	85000 0 75000 0 0 85000 0 75000 0 0 10000
 	85000 0 75000 0 0 85000 0 75000 0 0 10000
+	250
 )
 
 permissions_emc1402=(
@@ -234,6 +240,7 @@ runtest()
     local permissions=("${!6}")
     local rv
     local i
+    local stepsize
 
     echo Testing ${chip} ...
 
@@ -261,21 +268,25 @@ runtest()
     dotest attrs[@] vals[@] permissions[@]
     rv=$?
 
-    check_range -b ${basedir} -s 200 -d 500 -r -q temp1_crit
+    check_range -b ${basedir} -s 200 -d 500 -r temp1_crit
     rv=$(($? + ${rv}))
-    check_range -b ${basedir} -s 200 -d 500 -r -q temp1_crit_hyst
+    check_range -b ${basedir} -s 200 -d 500 -r temp1_crit_hyst
+    rv=$(($? + ${rv}))
+    check_range -b ${basedir} -s 200 -d 8000 -r update_interval
     rv=$(($? + ${rv}))
 
+    stepsize=1000
     for i in $(seq 1 ${channels})
     do
 	if [[ $i -ne 1 ]]; then
 	    check_range -b ${basedir} -s 200 -d 500 -r -q temp${i}_crit
 	    rv=$(($? + ${rv}))
 	fi
-	check_range -b ${basedir} -s 1000 -d 0 -r -q temp${i}_min
+	check_range -b ${basedir} -s ${stepsize} -d 0 -r -q temp${i}_min
 	rv=$(($? + ${rv}))
-	check_range -b ${basedir} -s 1000 -d 0 -r -q temp${i}_max
+	check_range -b ${basedir} -s ${stepsize} -d 0 -r -q temp${i}_max
 	rv=$(($? + ${rv}))
+	stepsize=125
     done
 
     modprobe -r i2c-stub 2>/dev/null
