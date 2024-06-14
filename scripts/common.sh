@@ -219,10 +219,15 @@ writeattr()
 {
     local attr="$1"
     local value="$2"
+    local rv
 
     echo "${value}" > "${attr}" 2>/dev/null
+    if [[ $? -ne 0 ]]; then
+        return 1
+    fi
 
     fixup_writeattr "${attr}" "${value}"
+    return $?
 }
 
 underflow_check_val()
@@ -499,6 +504,12 @@ check_range()
 		if ! underflow_check ${attr} ${min} ${waittime}; then
 			return 1
 		fi
+	else
+		writeattr ${attr} $((min - 1))
+		if [ $? -eq 0 ]
+		then
+			pr_err "Out of range value accepted writing into $(basename ${attr}): val=$((min - 1)) min=${min}"
+		fi
 	fi
 	if [ ${max} -eq ${DEFAULT_MAX} ]
 	then
@@ -511,6 +522,12 @@ check_range()
 		if [ $? -ne 0 ]
 		then
 			return 1
+		fi
+	else
+		writeattr ${attr} $((max + 1))
+		if [ $? -eq 0 ]
+		then
+			pr_err "Out of range value accepted writing into $(basename ${attr}): val=$((max + 1)) max=${max}"
 		fi
 	fi
 	if [[ "${min}" -eq "${max}" && "${silent}" -eq 0 ]]; then
