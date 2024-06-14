@@ -24,18 +24,18 @@ regs_max6639=(
 	ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
 )
 
-attrs_max6639=(fan1_fault fan1_input fan2_fault fan2_input
+attrs_max6639=(fan1_fault fan1_input fan1_pulses fan2_fault fan2_input fan2_pulses
 	name
-	pwm1 pwm2
+	pwm1 pwm1_freq pwm2 pwm2_freq
 	temp1_crit temp1_crit_alarm temp1_emergency temp1_emergency_alarm
 	temp1_fault temp1_input temp1_max temp1_max_alarm
 	temp2_crit temp2_crit_alarm temp2_emergency temp2_emergency_alarm
 	temp2_fault temp2_input temp2_max temp2_max_alarm
 )
 
-vals_max6639=(0 0 0 0
+vals_max6639=(0 0 2 0 0 2
 	max6639
-	255 255
+	255 25000 255 25000
 	90000 0 100000 0 1 255875 80000 0
 	90000 0 100000 0 0 26625 80000 0
 )
@@ -43,9 +43,13 @@ vals_max6639=(0 0 0 0
 permissions_max6639=(
 	"-r--r--r--"
 	"-r--r--r--"
+	"-rw-r--r--"
 	"-r--r--r--"
 	"-r--r--r--"
+	"-rw-r--r--"
 	"-r--r--r--"
+	"-rw-r--r--"
+	"-rw-r--r--"
 	"-rw-r--r--"
 	"-rw-r--r--"
 	"-rw-r--r--"
@@ -104,7 +108,11 @@ runtest()
 
     for i in $(seq 1 2)
     do
+	check_range -b ${basedir} -l 1 -u 4 -q fan${i}_pulses
+	rv=$(($? + ${rv}))
 	check_range -b ${basedir} -l 0 -u 255 -d 2 -r -q pwm${i}
+	rv=$(($? + ${rv}))
+	check_range -b ${basedir} -d 6200 -r -q pwm${i}_freq
 	rv=$(($? + ${rv}))
 	check_range -b ${basedir} -s 500 -d 500 -r -q temp${i}_crit
 	rv=$(($? + ${rv}))
