@@ -67,7 +67,7 @@ runtest()
 
     echo Testing ${chip} ...
 
-    load_i2c_stub ${i2c_addr}
+    load_i2c_stub ${i2c_addr} width=8
 
     modprobe -r spd5118
 
