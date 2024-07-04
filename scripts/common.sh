@@ -1,9 +1,18 @@
 dir=$(dirname $(pwd)/$0)
 getval=${dir}/../getval
 
+__verbose=0
+
 pr_err()
 {
     echo $* >&2
+}
+
+pr_verbose()
+{
+    if [[ "${__verbose}" -ge "$1" ]]; then
+	pr_err "$2"
+    fi
 }
 
 install_regs ()
@@ -371,6 +380,7 @@ findmin()
 	local min=-134217728
 	local found=$(cat ${attr})
 	local tmp
+	local written
 
 	# 0 is a good baseline
 	writeattr "${attr}" 0
@@ -380,6 +390,7 @@ findmin()
 		if [ ${tmp} -lt ${found} ]
 		then
 			found=${tmp}
+			written="0"
 		fi
 	fi
 	while [ ${min} -gt -9223372036854775808 ]
@@ -390,10 +401,12 @@ findmin()
 		if [ ${tmp} -lt ${found} ]
 		then
 			found=${tmp}
+			written="${tmp}"
 		fi
 	done
 
-	echo ${found}
+	pr_verbose 1 "$(basename "${attr}"): Found min ${found} when writing ${written}"
+	echo "${found}"
 }
 
 findmax()
@@ -404,6 +417,7 @@ findmax()
 	local max=65535		# FFFF
 	local found=$(cat ${attr})
 	local tmp
+	local written="${found}"
 
 	while [ ${max} -lt 9223372036854775807 ]	# 7FFFFFFFFFFFFFFF
 	do
@@ -413,7 +427,8 @@ findmax()
 		tmp=$(cat ${attr})
 		if [ ${tmp} -gt ${found} ]
 		then
-			found=${tmp}
+			found="${tmp}"
+			written="${max}"
 		fi
 		# The following suggests an overflow. Stop looking.
 		if [ ${tmp} -lt ${found} ]
@@ -422,7 +437,29 @@ findmax()
 		fi
 	done
 
-	echo ${found}
+	pr_verbose 1 "$(basename "${attr}"): Found max ${found} when writing ${written}"
+	echo "${found}"
+}
+
+check_read_write_read()
+{
+    local attr="$1"
+    local val="$2"
+
+    if [[ -z "${val}" ]]; then
+	val="$(cat ${attr})"
+    fi
+
+    writeattr "${attr}" "${val}"
+
+    if [[ $? -ne 0 ]]; then
+	pr_err "$(basename ${attr}): Failed to write ${val}"
+    else
+	local x=$(cat ${attr})
+	if [[ $x -ne ${val} ]]; then
+	    pr_err "$(basename ${attr}): Failed read->write->read sequence: ${val} -> ${x}"
+	fi
+    fi
 }
 
 check_range()
@@ -439,7 +476,6 @@ check_range()
 	local opt
 	local range
 	local i
-	local disp=0
 	local restore=0
 	local orig
 	local rv=0
@@ -448,6 +484,8 @@ check_range()
 	local prev
 	local ignore=0
 	local silent=0
+
+	__verbose=0
 
 	while getopts "Sb:d:il:qrs:u:vw:" opt
 	do
@@ -462,7 +500,7 @@ check_range()
 		;;
 	    q)	quiet=1
 		;;
-	    v)	disp=1
+	    v)	__verbose="$((__verbose + 1))"
 		quiet=0
 		;;
 	    w)  waittime=${OPTARG}
@@ -496,14 +534,15 @@ check_range()
 	orig=$(cat ${attr})
 
 	if [ ${min} -eq ${DEFAULT_MIN} ]; then
-		min=$(findmin ${attr})
-		if [ ${quiet} -eq 0 ]; then
-			disp=1
+		min="$(findmin ${attr})"
+		if [ ${quiet} -eq 0 -a ${__verbose} -eq 0 ]; then
+			__verbose=1
 		fi
 		# Try to trigger an underflow
 		if ! underflow_check ${attr} ${min} ${waittime}; then
 			return 1
 		fi
+		check_read_write_read "${attr}" "${min}"
 	else
 		writeattr ${attr} $((min - 1))
 		if [ $? -eq 0 ]
@@ -513,16 +552,15 @@ check_range()
 	fi
 	if [ ${max} -eq ${DEFAULT_MAX} ]
 	then
-		max=$(findmax ${attr})
-		if [ ${quiet} -eq 0 ]; then
-			disp=1
+		max="$(findmax ${attr})"
+		if [ ${quiet} -eq 0 -a ${__verbose} -eq 0 ]; then
+			__verbose=1
 		fi
 		# Try to trigger an overflow
-		overflow_check ${attr} ${max} ${waittime}
-		if [ $? -ne 0 ]
-		then
-			return 1
+		if ! overflow_check ${attr} ${max} ${waittime}; then
+		    return 1
 		fi
+		check_read_write_read "${attr}" "${max}"
 	else
 		writeattr ${attr} $((max + 1))
 		if [ $? -eq 0 ]
@@ -547,6 +585,7 @@ check_range()
 		stepsize=1
 	    fi
 	fi
+	pr_verbose 2 "range check attribute ${attr} (min ${min} max ${max} original ${orig})"
 	prev=${min}
 	for i in $(seq ${min} ${stepsize} ${max})
 	do
@@ -570,6 +609,9 @@ check_range()
 		then
 			d=$((x - i))
 		fi
+
+		pr_verbose 2 "write $i read $x deviation $d"
+
 		if [ $d -gt ${deviation} ]
 		then
 		    devi=$i
@@ -577,10 +619,8 @@ check_range()
 		    deviation=$d
 		fi
 	done
-	if [ ${disp} -eq 1 ]
-	then
-		echo "$(basename ${attr}): value range [${min},${max}], deviation ${deviation}"
-	fi
+
+	pr_verbose 1 "$(basename ${attr}): value range [${min},${max}], deviation ${deviation}"
 
 	if [ ${restore} -ne 0 ]
 	then
