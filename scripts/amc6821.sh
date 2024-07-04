@@ -115,25 +115,25 @@ rv=$(($? + ${rv}))
 check_range -b ${basedir} -s 1000 -d 3000000 -r -q fan1_target
 rv=$(($? + ${rv}))
 
-check_range -b ${basedir} -l 0 -u 255 -d 2 -r -q pwm1
+check_range -b ${basedir} -l 0 -u 255 -d 0 -r -q pwm1
 rv=$(($? + ${rv}))
-check_range -b ${basedir} -l 0 -u 255 -d 2 -r -q pwm1_auto_point2_pwm
+check_range -b ${basedir} -l 0 -u 255 -d 0 -r -q pwm1_auto_point2_pwm
 rv=$(($? + ${rv}))
-check_range -b ${basedir} -l 1 -u 4 -r -q pwm1_enable
+check_range -b ${basedir} -l 1 -u 4 -d 0 -r -q pwm1_enable
 rv=$(($? + ${rv}))
-check_range -b ${basedir} -l 0 -u 1 -r -q pwm1_mode
+check_range -b ${basedir} -l 0 -u 1 -r -q -d 0 pwm1_mode
 rv=$(($? + ${rv}))
 
-check_range -b ${basedir} -s 500 -d 3500 -r -q temp1_auto_point2_temp
+check_range -b ${basedir} -s 500 -d 2000 -r -q temp1_auto_point2_temp
 rv=$(($? + ${rv}))
-check_range -b ${basedir} -s 500 -d 49000 -r -q temp1_auto_point3_temp
+check_range -b ${basedir} -s 500 -d 48000 -r -q temp1_auto_point3_temp
 rv=$(($? + ${rv}))
 
 check_range -b ${basedir} -s 500 -d 500 -r -q temp2_auto_point1_temp
 rv=$(($? + ${rv}))
-check_range -b ${basedir} -s 500 -d 3500 -r -q temp2_auto_point2_temp
+check_range -b ${basedir} -s 500 -d 2000 -r -q temp2_auto_point2_temp
 rv=$(($? + ${rv}))
-check_range -b ${basedir} -s 500 -d 49000 -r -q temp2_auto_point3_temp
+check_range -b ${basedir} -s 500 -d 48000 -r -q temp2_auto_point3_temp
 rv=$(($? + ${rv}))
 
 exit ${rv}
