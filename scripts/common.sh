@@ -232,7 +232,7 @@ writeattr()
 
     echo "${value}" > "${attr}" 2>/dev/null
     if [[ $? -ne 0 ]]; then
-        return 1
+	return 1
     fi
 
     fixup_writeattr "${attr}" "${value}"
@@ -380,19 +380,20 @@ findmin()
 	local min=-134217728
 	local found=$(cat ${attr})
 	local tmp
-	local written
+	local written="none"
+	local val
 
-	# 0 is a good baseline
-	writeattr "${attr}" 0
-	if [ $? -eq 0 ]
-	then
+	# Try 0 and 1 as baseline
+	for val in 0 1; do
+	    if writeattr "${attr}" "${val}"; then
 		tmp=$(cat ${attr})
-		if [ ${tmp} -lt ${found} ]
-		then
-			found=${tmp}
-			written="0"
+		if [ "${tmp}" -lt "${found}" ]; then
+		    found="${tmp}"
+		    written="${val}"
+		    break
 		fi
-	fi
+	    fi
+	done
 	while [ ${min} -gt -9223372036854775808 ]
 	do
 		min=$((min * 2))
@@ -484,10 +485,11 @@ check_range()
 	local prev
 	local ignore=0
 	local silent=0
+	local range=""
 
 	__verbose=0
 
-	while getopts "Sb:d:il:qrs:u:vw:" opt
+	while getopts "R:Sb:d:il:qrs:u:vw:" opt
 	do
 	    case ${opt} in
 	    b)	base=${OPTARG}/
@@ -513,6 +515,8 @@ check_range()
 		;;
 	    u)	max=${OPTARG}
 		;;
+	    R)	range="${OPTARG}"
+		;;
 	    :)	pr_err "Option ${OPTARG} requires an argument"
 		return 1
 		;;
@@ -533,7 +537,8 @@ check_range()
 	fi
 	orig=$(cat ${attr})
 
-	if [ ${min} -eq ${DEFAULT_MIN} ]; then
+	if [[ -z "${range}" ]]; then
+	    if [ ${min} -eq ${DEFAULT_MIN} ]; then
 		min="$(findmin ${attr})"
 		if [ ${quiet} -eq 0 -a ${__verbose} -eq 0 ]; then
 			__verbose=1
@@ -543,15 +548,15 @@ check_range()
 			return 1
 		fi
 		check_read_write_read "${attr}" "${min}"
-	else
+	    else
 		writeattr ${attr} $((min - 1))
 		if [ $? -eq 0 ]
 		then
-			pr_err "Out of range value accepted writing into $(basename ${attr}): val=$((min - 1)) min=${min}"
+		    pr_err "Out of range value accepted writing into $(basename ${attr}): val=$((min - 1)) min=${min}"
 		fi
-	fi
-	if [ ${max} -eq ${DEFAULT_MAX} ]
-	then
+	    fi
+	    if [ ${max} -eq ${DEFAULT_MAX} ]
+	    then
 		max="$(findmax ${attr})"
 		if [ ${quiet} -eq 0 -a ${__verbose} -eq 0 ]; then
 			__verbose=1
@@ -561,34 +566,34 @@ check_range()
 		    return 1
 		fi
 		check_read_write_read "${attr}" "${max}"
-	else
+	    else
 		writeattr ${attr} $((max + 1))
 		if [ $? -eq 0 ]
 		then
-			pr_err "Out of range value accepted writing into $(basename ${attr}): val=$((max + 1)) max=${max}"
+		    pr_err "Out of range value accepted writing into $(basename ${attr}): val=$((max + 1)) max=${max}"
 		fi
-	fi
-	if [[ "${min}" -eq "${max}" && "${silent}" -eq 0 ]]; then
+	    fi
+	    if [[ "${min}" -eq "${max}" && "${silent}" -eq 0 ]]; then
 		# Not necessarily an error but let's report it.
 		pr_err "$(basename ${attr}): min [${min}] is equal to max [${max}]"
-	elif [[ "${max}" -lt "${min}" ]]; then
+	    elif [[ "${max}" -lt "${min}" ]]; then
 		pr_err "$(basename ${attr}): max [${max}] must be larger or equal to min [${min}]"
 		writeattr ${attr} ${orig}
 		return 1
-	fi
-	if [ "${stepsize}" = "" -o ${stepsize} -le 0 ]
-	then
-	    range=$((max - min))
-	    stepsize=$((range / 100))
-	    if [ ${stepsize} -lt 1 ]
-	    then
-		stepsize=1
 	    fi
-	fi
-	pr_verbose 2 "range check attribute ${attr} (min ${min} max ${max} original ${orig})"
-	prev=${min}
-	for i in $(seq ${min} ${stepsize} ${max})
-	do
+	    pr_verbose 2 "range check attribute ${attr} (min ${min} max ${max} original ${orig})"
+	    if [ -z "${stepsize}" -o ${stepsize} -le 0 ]
+	    then
+		range=$((max - min))
+		stepsize=$((range / 100))
+		if [ ${stepsize} -lt 1 ]
+		then
+		    stepsize=1
+		fi
+	    fi
+	    prev=${min}
+	    for i in $(seq ${min} ${stepsize} ${max})
+	    do
 		writeattr ${attr} ${i}
 		if [ $? -ne 0 ]
 		then
@@ -598,7 +603,7 @@ check_range()
 		x=$(cat ${attr})
 		if [ $x -lt ${prev} ]
 		then
-			pr_err "$(basename ${attr}): suspected error: Decreased value $x when expecting at least ${prev}"
+		    pr_err "$(basename ${attr}): suspected error: Decreased value $x when expecting at least ${prev}"
 		fi
 		prev=${x}
 		d=0
@@ -618,18 +623,51 @@ check_range()
 		    devv=$x
 		    deviation=$d
 		fi
-	done
-
-	pr_verbose 1 "$(basename ${attr}): value range [${min},${max}], deviation ${deviation}"
-
-	if [ ${restore} -ne 0 ]
-	then
-		writeattr ${attr} ${orig}
+	    done
+	    pr_verbose 1 "$(basename ${attr}): value range [${min},${max}], deviation ${deviation}"
+	    if [ ${mdev} -lt ${deviation} ]; then
+		pr_err "$(basename "${attr}"): Deviation out of range [max ${mdev}, seen ${deviation} (val=${devv}) with ${devi}]"
+		rv=1
+	    fi
+	else
+	    pr_verbose 2 "range check attribute ${attr} (range \"${range}\" original ${orig})"
+	    local reverse=0
+	    for v in ${range}; do
+		if [[ "$v" = ":" ]]; then
+		    reverse=1
+		    continue
+		fi
+		if ! writeattr ${attr} ${v}; then
+		    if [[ "${reverse}" -eq 0 ]]; then
+			pr_err "$(basename "${attr}"): failed to write ${v}"
+			rv=1
+		    fi
+		    continue
+		fi
+		if [[ "${reverse}" -eq 1 ]]; then
+		    pr_err "$(basename "${attr}"): write ${v} expected to fail, but succeeded"
+		    rv=1
+		    continue
+		fi
+		x="$(cat ${attr})"
+		if [[ "$x" -ne "$v" ]]; then
+		    pr_err "$(basename "${attr}"): Value error: Expected $i got $x"
+		    rv=1
+		fi
+	    done
 	fi
-	if [ ${mdev} -lt ${deviation} ]
-	then
-	    pr_err "$(basename ${attr}): Deviation out of range [max ${mdev}, seen ${deviation} (val=${devv}) with ${devi}]"
-	    rv=1
+
+	if [ ${restore} -ne 0 ]; then
+	    if ! writeattr ${attr} ${orig}; then
+		pr_err "$(basename "${attr}"): Failed to write back original value ${orig} (got error)"
+		rv=1
+	    else
+		x="$(cat ${attr})"
+		if [[ "$x" -ne "${orig}" ]]; then
+		    pr_err "$(basename "${attr}"): Failed to write back original value ${orig} (got $x)"
+		    rv=1
+		fi
+	    fi
 	fi
 	return ${rv}
 }
