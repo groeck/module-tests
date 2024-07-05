@@ -9,14 +9,12 @@ dir=$(dirname $0)
 load_i2c_stub "${i2c_addr}"
 modprobe -r "${chip}"
 
-adapter=$(grep "SMBus stub driver" /sys/class/i2c-adapter/*/name | cut -f1 -d: | cut -f5 -d/ | cut -f2 -d-)
-
-i2cset -f -y ${adapter} ${i2c_addr} 0x0 0x7f b	# set_cnt
-i2cset -f -y ${adapter} ${i2c_addr} 0x1 0x3f b	# act_cnt
-i2cset -f -y ${adapter} ${i2c_addr} 0x2 0x01 b	# fan_sta
-i2cset -f -y ${adapter} ${i2c_addr} 0x3 0x7f b	# set_out (pwm)
-i2cset -f -y ${adapter} ${i2c_addr} 0x4 0x04 b	# fan_cmd1
-i2cset -f -y ${adapter} ${i2c_addr} 0x5 0x00 b	# fan_cmd2
+i2cset -f -y ${i2c_adapter} ${i2c_addr} 0x0 0x7f b	# set_cnt
+i2cset -f -y ${i2c_adapter} ${i2c_addr} 0x1 0x3f b	# act_cnt
+i2cset -f -y ${i2c_adapter} ${i2c_addr} 0x2 0x01 b	# fan_sta
+i2cset -f -y ${i2c_adapter} ${i2c_addr} 0x3 0x7f b	# set_out (pwm)
+i2cset -f -y ${i2c_adapter} ${i2c_addr} 0x4 0x04 b	# fan_cmd1
+i2cset -f -y ${i2c_adapter} ${i2c_addr} 0x5 0x00 b	# fan_cmd2
 
 do_instantiate ${chip} ${i2c_addr} 2>/dev/null
 getbasedir ${i2c_addr}
@@ -42,23 +40,17 @@ permissions=(
 dotest attrs[@] vals[@] permissions[@]
 rv=$?
 
-check_range -b ${basedir} -l 0 -u 255 -d 0 -r -q pwm1
+check_range -l 0 -u 255 -d 0 -r -q pwm1
 rv=$(($? + ${rv}))
-check_range -b ${basedir} -l 1 -u 2 -d 0 -r -q pwm1_enable
+check_range -l 1 -u 2 -d 0 -r -q pwm1_enable
 rv=$(($? + ${rv}))
-check_range -b ${basedir} -l 0 -u 1 -d 0 -r -q pwm1_mode
+check_range -l 0 -u 1 -d 0 -r -q pwm1_mode
 rv=$(($? + ${rv}))
-check_range -b ${basedir} -l 1 -u 2 -d 0 -r -q fan1_div
+check_range -R "1 2 4 8 : 0 3 9" -r -q fan1_div
 rv=$(($? + ${rv}))
-check_range -b ${basedir} -l 4 -u 4 -d 0 -S -r -q fan1_div
+check_range -r -d 82000 -q fan1_target
 rv=$(($? + ${rv}))
-check_range -b ${basedir} -l 8 -u 8 -d 0 -S -r -q fan1_div
-rv=$(($? + ${rv}))
-check_range -b ${basedir} -r -d 82000 -q fan1_target
-rv=$(($? + ${rv}))
-check_range -b ${basedir} -l 2 -u 2 -r -d 0 -S -q fan1_pulses
-rv=$(($? + ${rv}))
-check_range -b ${basedir} -l 4 -u 4 -r -d 0 -S -q fan1_pulses
+check_range -R "2 4 : 1 3 9" -S -q fan1_pulses
 rv=$(($? + ${rv}))
 
 modprobe -r i2c-stub 2>/dev/null
