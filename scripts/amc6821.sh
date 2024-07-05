@@ -100,40 +100,40 @@ rv=$?
 
 for i in $(seq 1 2)
 do
-    check_range -b ${basedir} -s 500 -d 500 -r -q temp${i}_min
+    check_range -s 500 -d 500 -r -q temp${i}_min
     rv=$(($? + ${rv}))
-    check_range -b ${basedir} -s 500 -d 500 -r -q temp${i}_max
+    check_range -s 500 -d 500 -r -q temp${i}_max
     rv=$(($? + ${rv}))
-    check_range -b ${basedir} -s 500 -d 500 -r -q temp${i}_crit
+    check_range -s 500 -d 500 -r -q temp${i}_crit
     rv=$(($? + ${rv}))
 done
 
-check_range -b ${basedir} -s 1000 -d 3000000 -r -q fan1_min
+check_range -s 1000 -d 3000000 -r -q fan1_min
 rv=$(($? + ${rv}))
-check_range -b ${basedir} -s 1000 -d 3000000 -r -q fan1_max
+check_range -s 1000 -d 3000000 -r -q fan1_max
 rv=$(($? + ${rv}))
-check_range -b ${basedir} -s 1000 -d 3000000 -r -q fan1_target
-rv=$(($? + ${rv}))
-
-check_range -b ${basedir} -l 0 -u 255 -d 0 -r -q pwm1
-rv=$(($? + ${rv}))
-check_range -b ${basedir} -l 0 -u 255 -d 0 -r -q pwm1_auto_point2_pwm
-rv=$(($? + ${rv}))
-check_range -b ${basedir} -l 1 -u 4 -d 0 -r -q pwm1_enable
-rv=$(($? + ${rv}))
-check_range -b ${basedir} -l 0 -u 1 -r -q -d 0 pwm1_mode
+check_range -s 1000 -d 3000000 -r -q fan1_target
 rv=$(($? + ${rv}))
 
-check_range -b ${basedir} -s 500 -d 2000 -r -q temp1_auto_point2_temp
+check_range -l 0 -u 255 -d 0 -r -q pwm1
 rv=$(($? + ${rv}))
-check_range -b ${basedir} -s 500 -d 48000 -r -q temp1_auto_point3_temp
+check_range -l 0 -u 255 -d 0 -r -q pwm1_auto_point2_pwm
+rv=$(($? + ${rv}))
+check_range -l 1 -u 4 -d 0 -r -q pwm1_enable
+rv=$(($? + ${rv}))
+check_range -l 0 -u 1 -r -q -d 0 pwm1_mode
 rv=$(($? + ${rv}))
 
-check_range -b ${basedir} -s 500 -d 500 -r -q temp2_auto_point1_temp
+check_range -s 500 -d 2000 -r -q temp1_auto_point2_temp
 rv=$(($? + ${rv}))
-check_range -b ${basedir} -s 500 -d 2000 -r -q temp2_auto_point2_temp
+check_range -s 500 -d 48000 -r -q temp1_auto_point3_temp
 rv=$(($? + ${rv}))
-check_range -b ${basedir} -s 500 -d 48000 -r -q temp2_auto_point3_temp
+
+check_range -s 500 -d 500 -r -q temp2_auto_point1_temp
+rv=$(($? + ${rv}))
+check_range -s 500 -d 2000 -r -q temp2_auto_point2_temp
+rv=$(($? + ${rv}))
+check_range -s 500 -d 48000 -r -q temp2_auto_point3_temp
 rv=$(($? + ${rv}))
 
 exit ${rv}
