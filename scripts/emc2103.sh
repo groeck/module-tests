@@ -1,19 +1,13 @@
 #!/bin/bash
 
-i2c_addr=2e
+i2c_addr=0x2e
+chip="emc2103"
 
 dir=$(dirname $0)
 . ${dir}/common.sh
 
-modprobe -r i2c-stub 2>/dev/null
-modprobe i2c-stub chip_addr=0x${i2c_addr}
-if [ $? -ne 0 ]
-then
-	echo must be root
-	exit 1
-fi
-
-adapter=$(grep "SMBus stub driver" /sys/class/i2c-adapter/*/name | cut -f1 -d: | cut -f5 -d/ | cut -f2 -d-)
+load_i2c_stub "${i2c_addr}"
+modprobe -r "${chip}"
 
 regs=(1a 00 19 80 1a 00 19 e0 00 00 75 00 00 00 00 00
 	d0 12 12 16 07 07 00 07 00 64 64 64 00 64 00 00
@@ -36,50 +30,85 @@ regs=(1a 00 19 80 1a 00 19 e0 00 00 75 00 00 00 00 00
 i=0
 while [ $i -lt ${#regs[*]} ]
 do
-	i2cset -f -y ${adapter} 0x${i2c_addr} $i 0x${regs[$i]} b
+	i2cset -f -y ${i2c_adapter} ${i2c_addr} $i 0x${regs[$i]} b
 	i=$(($i + 1))
 done
 
-echo emc2103 0x${i2c_addr} > /sys/class/i2c-adapter/i2c-${adapter}/new_device 2>/dev/null
+do_instantiate ${chip} ${i2c_addr} 2>/dev/null
+getbasedir ${i2c_addr}
 
-base=$(getbase ${adapter} 00${i2c_addr})
-if [ "${base}" = "" -o ! -d "${base}" ]
-then
-	echo fail: No hwmon device
-	exit 1
-fi
+cd ${basedir}
 
-cd ${base}
-
-attrs=(name fan1_div fan1_fault fan1_input fan1_target pwm1_enable
+attrs=(name
+	fan1_div fan1_fault fan1_input fan1_target
+	pwm1_enable
 	temp1_fault temp1_input temp1_max temp1_max_alarm temp1_min temp1_min_alarm
 	temp2_fault temp2_input temp2_max temp2_max_alarm temp2_min temp2_min_alarm
 	temp3_fault temp3_input temp3_max temp3_max_alarm temp3_min temp3_min_alarm
 	temp4_fault temp4_input temp4_max temp4_max_alarm temp4_min temp4_min_alarm
 	)
 
-vals=(emc2103 4 0 6710 0 0 0 26000 85000 0 0 0 0 25500 85000 0 0
-	0 0 26000 85000 0 0 0 0 25875 85000 0 0 0
+vals=(emc2103
+	4 0 6710 0
+	0
+	0 26000 85000 0 0 0
+	0 25500 85000 0 0 0
+	0 26000 85000 0 0 0
+	0 25875 85000 0 0 0
 )
-dotest attrs[@] vals[@]
+
+permissions=(
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+)
+
+# ls -l
+
+dotest attrs[@] vals[@] permissions[@]
 rv=$?
 
 for t in $(seq 1 4)
 do
-	check_range -b ${base} -d 500 -r -q -w 2 temp${t}_min
-	rv=$(($? + ${rv}))
-	check_range -b ${base} -d 500 -r -q -w 2 temp${t}_max
-	rv=$(($? + ${rv}))
+	check_range -d 500 -r -q temp${t}_min
+	rv=$((rv + $?))
+	check_range -d 500 -r -q temp${t}_max
+	rv=$((rv + $?))
 done
 
-check_range -b ${base} -l 1 -u 2 -d 0 -r -q -w 2 fan1_div
-rv=$(($? + ${rv}))
-check_range -b ${base} -l 4 -u 4 -d 0 -r -q fan1_div
-rv=$(($? + ${rv}))
-check_range -b ${base} -l 0 -u 0 -d 0 -r -q -w 2 pwm1_enable
-rv=$(($? + ${rv}))
-check_range -b ${base} -l 0 -r -d 815 -q -w 2 fan1_target
-rv=$(($? + ${rv}))
+check_range -R "1 2 4 8 : 0 3 9" -r -q -S fan1_div
+rv=$((rv + $?))
+check_range -R "0 3 : 1 4" -r -q -S pwm1_enable
+rv=$((rv + $?))
+check_range -l 0 -r -d 815 -q fan1_target
+rv=$((rv + $?))
 
 modprobe -r i2c-stub 2>/dev/null
 modprobe -r emc2103
