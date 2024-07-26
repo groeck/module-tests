@@ -150,8 +150,10 @@ alarms_max1805=(
 	0x05 0x20 temp1_min_alarm
 	0x06 0x80 temp2_min_alarm
 	0x06 0x40 temp2_max_alarm
+	0x01 0x7f temp2_fault
 	0x06 0x20 temp3_min_alarm
 	0x06 0x10 temp3_max_alarm
+	0x02 0x7f temp3_fault
 )
 permissions_max1668=(
 	"-r--r--r--"
@@ -207,6 +209,11 @@ runtest()
 
     dotest attrs[@] vals[@] permissions[@]
     rv=$?
+
+    # Set fault bit prior to check alarms.
+    # The actual alarm is then set by temperature register
+    # value of 0x7f == 127.
+    i2cset -y -f ${i2c_adapter} ${i2c_addr} 0x05 0x10
 
     check_alarms ${i2c_adapter} ${i2c_addr} alarms[@]
     rv=$((rv + $?))
