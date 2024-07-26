@@ -84,6 +84,13 @@ permissions_max1619=(
 	"-rw-r--r--"
 )
 
+alarms_max1619=(
+	0x02 0x02 temp2_crit_alarm
+	0x02 0x04 temp2_fault
+	0x02 0x10 temp2_max_alarm
+	0x02 0x08 temp2_min_alarm
+)
+
 runtest()
 {
     local chip=$1
@@ -91,6 +98,7 @@ runtest()
     local attrs=("${!3}")
     local vals=("${!4}")
     local permissions=("${!5}")
+    local alarms=("${!6}")
     local rv
 
     echo Testing ${chip} ...
@@ -115,6 +123,11 @@ runtest()
     dotest attrs[@] vals[@] permissions[@]
     rv=$?
 
+    if [[ -n "${alarms}" ]]; then
+	check_alarms ${i2c_adapter} ${i2c_addr} alarms[@]
+	rv=$((rv + $?))
+    fi
+
     check_range -r -q -d 4000 update_interval
     rv=$((rv + $?))
     check_range -s 250 -r -q -d 500 temp2_min
@@ -133,7 +146,9 @@ rv=0
 
 runtest max1619 regs_max1619[@] attrs_max1619[@] vals_max1619[@] permissions_max1619[@]
 rv=$((rv + $?))
-runtest max1619 regs_max1619_pol[@] attrs_max1619[@] vals_max1619_pol[@] permissions_max1619[@]
+
+# Alarm tests require POL bit in configuration register to be set
+runtest max1619 regs_max1619_pol[@] attrs_max1619[@] vals_max1619_pol[@] permissions_max1619[@] alarms_max1619[@]
 rv=$((rv + $?))
 
 exit ${rv}
