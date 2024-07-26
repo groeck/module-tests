@@ -718,6 +718,54 @@ check_values ()
     return 0
 }
 
+check_alarms()
+{
+    local i2c_adapter="$1"
+    local i2c_addr="$2"
+    local alarms=("${!3}")
+    local reg
+    local mask
+    local attr
+    local oattr
+    local i
+    local regval
+    local size="b"
+    local rv=0
+
+    i=0
+    while [ $i -lt ${#alarms[*]} ]
+    do
+	reg="${alarms[$i]}"
+	mask="${alarms[$((i + 1))]}"
+	attr="${alarms[$((i + 2))]}"
+
+	if [[ "${#mask}" -eq 6 ]]; then
+	    size="w"
+	fi
+
+	regval="$(i2cget -y -f "${i2c_adapter}" "${i2c_addr}" "${reg}" "${size}")"
+	oattr="$(cat "${attr}")"
+	i2cset -y -f "${i2c_adapter}" "${i2c_addr}" "${reg}" "$((regval | mask))" "${size}"
+	if [[ "$(cat "${attr}")" -eq 0 ]]; then
+	    echo "${attr}: Expected alarm not set"
+	    rv="$((rv + 1))"
+	fi
+	i2cset -y -f "${i2c_adapter}" "${i2c_addr}" "${reg}" "$((regval & ~mask))" "${size}"
+	if [[ "$(cat "${attr}")" -ne 0 ]]; then
+	    echo "${attr}: alarm set but not expected"
+	    rv="$((rv + 1))"
+	fi
+	i2cset -y -f "${i2c_adapter}" "${i2c_addr}" "${reg}" "${regval}" "${size}"
+	if [[ "$(cat "${attr}")" -ne "${oattr}" ]]; then
+	    echo "${attr}: original alarm value not restored"
+	    rv="$((rv + 1))"
+	fi
+	i=$((i + 3))
+    done
+
+    return ${rv}
+}
+
 fixup_regwrite()
 {
     :
