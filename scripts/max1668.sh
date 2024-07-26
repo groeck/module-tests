@@ -74,6 +74,19 @@ permissions_max1668=(
 	"-r--r--r--"
 )
 
+alarms_max1668=(
+	0x05 0x40 temp1_max_alarm
+	0x05 0x20 temp1_min_alarm
+	0x06 0x80 temp2_min_alarm
+	0x06 0x40 temp2_max_alarm
+	0x06 0x20 temp3_min_alarm
+	0x06 0x10 temp3_max_alarm
+	0x06 0x08 temp4_min_alarm
+	0x06 0x04 temp4_max_alarm
+	0x06 0x02 temp5_min_alarm
+	0x06 0x01 temp5_max_alarm
+)
+
 regs_max1989=(
 	33 32 31 10 7f f0 0f 00 7f c9 7f c9 7f c9 7f c9
 	7f c9 03 03 03 03 03 03 03 03 03 03 03 03 03 03
@@ -132,6 +145,14 @@ vals_max1805=(max1805
 	0 127000 127000 0 -55000 1
 )
 
+alarms_max1805=(
+	0x05 0x40 temp1_max_alarm
+	0x05 0x20 temp1_min_alarm
+	0x06 0x80 temp2_min_alarm
+	0x06 0x40 temp2_max_alarm
+	0x06 0x20 temp3_min_alarm
+	0x06 0x10 temp3_max_alarm
+)
 permissions_max1668=(
 	"-r--r--r--"
 	"-r--r--r--"
@@ -161,6 +182,7 @@ runtest()
     local attrs=("${!4}")
     local vals=("${!5}")
     local permissions=("${!6}")
+    local alarms=("${!7}")
     local rv
     local i
 
@@ -186,6 +208,9 @@ runtest()
     dotest attrs[@] vals[@] permissions[@]
     rv=$?
 
+    check_alarms ${i2c_adapter} ${i2c_addr} alarms[@]
+    rv=$((rv + $?))
+
     for i in $(seq 1 ${channels}); do
 	check_range -s 250 -r -q temp${i}_min
 	rv=$((rv + $?))
@@ -200,11 +225,11 @@ runtest()
 
 rv=0
 
-runtest max1668 5 regs_max1668[@] attrs_max1668[@] vals_max1668[@] permissions_max1668[@]
+runtest max1668 5 regs_max1668[@] attrs_max1668[@] vals_max1668[@] permissions_max1668[@] alarms_max1668[@]
 rv=$((rv + $?))
-runtest max1989 5 regs_max1989[@] attrs_max1668[@] vals_max1989[@] permissions_max1668[@]
+runtest max1989 5 regs_max1989[@] attrs_max1668[@] vals_max1989[@] permissions_max1668[@] alarms_max1668[@]
 rv=$((rv + $?))
-runtest max1805 3 regs_max1805[@] attrs_max1805[@] vals_max1805[@] permissions_max1805[@]
+runtest max1805 3 regs_max1805[@] attrs_max1805[@] vals_max1805[@] permissions_max1805[@] alarms_max1805[@]
 rv=$((rv + $?))
 
 exit ${rv}
