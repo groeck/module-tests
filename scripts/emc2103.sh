@@ -10,8 +10,8 @@ load_i2c_stub "${i2c_addr}"
 modprobe -r "${chip}"
 
 regs=(1a 00 19 80 1a 00 19 e0 00 00 75 00 00 00 00 00
-	d0 12 12 16 07 07 00 07 00 64 64 64 00 64 00 00
-	01 0e 00 08 00 00 00 80 00 00 00 03 00 00 00 00
+	d0 12 12 16 07 07 00 07 00 64 64 64 00 64 00 aa
+	01 0e 00 08 55 aa 00 80 00 00 00 03 00 00 00 00
 	55 55 55 00 55 00 00 00 00 00 00 00 00 00 00 00
 	ff 01 2b 38 01 2a 19 10 66 f5 00 00 f8 ff 24 a0
 	00 fb 7f 7f 7f 7f e6 7f 7f 7f 7f d1 7f 7f 7f 7f
@@ -40,21 +40,29 @@ getbasedir ${i2c_addr}
 cd ${basedir}
 
 attrs=(name
-	fan1_div fan1_fault fan1_input fan1_target
-	pwm1_enable
+	fan1_div fan1_fault fan1_input fan1_target fan1_min fan1_min_alarm fan1_pulses
+	pwm1 pwm1_enable pwm1_freq
 	temp1_fault temp1_input temp1_max temp1_max_alarm temp1_min temp1_min_alarm
+	temp1_crit temp1_crit_alarm temp1_emergency
 	temp2_fault temp2_input temp2_max temp2_max_alarm temp2_min temp2_min_alarm
+	temp2_crit temp2_crit_alarm
 	temp3_fault temp3_input temp3_max temp3_max_alarm temp3_min temp3_min_alarm
+	temp3_crit temp3_crit_alarm
 	temp4_fault temp4_input temp4_max temp4_max_alarm temp4_min temp4_min_alarm
+	temp4_crit temp4_crit_alarm
 	)
 
 vals=(emc2103
-	4 0 6710 0
-	0
-	0 26000 85000 0 0 0
-	0 25500 85000 0 0 0
-	0 26000 85000 0 0 0
-	0 25875 85000 0 0 0
+	4 0 6710 0 963 0 2
+	255 0 2441
+	0 26000 85000 1 0 0
+	100000 0 117000
+	0 25500 85000 0 0 1
+	100000 1
+	0 26000 85000 1 0 0
+	100000 0
+	0 25875 85000 0 0 1
+	100000 1
 )
 
 permissions=(
@@ -65,15 +73,8 @@ permissions=(
 	"-rw-r--r--"
 	"-rw-r--r--"
 	"-r--r--r--"
-	"-r--r--r--"
 	"-rw-r--r--"
-	"-r--r--r--"
 	"-rw-r--r--"
-	"-r--r--r--"
-	"-r--r--r--"
-	"-r--r--r--"
-	"-rw-r--r--"
-	"-r--r--r--"
 	"-rw-r--r--"
 	"-r--r--r--"
 	"-r--r--r--"
@@ -82,7 +83,28 @@ permissions=(
 	"-r--r--r--"
 	"-rw-r--r--"
 	"-r--r--r--"
+	"-rw-r--r--"
 	"-r--r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-r--r--r--"
+	"-rw-r--r--"
 	"-r--r--r--"
 	"-rw-r--r--"
 	"-r--r--r--"
@@ -92,6 +114,8 @@ permissions=(
 
 # ls -l
 
+# i2cdump -y -f ${i2c_adapter} ${i2c_addr}
+
 dotest attrs[@] vals[@] permissions[@]
 rv=$?
 
@@ -100,6 +124,8 @@ do
 	check_range -d 500 -r -q temp${t}_min
 	rv=$((rv + $?))
 	check_range -d 500 -r -q temp${t}_max
+	rv=$((rv + $?))
+	check_range -d 500 -r -q temp${t}_crit
 	rv=$((rv + $?))
 done
 
