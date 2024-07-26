@@ -38,6 +38,12 @@ permissions_lm92=(
 	"-r--r--r--"
 )
 
+alarms_lm92=(
+	0x0 0x0100 temp1_min_alarm
+	0x0 0x0200 temp1_max_alarm
+	0x0 0x0400 temp1_crit_alarm
+)
+
 runtest()
 {
     local chip=$1
@@ -45,6 +51,7 @@ runtest()
     local attrs=("${!3}")
     local vals=("${!4}")
     local permissions=("${!5}")
+    local alarms=("${!6}")
     local rv
 
     echo Testing ${chip} ...
@@ -68,6 +75,9 @@ runtest()
     dotest attrs[@] vals[@]
     rv=$?
 
+    check_alarms "${i2c_adapter}" "${i2c_addr}" alarms[@]
+    rv=$(($? + rv))
+
     check_range -d 800 -r -q temp1_min
     rv=$(($? + rv))
     check_range -d 800 -r -q temp1_max
@@ -81,9 +91,9 @@ runtest()
     return ${rv}
 }
 
-runtest lm92 regs_lm92[@] attrs_lm92[@] vals_lm92[@] permissions_lm92[@]
+runtest lm92 regs_lm92[@] attrs_lm92[@] vals_lm92[@] permissions_lm92[@] alarms_lm92[@]
 rv=$?
-runtest max6635 regs_max6635[@] attrs_lm92[@] vals_max6635[@] permissions_lm92[@]
+runtest max6635 regs_max6635[@] attrs_lm92[@] vals_max6635[@] permissions_lm92[@] alarms_lm92[@]
 rv=$((rv + $?))
 
 exit ${rv}
