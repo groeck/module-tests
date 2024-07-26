@@ -104,7 +104,7 @@ runtest()
     rv=$(($? + ${rv}))
     check_range -b ${basedir} -l 1 -u 2 -d 0 -r -q temp2_type
     rv=$(($? + ${rv}))
-    check_range -b ${basedir} -l 0 -u 3000 -d 1500 -r -q update_interval
+    check_range -b ${basedir} -d 1500 -r -q update_interval
     rv=$(($? + ${rv}))
 
     do_remove ${i2c_addr}
