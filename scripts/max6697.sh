@@ -37,14 +37,14 @@ attrs_max6581=(name
 )
 
 vals_max6581=(max6581
-	80000 1 24875 0 0 90000 1
+	80000 0 24875 0 0 90000 1
 	110000 0 1 57625 0 0 127000 1 0
 	110000 1 0 58375 0 1 127000 0 0
 	110000 0 1 59125 0 0 100000 1 0
 	127000 1 0 57875 0 1 100000 0 0
 	90000 0 1 59375 0 0 100000 1 0
 	90000 1 0 59250 0 1 100000 0 0
-	110000 0 1 255000 0 1 100000 0 0
+	110000 1 1 255000 0 1 100000 0 0
 )
 
 permissions_max6581=(
@@ -119,6 +119,45 @@ permissions_max6581=(
 	"-rw-r--r--"
 	"-r--r--r--"
 	"-rw-r--r--"
+)
+
+# Note: The bit assignment of temp{1,8}_crit_alarm was changed in Rev. 4 of the
+# datasheet. In older versions, bit 7 of register 0x45h is the remote channel 7
+# alarm, and bit 6 is the local temperature alarm. The assignment is reversed in
+# datasheet Revision 4 and later. A real chip agrees with Revision 4 and later.
+
+alarms_max6581=(
+	0x44 0x80 temp8_max_alarm
+	0x44 0x40 temp1_max_alarm
+	0x44 0x20 temp7_max_alarm
+	0x44 0x10 temp6_max_alarm
+	0x44 0x08 temp5_max_alarm
+	0x44 0x04 temp4_max_alarm
+	0x44 0x02 temp3_max_alarm
+	0x44 0x01 temp2_max_alarm
+	0x45 0x80 temp1_crit_alarm
+	0x45 0x40 temp8_crit_alarm
+	0x45 0x20 temp7_crit_alarm
+	0x45 0x10 temp6_crit_alarm
+	0x45 0x08 temp5_crit_alarm
+	0x45 0x04 temp4_crit_alarm
+	0x45 0x02 temp3_crit_alarm
+	0x45 0x01 temp2_crit_alarm
+	0x46 0x40 temp8_fault
+	0x46 0x20 temp7_fault
+	0x46 0x10 temp6_fault
+	0x46 0x08 temp5_fault
+	0x46 0x04 temp4_fault
+	0x46 0x02 temp3_fault
+	0x46 0x01 temp2_fault
+	0x47 0x80 temp8_min_alarm
+	0x47 0x40 temp1_min_alarm
+	0x47 0x20 temp7_min_alarm
+	0x47 0x10 temp6_min_alarm
+	0x47 0x08 temp5_min_alarm
+	0x47 0x04 temp4_min_alarm
+	0x47 0x02 temp3_min_alarm
+	0x47 0x01 temp2_min_alarm
 )
 
 # 6581, extended temperature mode, different alert register values
@@ -298,6 +337,7 @@ runtest()
     local attrs=("${!4}")
     local vals=("${!5}")
     local permissions=("${!6}")
+    local alarms=("${!7}")
     local rv
     local i
 
@@ -322,6 +362,11 @@ runtest()
 
     dotest attrs[@] vals[@] permissions[@]
     rv=$?
+
+    if [[ -n "${alarms}" ]]; then
+	check_alarms ${i2c_adapter} ${i2c_addr} alarms[@]
+	rv=$((rv + $?))
+    fi
 
     if [[ -e "temp1_min" ]]; then
 	check_range -s 250 -r -q temp1_min
@@ -348,7 +393,7 @@ runtest()
 
 rv=0
 
-runtest max6581 8 regs_max6581[@] attrs_max6581[@] vals_max6581[@] permissions_max6581[@]
+runtest max6581 8 regs_max6581[@] attrs_max6581[@] vals_max6581[@] permissions_max6581[@] alarms_max6581[@]
 rv=$((rv + $?))
 runtest max6581 8 regs_max6581_ext[@] attrs_max6581[@] vals_max6581_ext[@] permissions_max6581[@]
 rv=$((rv + $?))
