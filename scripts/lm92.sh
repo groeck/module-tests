@@ -47,11 +47,12 @@ alarms_lm92=(
 runtest()
 {
     local chip=$1
-    local regs=("${!2}")
-    local attrs=("${!3}")
-    local vals=("${!4}")
-    local permissions=("${!5}")
-    local alarms=("${!6}")
+    local deviation=$2
+    local regs=("${!3}")
+    local attrs=("${!4}")
+    local vals=("${!5}")
+    local permissions=("${!6}")
+    local alarms=("${!7}")
     local rv
 
     echo Testing ${chip} ...
@@ -78,22 +79,22 @@ runtest()
     check_alarms "${i2c_adapter}" "${i2c_addr}" alarms[@]
     rv=$(($? + rv))
 
-    check_range -d 800 -r -q temp1_min
+    check_range -d ${deviation} -s 100 -r -q temp1_min
     rv=$(($? + rv))
-    check_range -d 800 -r -q temp1_max
+    check_range -d ${deviation} -s 100 -r -q temp1_max
     rv=$(($? + rv))
-    check_range -d 800 -r -q temp1_crit
+    check_range -d ${deviation} -s 100 -r -q temp1_crit
     rv=$(($? + rv))
-    check_range -d 800 -r -q temp1_crit_hyst
+    check_range -d ${deviation} -s 100 -r -q temp1_crit_hyst
     rv=$(($? + rv))
 
     modprobe -r i2c-stub 2>/dev/null
     return ${rv}
 }
 
-runtest lm92 regs_lm92[@] attrs_lm92[@] vals_lm92[@] permissions_lm92[@] alarms_lm92[@]
+runtest lm92 25 regs_lm92[@] attrs_lm92[@] vals_lm92[@] permissions_lm92[@] alarms_lm92[@]
 rv=$?
-runtest max6635 regs_max6635[@] attrs_lm92[@] vals_max6635[@] permissions_lm92[@] alarms_lm92[@]
+runtest max6635 500 regs_max6635[@] attrs_lm92[@] vals_max6635[@] permissions_lm92[@] alarms_lm92[@]
 rv=$((rv + $?))
 
 exit ${rv}
