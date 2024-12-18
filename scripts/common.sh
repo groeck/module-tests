@@ -3,6 +3,11 @@ getval=${dir}/../getval
 
 __verbose=0
 
+adapter_path()
+{
+    echo "/sys/class/i2c-dev/i2c-$1/device"
+}
+
 pr_err()
 {
     echo $* >&2
@@ -125,7 +130,7 @@ error_test()
 	local adapter=$1
 	local a=("${!2}")
 	local val
-	local efile=/sys/class/i2c-adapter/i2c-${adapter}/error
+	local efile="$(adapter_path ${adapter})/error"
 
 	# If i2c-stub doesn't support error code insertion,
 	# there is nothing we can do.
@@ -162,12 +167,12 @@ getbasedir()
     local dev
     local addr="00$(echo $1 | sed -e 's/0x//')"
 
-    dev=$(ls /sys/class/i2c-adapter/i2c-${i2c_adapter}/${i2c_adapter}-${addr}/hwmon 2>/dev/null)
+    dev="$(ls $(adapter_path ${i2c_adapter})/${i2c_adapter}-${addr}/hwmon 2>/dev/null)"
     if [ "${dev}" = "" ]
     then
 	# Give it a second, then retry
 	sleep 1
-	dev=$(ls /sys/class/i2c-adapter/i2c-${i2c_adapter}/${i2c_adapter}-${addr}/hwmon 2>/dev/null)
+	dev="$(ls $(adapter_path ${i2c_adapter})/${i2c_adapter}-${addr}/hwmon 2>/dev/null)"
 	if [ "${dev}" = "" ]
 	then
 	    pr_err "hwmon device entry not found"
@@ -175,14 +180,12 @@ getbasedir()
 	fi
     fi
 
-    if [ -e "/sys/class/hwmon/${dev}/name" ]
-    then
+    if [ -e "/sys/class/hwmon/${dev}/name" ]; then
 	basedir="/sys/class/hwmon/${dev}"
     else
 	basedir="/sys/class/hwmon/${dev}/device"
     fi
-    if [ ! -d "${basedir}" ]
-    then
+    if [ ! -d "${basedir}" ]; then
 	pr_err "Directory ${basedir} does not exist"
 	exit 1
     fi
@@ -1230,9 +1233,8 @@ load_i2c_stub()
 	pr_err "Failed to load i2c-stub driver"
 	exit 1
     fi
-    i2c_adapter=$(grep "SMBus stub driver" /sys/class/i2c-adapter/*/name | cut -f1 -d: | cut -f5 -d/ | cut -f2 -d-)
-    if [ "${i2c_adapter}" = "" ]
-    then
+    i2c_adapter="$(grep "SMBus stub driver" /sys/class/i2c-dev/*/name 2>/dev/null | cut -f1 -d: | cut -f5 -d/ | cut -f2 -d-)"
+    if [[ -z "${i2c_adapter}" ]]; then
 	pr_err "I2C adapter not found"
 	exit 1
     fi
@@ -1241,10 +1243,10 @@ load_i2c_stub()
 
 do_instantiate()
 {
-	echo $1 $2 > /sys/class/i2c-adapter/i2c-${i2c_adapter}/new_device 2>/dev/null
+	echo $1 $2 > "$(adapter_path ${i2c_adapter})/new_device" 2>/dev/null
 }
 
 do_remove()
 {
-	echo $1 > /sys/class/i2c-adapter/i2c-${i2c_adapter}/delete_device
+	echo $1 > "$(adapter_path  ${i2c_adapter})/delete_device"
 }
