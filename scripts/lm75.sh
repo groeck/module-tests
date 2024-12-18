@@ -41,7 +41,7 @@ regs_lm75=(
 )
 
 attrs_lm75=(name temp1_input temp1_max temp1_max_hyst update_interval)
-vals_lm75=(lm75 28000 80000 75000 500)
+vals_lm75=(lm75 28000 80000 75000 100)
 
 regs_ds75=(
 	7f1c 0030 004b 0050 0050 0050 0050 0050
@@ -49,7 +49,7 @@ regs_ds75=(
 )
 
 attrs_ds75=(name temp1_input temp1_max temp1_max_hyst update_interval)
-vals_ds75=(ds75 28375 80000 75000 1000)
+vals_ds75=(ds75 28375 80000 75000 600)
 
 runtest()
 {
@@ -59,6 +59,8 @@ runtest()
     local vals=("${!4}")
     local rv
     local i
+
+    echo "Testing $1"
 
     load_i2c_stub ${i2c_addr}
 
